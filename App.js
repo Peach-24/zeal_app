@@ -58,6 +58,24 @@ export class App extends Component {
     });
   }
 
+  signOut() {
+    // [START auth_sign_out]
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        this.setState({
+          loggedIn: false,
+          loaded: true,
+        });
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+    // [END auth_sign_out]
+  }
+
   render() {
     const { loggedIn, loaded } = this.state;
     if (!loaded) {
@@ -85,7 +103,7 @@ export class App extends Component {
 
     return (
       <Provider store={store}>
-        <MainScreen />
+        <MainScreen signOut={this.signOut} />
       </Provider>
     );
   }

@@ -9,21 +9,17 @@ export class Main extends Component {
   componentDidMount() {
     this.props.fetchUser();
   }
+
   render() {
-    const { currentUser } = this.props;
-    console.log(currentUser);
+    console.log(this.props);
+    const { currentUser, signOut } = this.props;
     if (currentUser === undefined) {
-      return <View></View>;
+      return <View>aaa</View>;
     }
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Text>{currentUser.name} is Logged In</Text>
-        <Button
-          title="Sign Out"
-          onPress={() => {
-            console.log("log out");
-          }}
-        />
+        <Button title="Sign Out" onPress={() => signOut()} />
       </View>
     );
   }
