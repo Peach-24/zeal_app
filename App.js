@@ -2,11 +2,15 @@ import * as firebase from 'firebase';
 import 'firebase/auth';
 import 'firebase/firestore';
 import React from 'react';
+
 import { StyleSheet, Text, View } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import MainScreen from './components/Main';
 import LandingScreen from './components/auth/Landing';
 import CameraScreen from './components/main/PhotoCapture';
+import UploadScreen from './components/main/UploadMedia';
 
 const Stack = createStackNavigator();
 
@@ -28,8 +32,10 @@ if (firebase.apps.length === 0) {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Camera">
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen name="Main" component={MainScreen} />
         <Stack.Screen name="Camera" component={CameraScreen} />
+        <Stack.Screen name="Upload" component={UploadScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

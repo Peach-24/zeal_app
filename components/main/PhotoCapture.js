@@ -112,7 +112,7 @@ export default function PhotoCapture({ navigation }) {
       <Button
         title="Submit"
         style={styles.submitBtn}
-        onPress={() => navigation.navigate('Save', { image })}
+        onPress={() => navigation.navigate('Upload', { image })}
       ></Button>
       <Button
         title="Retake photograph"
