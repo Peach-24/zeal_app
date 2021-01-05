@@ -1,23 +1,35 @@
-import * as firebase from "firebase";
+import * as firebase from 'firebase';
+import 'firebase/auth';
+import 'firebase/firestore';
 
-import React, { Component } from "react";
+// React
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-import rootReducer from "./redux/reducers";
-import thunk from "redux-thunk";
+// React-Navigation
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import MainScreen from './components/Main';
+import LandingScreen from './components/auth/Landing';
+import CameraScreen from './components/main/PhotoCapture';
+import UploadScreen from './components/main/UploadMedia';
+import RegisterScreen from './components/auth/Register';
+import LoginScreen from './components/auth/Login';
 
-import { View, Text } from "react-native";
-
+// Redux
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './redux/reducers';
+import thunk from 'redux-thunk';
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 var firebaseConfig = {
-  apiKey: "AIzaSyBPm46Yqq4vkJ0_hEj9-nsbtm3Z8XyUv6A",
-  authDomain: "activity-club-3dfcf.firebaseapp.com",
-  projectId: "activity-club-3dfcf",
-  storageBucket: "activity-club-3dfcf.appspot.com",
-  messagingSenderId: "100041602249",
-  appId: "1:100041602249:web:1d3e659dc288fe89cc8918",
+  apiKey: 'AIzaSyBPm46Yqq4vkJ0_hEj9-nsbtm3Z8XyUv6A',
+  authDomain: 'activity-club-3dfcf.firebaseapp.com',
+  projectId: 'activity-club-3dfcf',
+  storageBucket: 'activity-club-3dfcf.appspot.com',
+  messagingSenderId: '100041602249',
+  appId: '1:100041602249:web:1d3e659dc288fe89cc8918',
 };
 
 const Stack = createStackNavigator();
@@ -26,12 +38,6 @@ if (firebase.apps.length === 0) {
   // initializes fb
   firebase.initializeApp(firebaseConfig);
 }
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import LandingScreen from "./components/auth/Landing";
-import RegisterScreen from "./components/auth/Register";
-import LoginScreen from "./components/auth/Login";
-import MainScreen from "./components/Main";
 
 export class App extends Component {
   constructor(props) {
@@ -58,29 +64,11 @@ export class App extends Component {
     });
   }
 
-  signOut() {
-    // [START auth_sign_out]
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        this.setState({
-          loggedIn: false,
-          loaded: true,
-        });
-        // Sign-out successful.
-      })
-      .catch((error) => {
-        // An error happened.
-      });
-    // [END auth_sign_out]
-  }
-
   render() {
     const { loggedIn, loaded } = this.state;
     if (!loaded) {
       return (
-        <View style={{ flex: 1, justifyContent: "center" }}>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
           <Text>Loading</Text>
         </View>
       );
@@ -100,10 +88,19 @@ export class App extends Component {
         </NavigationContainer>
       );
     }
-
     return (
       <Provider store={store}>
-        <MainScreen signOut={this.signOut} />
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Main">
+            <Stack.Screen
+              name="Main"
+              component={MainScreen}
+              signOut={this.signOut}
+            />
+            <Stack.Screen name="Camera" component={CameraScreen} />
+            <Stack.Screen name="Upload" component={UploadScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
       </Provider>
     );
   }

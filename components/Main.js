@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Text, View, Button } from "react-native";
+import React, { Component } from 'react';
+import { Text, View, Button } from 'react-native';
 
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { fetchUser } from "../redux/actions/index";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchUser, signOut } from '../redux/actions/index';
 
 export class Main extends Component {
   componentDidMount() {
@@ -12,13 +12,14 @@ export class Main extends Component {
 
   render() {
     console.log(this.props);
-    const { currentUser, signOut } = this.props;
+    const { currentUser, navigation } = this.props;
     if (currentUser === undefined) {
-      return <View>aaa</View>;
+      return <View />;
     }
     return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text>{currentUser.name} is Logged In</Text>
+        <Button title="Camera" onPress={() => navigation.navigate('Camera')} />
         <Button title="Sign Out" onPress={() => signOut()} />
       </View>
     );
