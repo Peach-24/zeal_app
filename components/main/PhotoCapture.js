@@ -101,6 +101,7 @@ export default function PhotoCapture({ navigation }) {
             onPress={() => takePhoto()}
           />
           <Icon.Button
+            // Access gallery
             name="folder-open"
             size={30}
             style={styles.cameraBtn}
@@ -114,7 +115,7 @@ export default function PhotoCapture({ navigation }) {
         onPress={() => navigation.navigate('Save', { image })}
       ></Button>
       <Button
-        title="Retake photo"
+        title="Retake photograph"
         style={styles.submitBtn}
         onPress={() => resetImage()}
       ></Button>
