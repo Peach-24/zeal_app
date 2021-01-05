@@ -2,19 +2,19 @@ import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import { Text, View, Button } from "react-native";
 
-const Landing = () => {
+const Landing = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: "center" }}>
       <Button
         title="Register"
         onPress={() => {
-          navigation.navigate;
+          navigation.navigate("Register");
         }}
       />
       <Button
         title="Login"
         onPress={() => {
-          navigation.navigate;
+          navigation.navigate("Login");
         }}
       />
     </View>
