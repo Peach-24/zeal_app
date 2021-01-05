@@ -25,6 +25,33 @@ export default function PhotoCapture({ navigation }) {
     })();
   }, []);
 
+  const takePhoto = async () => {
+    if (camera) {
+      const data = await camera.takePictureAsync(null);
+      setImage(data.uri);
+    }
+  };
+
+  const resetImage = async () => {
+    if (image) {
+      setImage(null);
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      // specify which types of media you want user to be able to select
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
   if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
   }
@@ -41,15 +68,20 @@ export default function PhotoCapture({ navigation }) {
       </View>
       <>
         <View style={styles.cameraContainer}>
-          <Camera
-            ref={(ref) => setCamera(ref)}
-            style={styles.cameraArea}
-            type={type}
-            ratio={'1:1'}
-          />
+          {!image ? (
+            <Camera
+              ref={(ref) => setCamera(ref)}
+              style={styles.cameraArea}
+              type={type}
+              ratio={'1:1'}
+            />
+          ) : (
+            <Image source={{ uri: image }} style={{ flex: 1 }} />
+          )}
         </View>
         <View style={styles.cameraOptionsRow}>
           <Icon.Button
+            // flip camera
             name="undo"
             size={30}
             style={styles.cameraBtn}
@@ -62,26 +94,30 @@ export default function PhotoCapture({ navigation }) {
             }}
           />
           <Icon.Button
+            // take photo
             name="camera"
             size={30}
             style={styles.cameraBtn}
-            onPress={''}
+            onPress={() => takePhoto()}
           />
           <Icon.Button
             name="folder-open"
             size={30}
             style={styles.cameraBtn}
-            onPress={''}
+            onPress={() => pickImage()}
           />
         </View>
       </>
       <Button
-        title="Save"
+        title="Submit"
         style={styles.submitBtn}
         onPress={() => navigation.navigate('Save', { image })}
       ></Button>
-      {/* Preview
-      {image && <Image source={{ uri: image }} style={{ flex: 1 }} />} */}
+      <Button
+        title="Retake photo"
+        style={styles.submitBtn}
+        onPress={() => resetImage()}
+      ></Button>
     </View>
   );
 }
