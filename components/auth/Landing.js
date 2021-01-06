@@ -1,24 +1,70 @@
-import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
-import { Text, View, Button } from "react-native";
+import React, { Component } from "react";
+import { Text, View, Button, TextInput, StyleSheet } from "react-native";
+import * as firebase from "firebase";
 
-const Landing = ({ navigation }) => {
-  return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <Button
-        title="Register"
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      />
-      <Button
-        title="Login"
-        onPress={() => {
-          navigation.navigate("Login");
-        }}
-      />
-    </View>
-  );
-};
+export default class Landing extends Component {
+  constructor(props) {
+    super(props);
 
-export default Landing;
+    this.state = {
+      email: "",
+      password: "",
+    };
+
+    this.onSignIn = this.onSignIn.bind(this);
+  }
+
+  onSignIn() {
+    const { name, email, password } = this.state;
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((res) => {})
+      .catch((err) => {});
+  }
+  render() {
+    const { navigation } = this.props;
+    return (
+      <View style={styles.main}>
+        <Text style={styles.title}>Zeal 🦓</Text>
+        <View style={styles.login}>
+          <TextInput
+            placeholder="email"
+            onChangeText={(email) => this.setState({ email })}
+          />
+          <TextInput
+            placeholder="password"
+            secureTextEntry={true}
+            onChangeText={(password) => this.setState({ password })}
+          />
+          <Button onPress={() => this.onSignIn()} title="Login" />
+        </View>
+        <Text>
+          Don't have an account?{" "}
+          <Button
+            title="Register"
+            onPress={() => {
+              navigation.navigate("Register");
+            }}
+          />
+        </Text>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    justifyContent: "center",
+    textAlign: "center",
+  },
+  title: {
+    fontSize: 30,
+    textTransform: "uppercase",
+    marginBottom: 100,
+  },
+  login: {
+    padding: 70,
+  },
+});
