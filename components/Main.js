@@ -7,7 +7,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchUser, signOut } from "../redux/actions/index";
+import { fetchUser, fetchGroups, signOut } from "../redux/actions/index";
 
 import DashboardScreen from "./main/Dashboard";
 import ActivityScreen from "./main/Activity";
@@ -19,6 +19,7 @@ const Tab = createMaterialBottomTabNavigator();
 export class Main extends Component {
   componentDidMount() {
     this.props.fetchUser();
+    this.props.fetchGroups();
   }
 
   render() {
@@ -33,7 +34,8 @@ export class Main extends Component {
           backBehavior="history"
           labeled={false}
           shifting={false}
-          barStyle={styles.tabBar}>
+          barStyle={styles.tabBar}
+        >
           <Tab.Screen
             name="Dashboard"
             component={DashboardScreen}
@@ -115,6 +117,6 @@ const mapStateToProps = (store) => ({
 });
 
 const mapDispatchProps = (dispatch) =>
-  bindActionCreators({ fetchUser }, dispatch);
+  bindActionCreators({ fetchUser, fetchGroups }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Main);
