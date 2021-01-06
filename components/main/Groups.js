@@ -1,7 +1,9 @@
-import React from "react";
-import { Text, View, Button, StyleSheet } from "react-native";
+import React from 'react';
+import { Text, View, Button, StyleSheet } from 'react-native';
 
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator } from '@react-navigation/stack';
+import SearchGroupsScreen from './GroupScreens/SearchGroups';
+import CreateGroupScreen from './GroupScreens/CreateGroup';
 
 const GroupStack = createStackNavigator();
 
@@ -9,8 +11,8 @@ function GroupsList({ navigation }) {
   return (
     <View>
       <Text>GroupList screen</Text>
-      <Button title="group 1" onPress={() => navigation.navigate("Group")} />
-      <Button title="group 2" onPress={() => navigation.navigate("Group")} />
+      <Button title="group 1" onPress={() => navigation.navigate('Group')} />
+      <Button title="group 2" onPress={() => navigation.navigate('Group')} />
     </View>
   );
 }
@@ -21,7 +23,7 @@ function Group({ navigation }) {
       <Text>Group - GroupName</Text>
       <Button
         title="Challenge 1"
-        onPress={() => navigation.navigate("Challenge")}
+        onPress={() => navigation.navigate('Challenge')}
       />
     </View>
   );
@@ -42,6 +44,8 @@ const Groups = (props) => {
       <GroupStack.Screen name="GroupsList" component={GroupsList} />
       <GroupStack.Screen name="Group" component={Group} />
       <GroupStack.Screen name="Challenge" component={Challenge} />
+      <GroupStack.Screen name="SearchGroups" component={SearchGroupsScreen} />
+      <GroupStack.Screen name="CreateGroup" component={CreateGroupScreen} />
     </GroupStack.Navigator>
   );
 };
@@ -49,7 +53,7 @@ const Groups = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 });
 
