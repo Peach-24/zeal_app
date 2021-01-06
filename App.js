@@ -9,6 +9,7 @@ import { StyleSheet, Text, View } from "react-native";
 // React-Navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import MainScreen from "./components/Main";
 import LandingScreen from "./components/auth/Landing";
 import CameraScreen from "./components/main/PhotoCapture";
@@ -32,6 +33,7 @@ var firebaseConfig = {
 };
 
 const Stack = createStackNavigator();
+
 // Below IF checks that we are not running any fb instance atm (avoids crashing)
 if (firebase.apps.length === 0) {
   // initializes fb
@@ -88,17 +90,7 @@ export class App extends Component {
     }
     return (
       <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Main">
-            <Stack.Screen
-              name="Main"
-              component={MainScreen}
-              signOut={this.signOut}
-            />
-            <Stack.Screen name="Camera" component={CameraScreen} />
-            <Stack.Screen name="Upload" component={UploadScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <MainScreen />
       </Provider>
     );
   }
