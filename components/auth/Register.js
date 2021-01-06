@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Button, TextInput, StyleSheet } from "react-native";
+import { View, Button, TextInput, Text, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 
 export default class Register extends Component {
@@ -18,7 +18,13 @@ export default class Register extends Component {
   }
 
   onSignUp() {
-    const { username, email, password, confirmPassword } = this.state;
+    const {
+      username,
+      email,
+      password,
+      confirmPassword,
+      isMatching,
+    } = this.state;
     if (confirmPassword === password) {
       firebase
         .auth()
@@ -38,7 +44,7 @@ export default class Register extends Component {
           console.log(err);
         });
     } else {
-      this.setState;
+      this.setState({ isMatching: "passwords do not match" });
     }
   }
 
@@ -46,7 +52,7 @@ export default class Register extends Component {
     const { isMatching } = this.state;
     return (
       <View style={styles.main}>
-        {/* <Text style={styles.title}>Zeal 🦓</Text> */}
+        <Text style={styles.title}>Zeal 🦓</Text>
         <View style={styles.register}>
           <TextInput
             placeholder="username"
@@ -70,6 +76,7 @@ export default class Register extends Component {
             }
           />
           <Button onPress={() => this.onSignUp()} title="Sign Up" />
+          <Text>{isMatching}</Text>
         </View>
       </View>
     );
