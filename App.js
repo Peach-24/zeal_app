@@ -1,35 +1,34 @@
-import * as firebase from 'firebase';
-import 'firebase/auth';
-import 'firebase/firestore';
+import * as firebase from "firebase";
+import "firebase/auth";
+import "firebase/firestore";
 
 // React
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 // React-Navigation
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import MainScreen from './components/Main';
-import LandingScreen from './components/auth/Landing';
-import CameraScreen from './components/main/PhotoCapture';
-import UploadScreen from './components/main/UploadMedia';
-import RegisterScreen from './components/auth/Register';
-import LoginScreen from './components/auth/Login';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import MainScreen from "./components/Main";
+import LandingScreen from "./components/auth/Landing";
+import CameraScreen from "./components/main/PhotoCapture";
+import UploadScreen from "./components/main/UploadMedia";
+import RegisterScreen from "./components/auth/Register";
 
 // Redux
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from './redux/reducers';
-import thunk from 'redux-thunk';
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/reducers";
+import thunk from "redux-thunk";
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 var firebaseConfig = {
-  apiKey: 'AIzaSyBPm46Yqq4vkJ0_hEj9-nsbtm3Z8XyUv6A',
-  authDomain: 'activity-club-3dfcf.firebaseapp.com',
-  projectId: 'activity-club-3dfcf',
-  storageBucket: 'activity-club-3dfcf.appspot.com',
-  messagingSenderId: '100041602249',
-  appId: '1:100041602249:web:1d3e659dc288fe89cc8918',
+  apiKey: "AIzaSyBPm46Yqq4vkJ0_hEj9-nsbtm3Z8XyUv6A",
+  authDomain: "activity-club-3dfcf.firebaseapp.com",
+  projectId: "activity-club-3dfcf",
+  storageBucket: "activity-club-3dfcf.appspot.com",
+  messagingSenderId: "100041602249",
+  appId: "1:100041602249:web:1d3e659dc288fe89cc8918",
 };
 
 const Stack = createStackNavigator();
@@ -68,7 +67,7 @@ export class App extends Component {
     const { loggedIn, loaded } = this.state;
     if (!loaded) {
       return (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{ flex: 1, justifyContent: "center" }}>
           <Text>Loading</Text>
         </View>
       );
@@ -83,7 +82,6 @@ export class App extends Component {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       );
