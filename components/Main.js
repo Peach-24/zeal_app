@@ -22,7 +22,6 @@ export class Main extends Component {
   }
 
   render() {
-    console.log(this.props);
     const { currentUser, navigation } = this.props;
     if (currentUser === undefined) {
       return <View />;

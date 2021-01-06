@@ -15,7 +15,6 @@ import LandingScreen from "./components/auth/Landing";
 import CameraScreen from "./components/main/PhotoCapture";
 import UploadScreen from "./components/main/UploadMedia";
 import RegisterScreen from "./components/auth/Register";
-import LoginScreen from "./components/auth/Login";
 
 // Redux
 import { Provider } from "react-redux";
@@ -85,7 +84,6 @@ export class App extends Component {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="Register" component={RegisterScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       );

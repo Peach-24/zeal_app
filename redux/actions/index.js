@@ -1,20 +1,19 @@
-import { USER_STATE_CHANGE } from '../constants';
-import firebase from 'firebase';
+import { USER_STATE_CHANGE } from "../constants";
+import firebase from "firebase";
 
 export function fetchUser() {
   return (dispatch) => {
     firebase
       .firestore()
-      .collection('users')
+      .collection("users")
       .doc(firebase.auth().currentUser.uid)
       .get()
       .then((snapshot) => {
-        console.log(snapshot.data());
         if (snapshot.exists) {
           console.log(snapshot.data());
           dispatch({ type: USER_STATE_CHANGE, currentUser: snapshot.data() });
         } else {
-          console.log('does not exist');
+          console.log("does not exist");
         }
       })
       .catch(function (err) {
@@ -28,7 +27,7 @@ export function signOut() {
     .auth()
     .signOut()
     .then(() => {
-      console.log('logged user out');
+      console.log("logged user out");
       // this.setState({
       //   loggedIn: false,
       //   loaded: true,
