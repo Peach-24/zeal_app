@@ -3,13 +3,20 @@ import { View, Button, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 const DateSelect = (props) => {
-  const [date, setDate] = useState(new Date());
+  // Setting default time to be midnight on the day selected
+  var d = new Date();
+  d.setHours(0, 0, 0, 0);
+  const [date, setDate] = useState(d);
   const [mode, setMode] = useState("date");
+<<<<<<< HEAD
   const [show, setShow] = useState(false);
+=======
+  const [show, setShow] = useState(Platform.OS === "ios");
+>>>>>>> f9e664ec79ecdc813ceb766ce4105adcae73f2c4
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
+    setShow(false);
     setDate(currentDate);
     props.handleDateChange(currentDate);
   };
@@ -26,7 +33,11 @@ const DateSelect = (props) => {
   return (
     <View>
       <View>
+<<<<<<< HEAD
         <Button onPress={showDatepicker} title="Show date picker!" />
+=======
+        <Button onPress={showDatepicker} title="Select Start Date" />
+>>>>>>> f9e664ec79ecdc813ceb766ce4105adcae73f2c4
       </View>
       {show && (
         <DateTimePicker
@@ -34,7 +45,11 @@ const DateSelect = (props) => {
           value={date}
           mode={"date"}
           is24Hour={true}
+<<<<<<< HEAD
           display="default"
+=======
+          display="calendar"
+>>>>>>> f9e664ec79ecdc813ceb766ce4105adcae73f2c4
           onChange={onChange}
         />
       )}
