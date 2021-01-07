@@ -5,6 +5,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import SearchGroupsScreen from "./GroupScreens/SearchGroups";
 import CreateGroupScreen from "./GroupScreens/CreateGroup";
 import SingleGroupScreen from "./GroupScreens/SingleGroup";
+import PhotoCaptureScreen from "./PhotoCapture";
+import UploadMediaScreen from "./UploadMedia";
 
 const GroupStack = createStackNavigator();
 
@@ -52,6 +54,8 @@ const Groups = (props) => {
         component={SingleGroupScreen}
         options={{ headerShown: true }}
       />
+      <GroupStack.Screen name="PhotoCapture" component={PhotoCaptureScreen} />
+      <GroupStack.Screen name="UploadMedia" component={UploadMediaScreen} />
     </GroupStack.Navigator>
   );
 };

@@ -3,9 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
   FlatList,
-  Button,
   TouchableOpacity,
 } from "react-native";
 
@@ -13,7 +11,7 @@ import * as firebase from "firebase";
 import {} from "react-native-gesture-handler";
 require("firebase/firestore");
 
-export default function SingleGroup(props) {
+export default function SingleGroup(props, { navigation }) {
   const [challenges, setChallenges] = useState([]);
   const groupInfo = props.route.params.item;
 
@@ -25,7 +23,6 @@ export default function SingleGroup(props) {
       .collection("submissions")
       .get()
       .then((snapshot) => {
-        // console.log(snapshot.docs);
         let challenges = snapshot.docs.map((task) => {
           const data = task.data();
           const id = task.id;
@@ -37,16 +34,13 @@ export default function SingleGroup(props) {
 
   const renderItem = ({ item }) => (
     <View style={styles.challengeCard}>
-      <Text
-        style={styles.challengeNum}
-        onPress={() => navigation.navigate("SingleGroup", { item })}
-      >
-        {item.challengeNum}
-      </Text>
+      <Text style={styles.challengeNum}>{item.challengeNum}</Text>
 
       <Text style={styles.challengeTitle}>{item.topic}</Text>
 
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => props.navigation.navigate("PhotoCapture")}
+      >
         <Text style={styles.submit}>Submit</Text>
       </TouchableOpacity>
     </View>
@@ -116,7 +110,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 2.65,
-    elevation: 1,
+    elevation: 2,
   },
   challengeTitle: {
     fontSize: 20,

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
-import { Camera } from 'expo-camera';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Button, Image } from "react-native";
+import { Camera } from "expo-camera";
 // import Icon from 'react-native-vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import * as ImagePicker from "expo-image-picker";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function PhotoCapture({ navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -15,12 +15,12 @@ export default function PhotoCapture({ navigation }) {
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestPermissionsAsync();
-      setHasCameraPermission(cameraStatus.status === 'granted');
+      setHasCameraPermission(cameraStatus.status === "granted");
       const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setHasGalleryPermission(galleryStatus.status === 'granted');
+      setHasGalleryPermission(galleryStatus.status === "granted");
 
-      if (galleryStatus.status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
+      if (galleryStatus.status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
       }
     })();
   }, []);
@@ -73,7 +73,7 @@ export default function PhotoCapture({ navigation }) {
               ref={(ref) => setCamera(ref)}
               style={styles.cameraArea}
               type={type}
-              ratio={'1:1'}
+              ratio={"1:1"}
             />
           ) : (
             <Image source={{ uri: image }} style={{ flex: 1 }} />
@@ -112,7 +112,7 @@ export default function PhotoCapture({ navigation }) {
       <Button
         title="Submit"
         style={styles.submitBtn}
-        onPress={() => navigation.navigate('Upload', { image })}
+        onPress={() => navigation.navigate("UploadMedia", { image })}
       ></Button>
       <Button
         title="Retake photograph"
@@ -126,7 +126,7 @@ export default function PhotoCapture({ navigation }) {
 const styles = StyleSheet.create({
   cameraContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 10,
     margin: 0,
   },
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   topicTitle: {
-    color: 'darkgrey',
+    color: "darkgrey",
   },
   topicDescription: {
     // flex: 1,
@@ -148,17 +148,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   topicInfo: {
-    backgroundColor: '#FFF7',
+    backgroundColor: "#FFF7",
     padding: 20,
   },
   cameraOptionsRow: {
-    backgroundColor: 'black',
-    flexDirection: 'row',
-    width: 'auto',
-    justifyContent: 'center',
+    backgroundColor: "black",
+    flexDirection: "row",
+    width: "auto",
+    justifyContent: "center",
   },
   cameraBtn: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   submitBtn: {
     paddingTop: 20,
