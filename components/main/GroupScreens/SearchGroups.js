@@ -6,7 +6,7 @@ import { fetchGroups } from "../../../redux/actions";
 import { SearchBar } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function SearchGroups() {
+export default function SearchGroups({ navigation }) {
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState([]);
@@ -29,7 +29,12 @@ export default function SearchGroups() {
 
   const renderItem = ({ item }) => (
     <View style={styles.groupCard}>
-      <Text style={styles.groupTitle}>{item.name}</Text>
+      <Text
+        style={styles.groupTitle}
+        onPress={() => navigation.navigate("SingleGroup", { item })}
+      >
+        {item.name}
+      </Text>
       <View style={styles.groupBody}>
         <Text>{item.description}</Text>
         <Text>Frequency: {item.frequency}</Text>
