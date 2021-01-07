@@ -10,7 +10,7 @@ export function fetchUser() {
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
-          console.log(snapshot.data());
+          // console.log(snapshot.data());
           dispatch({ type: USER_STATE_CHANGE, currentUser: snapshot.data() });
         } else {
           console.log("does not exist");
@@ -30,8 +30,13 @@ export function fetchGroups() {
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
-          console.log(snapshot.data());
-          dispatch({ type: GROUP_STATE_CHANGE, groups: snapshot.data() });
+          let groups = snapshot.docs.map((doc) => {
+            // console.log(doc);
+            const data = doc.data();
+            const id = doc.id;
+            return { id, ...data };
+          });
+          dispatch({ type: GROUP_STATE_CHANGE, groups: groups });
         } else {
           console.log("not found!");
         }
@@ -48,10 +53,6 @@ export function signOut() {
     .signOut()
     .then(() => {
       console.log("logged user out");
-      // this.setState({
-      //   loggedIn: false,
-      //   loaded: true,
-      // });
     })
     .catch((error) => {
       console.log(error);
