@@ -5,6 +5,7 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
+  Button,
 } from "react-native";
 
 import * as firebase from "firebase";
@@ -35,11 +36,9 @@ export default function SingleGroup(props, { navigation }) {
   const renderItem = ({ item }) => (
     <View style={styles.challengeCard}>
       <Text style={styles.challengeNum}>{item.challengeNum}</Text>
-
       <Text style={styles.challengeTitle}>{item.topic}</Text>
-
       <TouchableOpacity
-        onPress={() => props.navigation.navigate("PhotoCapture")}
+        onPress={() => props.navigation.navigate("PhotoCapture", { item })}
       >
         <Text style={styles.submit}>Submit</Text>
       </TouchableOpacity>
@@ -56,6 +55,7 @@ export default function SingleGroup(props, { navigation }) {
         </View>
       </View>
       <View>
+        <Button title="Join group" />
         <Text style={styles.listHeader}>Challenges</Text>
         <FlatList
           numColumns={1}

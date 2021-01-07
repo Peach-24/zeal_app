@@ -5,12 +5,14 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function PhotoCapture({ navigation }) {
+export default function PhotoCapture(props, { navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+
+  const challengeInfo = props.route.params.item;
 
   useEffect(() => {
     (async () => {
@@ -61,7 +63,9 @@ export default function PhotoCapture({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.topicInfo}>
-        <Text style={styles.topicTitle}>Challenge Topic: Portraits</Text>
+        <Text style={styles.topicTitle}>
+          Challenge Topic: {challengeInfo.topic}
+        </Text>
         <Text style={styles.topicDescription}>
           What will you submit for this challenge?
         </Text>
