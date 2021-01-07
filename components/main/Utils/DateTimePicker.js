@@ -8,11 +8,7 @@ const DateSelect = (props) => {
   d.setHours(0, 0, 0, 0);
   const [date, setDate] = useState(d);
   const [mode, setMode] = useState("date");
-<<<<<<< HEAD
-  const [show, setShow] = useState(false);
-=======
   const [show, setShow] = useState(Platform.OS === "ios");
->>>>>>> f9e664ec79ecdc813ceb766ce4105adcae73f2c4
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
