@@ -44,7 +44,7 @@ export default class Register extends Component {
           console.log(err);
         });
     } else {
-      this.setState({ isMatching: "passwords do not match" });
+      this.setState({ isMatching: "Passwords do not match" });
     }
   }
 
@@ -56,28 +56,32 @@ export default class Register extends Component {
         <View style={styles.register}>
           <TextInput
             placeholder="username"
+            style={styles.input}
             onChangeText={(username) => this.setState({ username })}
           />
           <TextInput
             placeholder="email"
+            style={styles.input}
             onChangeText={(email) => this.setState({ email })}
           />
           <TextInput
             placeholder="password"
             secureTextEntry={true}
+            style={styles.input}
             onChangeText={(password) => this.setState({ password })}
           />
           {/* need to add warning for non-matching passwords */}
           <TextInput
             placeholder="confirm password"
             secureTextEntry={true}
+            style={styles.input}
             onChangeText={(confirmPassword) =>
               this.setState({ confirmPassword })
             }
           />
-          <Button onPress={() => this.onSignUp()} title="Sign Up" />
-          <Text>{isMatching}</Text>
+          <Text style={styles.error}>{isMatching}</Text>
         </View>
+        <Button onPress={() => this.onSignUp()} title="Sign up" />
       </View>
     );
   }
@@ -92,9 +96,30 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     textTransform: "uppercase",
-    marginBottom: 100,
+    textAlign: "center",
   },
   register: {
-    padding: 70,
+    padding: 60,
+  },
+  input: {
+    padding: 5,
+    borderRadius: 5,
+    fontSize: 18,
+    backgroundColor: "white",
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 1,
+      height: 4,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4.65,
+    elevation: 2,
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+    marginTop: 10,
+    fontSize: 18,
   },
 });
