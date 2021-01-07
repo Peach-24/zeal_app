@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import { View, TextInput, Text, StyleSheet, Button } from "react-native";
+import { RadioButton } from "react-native-paper";
 import { challengeSet } from "../../testData/Data";
 import * as firebase from "firebase";
 require("firebase/firestore");
-import { RadioButton } from "react-native-paper";
+
+import DateSelect from "../Utils/DateTimePicker";
 
 export default function CreateGroup() {
   const [groupName, setGroupName] = useState("");
   const [desc, setDesc] = useState("");
   const [frequency, setFrequency] = useState("Daily");
+  const [startDate, setStartDate] = useState(new Date());
 
   const createGroup = (groupName, desc, frequency) => {
-    const groupData = { name: groupName, description: desc, frequency };
+    const groupData = {
+      name: groupName,
+      description: desc,
+      frequency,
+      startDate,
+    };
     firebase
       .firestore()
       .collection("groups")
@@ -25,6 +33,12 @@ export default function CreateGroup() {
       });
   };
 
+  const handleDateChange = (newDate) => {
+    setStartDate(newDate);
+    console.log("newdate>>", newDate);
+    console.log("startDate>>", startDate);
+  };
+
   return (
     <View>
       <Text>Create a group for your pals</Text>
@@ -33,14 +47,12 @@ export default function CreateGroup() {
         <TextInput
           defaultValue={groupName}
           placeholder="Group name"
-          onChangeText={(groupName) => setGroupName(groupName)}
-        ></TextInput>
+          onChangeText={(groupName) => setGroupName(groupName)}></TextInput>
         <Text>A brief description</Text>
         <TextInput
           placeholder="What's it about?"
           defaultValue={desc}
-          onChangeText={(desc) => setDesc(desc)}
-        ></TextInput>
+          onChangeText={(desc) => setDesc(desc)}></TextInput>
         <Text>How often do you want your challenges?</Text>
         <Text>
           <RadioButton
@@ -58,6 +70,8 @@ export default function CreateGroup() {
           />{" "}
           Weekly
         </Text>
+        <Text>Select start date...</Text>
+        <DateSelect handleDateChange={handleDateChange} />
         <Button
           title="Create Group"
           onPress={() => createGroup(groupName, desc, frequency)}
