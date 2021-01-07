@@ -70,7 +70,7 @@ export default function CreateGroup() {
           />{" "}
           Weekly
         </Text>
-        <Text>Select start date...</Text>
+        <Text>Start Date:</Text>
         <DateSelect handleDateChange={handleDateChange} />
         <Button
           title="Create Group"
