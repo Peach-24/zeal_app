@@ -30,24 +30,24 @@ export default class Landing extends Component {
         <View style={styles.login}>
           <TextInput
             placeholder="email"
+            style={styles.input}
             onChangeText={(email) => this.setState({ email })}
           />
           <TextInput
             placeholder="password"
             secureTextEntry={true}
             onChangeText={(password) => this.setState({ password })}
+            style={styles.input}
           />
           <Button onPress={() => this.onSignIn()} title="Login" />
         </View>
-        <Text>
-          Don't have an account?{" "}
-          <Button
-            title="Register"
-            onPress={() => {
-              navigation.navigate("Register");
-            }}
-          />
-        </Text>
+        <Text style={styles.noAccount}>Don't have an account? </Text>
+        <Button
+          title="Register"
+          onPress={() => {
+            navigation.navigate("Register");
+          }}
+        />
       </View>
     );
   }
@@ -62,9 +62,29 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     textTransform: "uppercase",
-    marginBottom: 100,
+    textAlign: "center",
   },
   login: {
-    padding: 70,
+    padding: 50,
+    marginTop: 50,
+    marginBottom: 50,
+  },
+  noAccount: {
+    textAlign: "center",
+  },
+  input: {
+    padding: 5,
+    borderRadius: 5,
+    fontSize: 18,
+    backgroundColor: "white",
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 1,
+      height: 4,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4.65,
+    elevation: 2,
   },
 });
