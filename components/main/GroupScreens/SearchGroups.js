@@ -9,6 +9,7 @@ import { ScrollView } from "react-native-gesture-handler";
 export default function SearchGroups() {
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
+  const [filtered, setFiltered] = useState([]);
 
   useEffect(() => {
     firebase
@@ -22,6 +23,7 @@ export default function SearchGroups() {
           return { id, ...data };
         });
         setGroups(groups);
+        setFiltered(groups);
       });
   }, []);
 
@@ -35,41 +37,30 @@ export default function SearchGroups() {
     </View>
   );
 
-  const updateSearch = (criteria) => {
-    setSearch(criteria);
+  const searchFilter = (text) => {
+    setSearch(text);
+    const newData = groups.filter((item) => {
+      const itemName = item.name.toUpperCase();
+      const textData = text.toUpperCase();
+      return itemName.indexOf(textData) > -1;
+    });
+    setFiltered(newData);
   };
 
   return (
     <View>
       <SearchBar
         placeholder="Type Here..."
-        onChangeText={updateSearch}
+        onChangeText={(text) => searchFilter(text)}
         value={search}
       />
 
       <FlatList
         numColumns={1}
-        data={groups}
+        data={filtered}
         renderItem={renderItem}
         style={styles.groupsList}
       />
-
-      {/*
-        SCROLLVIEW OPTION*/}
-
-      {/* <ScrollView>
-        {groups.map((item) => {
-          return (
-            <View key={item.name} style={styles.groupCard}>
-              <Text style={styles.groupTitle}>{item.name}</Text>
-              <View style={styles.groupBody}>
-                <Text>{item.description}</Text>
-                <Text>Frequency: {item.frequency}</Text>
-              </View>
-            </View>
-          );
-        })}
-      </ScrollView> */}
     </View>
   );
 }
