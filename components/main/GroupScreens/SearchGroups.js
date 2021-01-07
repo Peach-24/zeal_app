@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, StyleSheet, FlatList } from "react-native";
 import { fetchGroups } from "../../../redux/actions";
 import { SearchBar } from "react-native-elements";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SearchGroups() {
   const [groups, setGroups] = useState([]);
@@ -37,7 +38,7 @@ export default function SearchGroups() {
   const updateSearch = (criteria) => {
     setSearch(criteria);
   };
-  console.log(search);
+
   return (
     <View>
       <SearchBar
@@ -45,12 +46,30 @@ export default function SearchGroups() {
         onChangeText={updateSearch}
         value={search}
       />
+
       <FlatList
         numColumns={1}
         data={groups}
         renderItem={renderItem}
         style={styles.groupsList}
       />
+
+      {/*
+        SCROLLVIEW OPTION*/}
+
+      {/* <ScrollView>
+        {groups.map((item) => {
+          return (
+            <View key={item.name} style={styles.groupCard}>
+              <Text style={styles.groupTitle}>{item.name}</Text>
+              <View style={styles.groupBody}>
+                <Text>{item.description}</Text>
+                <Text>Frequency: {item.frequency}</Text>
+              </View>
+            </View>
+          );
+        })}
+      </ScrollView> */}
     </View>
   );
 }
