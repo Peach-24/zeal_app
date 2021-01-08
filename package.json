@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/datetimepicker": "3.0.4",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/bottom-tabs": "^5.11.2",
     "@react-navigation/material-bottom-tabs": "^5.3.10",
@@ -27,13 +28,13 @@
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.0",
+    "react-native-uuid-generator": "^6.1.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
     "react-navigation": "^4.4.3",
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "@react-native-community/datetimepicker": "3.0.4"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

@@ -7,6 +7,8 @@ require("firebase/firestore");
 
 import DateSelect from "../Utils/DateTimePicker";
 
+// import UUIDGenerator from "react-native-uuid-generator";
+
 export default function CreateGroup() {
   const [groupName, setGroupName] = useState("");
   const [desc, setDesc] = useState("");
@@ -15,22 +17,24 @@ export default function CreateGroup() {
   const [isCreated, setCreated] = useState(false);
 
   const createGroup = async (groupName, desc, frequency) => {
+    const groupId = Math.random().toString(36);
     const groupData = {
+      groupId,
       name: groupName,
       description: desc,
       frequency,
       startDate,
     };
+
     const db = firebase.firestore();
     const batch = db.batch();
-
-    const groupRef = db.collection("groups").doc(groupName);
+    const groupRef = db.collection("groups").doc(groupId);
     batch.set(groupRef, groupData);
 
     challengeSet.forEach((challenge) => {
       const challengeRef = db
         .collection("groups")
-        .doc(groupName)
+        .doc(groupId)
         .collection("submissions")
         .doc(challenge.challengeNum.toString());
       batch.set(challengeRef, challenge);
@@ -41,10 +45,13 @@ export default function CreateGroup() {
     });
   };
 
+  //look into this at some point!
+  // UUIDGenerator.getRandomUUID().then((uuid) => {
+  //   console.log(uuid);
+  // });
+
   const handleDateChange = (newDate) => {
     setStartDate(newDate);
-    console.log("newdate>>", newDate);
-    console.log("startDate>>", startDate);
   };
   !isCreated;
   return (
@@ -61,12 +68,14 @@ export default function CreateGroup() {
             <TextInput
               defaultValue={groupName}
               placeholder="Group name"
-              onChangeText={(groupName) => setGroupName(groupName)}></TextInput>
+              onChangeText={(groupName) => setGroupName(groupName)}
+            ></TextInput>
             <Text>A brief description</Text>
             <TextInput
               placeholder="What's it about?"
               defaultValue={desc}
-              onChangeText={(desc) => setDesc(desc)}></TextInput>
+              onChangeText={(desc) => setDesc(desc)}
+            ></TextInput>
             <Text>How often do you want your challenges?</Text>
             <Text>
               <RadioButton

@@ -14,13 +14,15 @@ require("firebase/firestore");
 
 export default function SingleGroup(props, { navigation }) {
   const [challenges, setChallenges] = useState([]);
-  const groupInfo = props.route.params.item;
+  const [joined, setJoined] = useState(false);
 
+  const groupInfo = props.route.params.item;
+  console.log(groupInfo);
   useEffect(() => {
     firebase
       .firestore()
       .collection("groups")
-      .doc(groupInfo.name)
+      .doc(groupInfo.groupId)
       .collection("submissions")
       .get()
       .then((snapshot) => {
@@ -45,6 +47,42 @@ export default function SingleGroup(props, { navigation }) {
     </View>
   );
 
+  const joinGroup = () => {
+    const user = firebase.auth().currentUser.uid;
+    firebase
+      .firestore()
+      .collection("groups")
+      .doc(groupInfo.groupId)
+      .collection("members")
+      .doc(user)
+      .set({ user })
+      .then(() => {
+        console.log("added!!");
+        setJoined(true);
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  };
+
+  const leaveGroup = () => {
+    const user = firebase.auth().currentUser.uid;
+    firebase
+      .firestore()
+      .collection("groups")
+      .doc(groupInfo.groupId)
+      .collection("members")
+      .doc(user)
+      .delete()
+      .then(() => {
+        console.log("left group!!");
+        setJoined(false);
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
+  };
+
   return (
     <View>
       <View style={styles.header}>
@@ -55,7 +93,12 @@ export default function SingleGroup(props, { navigation }) {
         </View>
       </View>
       <View>
-        <Button title="Join group" />
+        {!joined ? (
+          <Button title="Join Group" onPress={() => joinGroup()} />
+        ) : (
+          <Button title="Leave Group" onPress={() => leaveGroup()} />
+        )}
+
         <Text style={styles.listHeader}>Challenges</Text>
         <FlatList
           numColumns={1}
