@@ -45,6 +45,13 @@ export default function SingleGroup(props, { navigation }) {
     </View>
   );
 
+  const joinGroup = () => {
+    console.log(firebase.auth().currentUser.uid);
+    const group = groupInfo.name;
+    console.log(group);
+    const user = firebase.auth().currentUser.uid;
+    // firebase.firestore().collection("groups").doc().set(user);
+  };
   return (
     <View>
       <View style={styles.header}>
@@ -55,7 +62,7 @@ export default function SingleGroup(props, { navigation }) {
         </View>
       </View>
       <View>
-        <Button title="Join group" />
+        <Button title="Join group" onPress={() => joinGroup()} />
         <Text style={styles.listHeader}>Challenges</Text>
         <FlatList
           numColumns={1}

@@ -29,11 +29,7 @@ const DateSelect = (props) => {
   return (
     <View>
       <View>
-<<<<<<< HEAD
-        <Button onPress={showDatepicker} title="Show date picker!" />
-=======
         <Button onPress={showDatepicker} title="Select Start Date" />
->>>>>>> f9e664ec79ecdc813ceb766ce4105adcae73f2c4
       </View>
       {show && (
         <DateTimePicker
@@ -41,11 +37,7 @@ const DateSelect = (props) => {
           value={date}
           mode={"date"}
           is24Hour={true}
-<<<<<<< HEAD
-          display="default"
-=======
           display="calendar"
->>>>>>> f9e664ec79ecdc813ceb766ce4105adcae73f2c4
           onChange={onChange}
         />
       )}
