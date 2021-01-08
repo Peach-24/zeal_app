@@ -35,7 +35,7 @@ export default function CreateGroup() {
       const challengeRef = db
         .collection("groups")
         .doc(groupId)
-        .collection("submissions")
+        .collection("challenges")
         .doc(challenge.challengeNum.toString());
       batch.set(challengeRef, challenge);
     });
