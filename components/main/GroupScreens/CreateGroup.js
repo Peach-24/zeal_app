@@ -17,7 +17,9 @@ export default function CreateGroup() {
   const [isCreated, setCreated] = useState(false);
 
   const createGroup = async (groupName, desc, frequency) => {
+    const groupId = Math.random().toString(36);
     const groupData = {
+      groupId,
       name: groupName,
       description: desc,
       frequency,
@@ -26,7 +28,6 @@ export default function CreateGroup() {
 
     const db = firebase.firestore();
     const batch = db.batch();
-    const groupId = Math.random().toString(36);
     const groupRef = db.collection("groups").doc(groupId);
     batch.set(groupRef, groupData);
 
