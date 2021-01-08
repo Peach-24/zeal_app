@@ -23,7 +23,7 @@ export default function SingleGroup(props, { navigation }) {
       .firestore()
       .collection("groups")
       .doc(groupInfo.groupId)
-      .collection("submissions")
+      .collection("challenges")
       .get()
       .then((snapshot) => {
         let challenges = snapshot.docs.map((task) => {

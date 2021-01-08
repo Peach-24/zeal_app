@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View, Button, StyleSheet } from 'react-native';
+import React from "react";
+import { Text, View, Button, StyleSheet } from "react-native";
 
 const Dashboard = ({ navigation }) => {
   return (
@@ -8,12 +8,18 @@ const Dashboard = ({ navigation }) => {
       <Button
         title="Search for a group"
         onPress={() =>
-          navigation.navigate('Groups', { screen: 'SearchGroups' })
+          navigation.navigate("Groups", { screen: "SearchGroups" })
         }
       />
       <Button
         title="Create a group"
-        onPress={() => navigation.navigate('Groups', { screen: 'CreateGroup' })}
+        onPress={() => navigation.navigate("Groups", { screen: "CreateGroup" })}
+      />
+      <Button
+        title="Current Challenge"
+        onPress={() =>
+          navigation.navigate("Groups", { screen: "ChallengeFeed" })
+        }
       />
     </View>
   );
@@ -22,7 +28,7 @@ const Dashboard = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
 
