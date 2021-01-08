@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Image, Button, StyleSheet } from 'react-native';
-import firebase from 'firebase';
-require('firebase/firestore');
-require('firebase/firebase-storage');
+import React, { useState } from "react";
+import { View, Text, TextInput, Image, Button, StyleSheet } from "react-native";
+import firebase from "firebase";
+require("firebase/firestore");
+require("firebase/firebase-storage");
 
 export default function UploadMedia(props, { navigation }) {
-  const [caption, setCaption] = useState('');
+  const [caption, setCaption] = useState("");
 
   const uploadImage = async () => {
     const uri = props.route.params.image;
@@ -31,15 +31,15 @@ export default function UploadMedia(props, { navigation }) {
       console.log(snapshot);
     };
 
-    task.on('state_changed', taskProgress, taskError, taskCompleted);
+    task.on("state_changed", taskProgress, taskError, taskCompleted);
   };
 
   const savePostData = (downloadURL) => {
     firebase
       .firestore()
-      .collection('submissions')
+      .collection("submissions")
       .doc(firebase.auth().currentUser.uid)
-      .collection('userPosts')
+      .collection("userPosts")
       .add({
         downloadURL,
         caption,
@@ -71,6 +71,6 @@ const styles = StyleSheet.create({
   },
   tabIcon: {
     fontSize: 26,
-    color: 'white',
+    color: "white",
   },
 });
