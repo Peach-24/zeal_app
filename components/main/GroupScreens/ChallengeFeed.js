@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View, FlatList, Image, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 import { Text } from "react-native";
+import { render } from "react-dom";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 require("firebase/firestore");
 
 export default function ChallengeFeed({ navigation }) {
@@ -11,7 +14,7 @@ export default function ChallengeFeed({ navigation }) {
     firebase
       .firestore()
       .collection("groups")
-      .doc("0.tnaw7g00i")
+      .doc("0.hcwlt9l4kf")
       .collection("challenges")
       .doc("1")
       .collection("uploads")
@@ -25,53 +28,46 @@ export default function ChallengeFeed({ navigation }) {
         setSubmissions(submissions);
       });
   }, []);
-  console.log(submissions);
-  // const renderItem = ({ item }) => {
-  //   <View style={{ flex: 1 }}>
-  //     <Text>{item.url}</Text>
-  //     <Text>Challenge</Text>
-  //     <Image
-  //       style={{
-  //         flex: 1,
-  //         aspectRatio: 1 / 1,
-  //       }}
-  //       resizeMode="center"
-  //       source={{ uri: item.url }}
-  //     />
-  //   </View>;
-  // };
+
+  renderItem = ({ item }) => (
+    <View style={styles.imageCard}>
+      <Image
+        style={styles.image}
+        source={{
+          uri: item.downloadURL,
+        }}
+      />
+      <View style={styles.imageCardInfo}>
+        <Text style={styles.caption}>{item.caption}</Text>
+        <MaterialCommunityIcons name="favorite" />
+      </View>
+    </View>
+  );
 
   return (
-    // <View>
-    //   <Image
-
-    //     source={{
-    //       uri:
-    //         "https://firebasestorage.googleapis.com/v0/b/activity-club-3dfcf.appspot.com/o/Hedgehog.jpg?alt=media&token=c5534e2a-922d-4e39-95b0-89b566902853",
-    //     }}
-    //   />
-    // </View>
     <View>
       <FlatList
         numColumns={1}
         horizontal={false}
         data={submissions}
-        renderItem={({ item }) => (
-          <View style={{ flex: 1 }}>
-            {/* <Text>{item.url}</Text>
-            <Text>Challenge</Text> */}
-            <Image
-              style={{
-                width: "auto",
-                height: 500,
-              }}
-              source={{
-                uri: item.url,
-              }}
-            />
-          </View>
-        )}
+        renderItem={renderItem}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  imageCard: {
+    flex: 1,
+    marginBottom: 15,
+  },
+  image: {
+    height: 300,
+    width: "auto",
+  },
+  caption: {
+    padding: 5,
+    fontSize: 16,
+  },
+  imageCardInfo: {},
+});

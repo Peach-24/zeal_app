@@ -37,9 +37,11 @@ export default function UploadMedia(props, { navigation }) {
   const savePostData = (downloadURL) => {
     firebase
       .firestore()
-      .collection("submissions")
-      .doc(firebase.auth().currentUser.uid)
-      .collection("userPosts")
+      .collection("groups")
+      .doc("0.hcwlt9l4kf")
+      .collection("challenges")
+      .doc("1")
+      .collection("uploads")
       .add({
         downloadURL,
         caption,
@@ -55,10 +57,6 @@ export default function UploadMedia(props, { navigation }) {
     <View style={{ flex: 1 }}>
       <Text style={styles.heading}>Tell people about your photo!</Text>
       <Image source={{ url: props.route.params.image }} style={{ flex: 1 }} />
-      <TextInput
-        placeholder="Write a caption..."
-        onChangeText={(caption) => setCaption(caption)}
-      />
 
       <Button title="Confirm" onPress={() => uploadImage()} />
     </View>
