@@ -16,10 +16,11 @@ export default function PhotoCapture(props, { navigation }) {
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [caption, setCaption] = useState("");
+  const [submit, setSubmit] = useState(false);
 
   const challengeInfo = props.route.params.item;
   const groupDetails = props.route.params.groupDetails;
-  console.log(groupDetails);
+
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestPermissionsAsync();
@@ -39,13 +40,11 @@ export default function PhotoCapture(props, { navigation }) {
       setImage(data.uri);
     }
   };
-
   const resetImage = async () => {
     if (image) {
       setImage(null);
     }
   };
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       // specify which types of media you want user to be able to select
@@ -54,7 +53,6 @@ export default function PhotoCapture(props, { navigation }) {
       aspect: [1, 1],
       quality: 1,
     });
-
     if (!result.cancelled) {
       setImage(result.uri);
     }
@@ -62,16 +60,12 @@ export default function PhotoCapture(props, { navigation }) {
 
   const uploadImage = async () => {
     const uri = image;
-
     const childPath = `submissions/${
       firebase.auth().currentUser.uid
     }/${Math.random().toString(36)}`;
-
     const res = await fetch(uri);
     const blob = await res.blob();
-
     const task = firebase.storage().ref().child(childPath).put(blob);
-
     const taskProgress = (snapshot) => {
       console.log(`transferred: ${snapshot.bytesTransferred}`);
     };
@@ -102,10 +96,22 @@ export default function PhotoCapture(props, { navigation }) {
       })
       .then(function () {
         // the below means that it will go to the beginning route of our navigator in App
-        // props.navigation.popToTop();
         console.log("image upload successful");
+        props.navigation.navigate("ChallengeFeed", {
+          groupDetails,
+          challengeInfo,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
+
+  const handleUploadClick = () => {
+    setSubmit(true);
+    uploadImage();
+  };
+
   if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
   }
@@ -171,9 +177,10 @@ export default function PhotoCapture(props, { navigation }) {
         onChangeText={(caption) => setCaption(caption)}
       />
       <Button
-        title="Submit"
+        title={!submit ? "Submit" : "Posting image..."}
         style={styles.submitBtn}
-        onPress={() => uploadImage()}
+        onPress={() => handleUploadClick()}
+        disabled={submit}
       ></Button>
       <Button
         title="Retake photograph"

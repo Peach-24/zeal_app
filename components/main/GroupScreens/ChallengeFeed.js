@@ -7,16 +7,19 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 require("firebase/firestore");
 
-export default function ChallengeFeed({ navigation }) {
+export default function ChallengeFeed(props, { navigation }) {
   const [submissions, setSubmissions] = useState([]);
-  //refactor to access specific paths
+
+  const groupID = props.route.params.groupDetails.id;
+  const challengeID = props.route.params.challengeInfo.id;
+
   useEffect(() => {
     firebase
       .firestore()
       .collection("groups")
-      .doc("0.hcwlt9l4kf")
+      .doc(groupID)
       .collection("challenges")
-      .doc("1")
+      .doc(challengeID)
       .collection("uploads")
       .get()
       .then((snapshot) => {
@@ -29,7 +32,7 @@ export default function ChallengeFeed({ navigation }) {
       });
   }, []);
 
-  renderItem = ({ item }) => (
+  const renderItem = ({ item }) => (
     <View style={styles.imageCard}>
       <Image
         style={styles.image}
