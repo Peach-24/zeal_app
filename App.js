@@ -12,8 +12,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import MainScreen from "./components/Main";
 import LandingScreen from "./components/auth/Landing";
-import CameraScreen from "./components/main/PhotoCapture";
-import UploadScreen from "./components/main/UploadMedia";
 import RegisterScreen from "./components/auth/Register";
 
 // Redux
