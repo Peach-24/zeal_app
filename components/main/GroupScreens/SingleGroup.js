@@ -40,7 +40,12 @@ export default function SingleGroup(props, { navigation }) {
       <Text style={styles.challengeNum}>{item.challengeNum}</Text>
       <Text style={styles.challengeTitle}>{item.topic}</Text>
       <TouchableOpacity
-        onPress={() => props.navigation.navigate("PhotoCapture", { item })}
+        onPress={() =>
+          props.navigation.navigate("PhotoCapture", {
+            item,
+            groupDetails: groupInfo,
+          })
+        }
       >
         <Text style={styles.submit}>Submit</Text>
       </TouchableOpacity>

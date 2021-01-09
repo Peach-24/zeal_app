@@ -4,6 +4,10 @@ import { Camera } from "expo-camera";
 // import Icon from 'react-native-vector-icons';
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { TextInput } from "react-native-gesture-handler";
+import firebase from "firebase";
+require("firebase/firestore");
+require("firebase/firebase-storage");
 
 export default function PhotoCapture(props, { navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -11,9 +15,11 @@ export default function PhotoCapture(props, { navigation }) {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [caption, setCaption] = useState("");
 
   const challengeInfo = props.route.params.item;
-
+  const groupDetails = props.route.params.groupDetails;
+  console.log(groupDetails);
   useEffect(() => {
     (async () => {
       const cameraStatus = await Camera.requestPermissionsAsync();
@@ -54,6 +60,52 @@ export default function PhotoCapture(props, { navigation }) {
     }
   };
 
+  const uploadImage = async () => {
+    const uri = image;
+
+    const childPath = `submissions/${
+      firebase.auth().currentUser.uid
+    }/${Math.random().toString(36)}`;
+
+    const res = await fetch(uri);
+    const blob = await res.blob();
+
+    const task = firebase.storage().ref().child(childPath).put(blob);
+
+    const taskProgress = (snapshot) => {
+      console.log(`transferred: ${snapshot.bytesTransferred}`);
+    };
+    const taskCompleted = () => {
+      task.snapshot.ref.getDownloadURL().then((snapshot) => {
+        savePostData(snapshot);
+      });
+    };
+    const taskError = (snapshot) => {
+      console.log(snapshot);
+    };
+
+    task.on("state_changed", taskProgress, taskError, taskCompleted);
+  };
+
+  const savePostData = (downloadURL) => {
+    firebase
+      .firestore()
+      .collection("groups")
+      .doc(groupDetails.id)
+      .collection("challenges")
+      .doc(challengeInfo.id)
+      .collection("uploads")
+      .add({
+        downloadURL,
+        caption,
+        creation: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then(function () {
+        // the below means that it will go to the beginning route of our navigator in App
+        // props.navigation.popToTop();
+        console.log("image upload successful");
+      });
+  };
   if (hasCameraPermission === null || hasGalleryPermission === false) {
     return <View />;
   }
@@ -113,10 +165,15 @@ export default function PhotoCapture(props, { navigation }) {
           />
         </View>
       </>
+      <TextInput
+        style={styles.captionBox}
+        placeholder="Write a caption..."
+        onChangeText={(caption) => setCaption(caption)}
+      />
       <Button
         title="Submit"
         style={styles.submitBtn}
-        onPress={() => navigation.navigate("UploadMedia", { image })}
+        onPress={() => uploadImage()}
       ></Button>
       <Button
         title="Retake photograph"
@@ -167,5 +224,9 @@ const styles = StyleSheet.create({
   submitBtn: {
     paddingTop: 20,
     fontSize: 50,
+  },
+  captionBox: {
+    backgroundColor: "white",
+    padding: 5,
   },
 });
