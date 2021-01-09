@@ -8,6 +8,7 @@ import SingleGroupScreen from "./GroupScreens/SingleGroup";
 import PhotoCaptureScreen from "./PhotoCapture";
 import UploadMediaScreen from "./UploadMedia";
 import ChallengeFeedScreen from "./GroupScreens/ChallengeFeed";
+import MyGroupsScreen from "./GroupScreens/MyGroups";
 
 const GroupStack = createStackNavigator();
 
@@ -15,6 +16,11 @@ const Groups = (props) => {
   const { navigation } = props;
   return (
     <GroupStack.Navigator>
+      <GroupStack.Screen
+        name="MyGroups"
+        component={MyGroupsScreen}
+        options={{ headerShown: false }}
+      />
       <GroupStack.Screen name="SearchGroups" component={SearchGroupsScreen} />
       <GroupStack.Screen name="CreateGroup" component={CreateGroupScreen} />
       <GroupStack.Screen
