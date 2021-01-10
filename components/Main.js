@@ -7,7 +7,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchUser, fetchGroups, signOut } from "../redux/actions/index";
 
 import DashboardScreen from "./main/Dashboard";
 import ActivityScreen from "./main/Activity";
@@ -15,6 +14,12 @@ import GroupsScreen from "./main/Groups";
 import ProfileScreen from "./main/Profile";
 
 const Tab = createMaterialBottomTabNavigator();
+
+import store from "../App";
+import { fetchUser, fetchGroups } from "../redux/actions/index";
+// Once in main, we want to add the current user and their joined groups to the store
+fetchUser();
+fetchGroups();
 
 const Main = () => {
   // componentDidMount() {

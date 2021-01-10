@@ -22,6 +22,11 @@ export function fetchUser() {
   };
 }
 
+// export const fetchGroups = async () => {
+//   return (dispatch) => {
+
+//   }
+// }
 export function fetchGroups() {
   return (dispatch) => {
     firebase

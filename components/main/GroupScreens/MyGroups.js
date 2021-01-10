@@ -2,7 +2,8 @@ import * as firebase from "firebase";
 require("firebase/firestore");
 import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, StyleSheet, FlatList } from "react-native";
-import { fetchGroups } from "../../../redux/actions";
+import { useSelector } from "react-redux";
+import { fetchGroups } from "../../../redux/actions/index";
 import { SearchBar } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -29,12 +30,14 @@ export default function MyGroups({ navigation }) {
   //   });
   //   }, []);
 
+  const userGroups = useSelector((state) => state.groups);
+  console.log(userGroups);
+
   const renderItem = ({ item }) => (
     <View style={styles.groupCard}>
       <Text
         style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}
-      >
+        onPress={() => navigation.navigate("SingleGroup", { item })}>
         {item.name}
       </Text>
       <View style={styles.groupBody}>
