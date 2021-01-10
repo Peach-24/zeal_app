@@ -1,30 +1,28 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { View, Button, TextInput, Text, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 
-export default class Register extends Component {
-  constructor(props) {
-    super(props);
+const Register = () => {
+  // constructor(props) {
+  //   super(props);
 
-    this.state = {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      isMatching: "",
-    };
+  //   this.state = {
+  //     username: "",
+  //     email: "",
+  //     password: "",
+  //     confirmPassword: "",
+  //     isMatching: "",
+  //   };
 
-    this.onSignUp = this.onSignUp.bind(this);
-  }
+  //   this.onSignUp = this.onSignUp.bind(this);
+  // }
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isMatching, setIsMatching] = useState("");
 
-  onSignUp() {
-    const {
-      username,
-      email,
-      password,
-      confirmPassword,
-      isMatching,
-    } = this.state;
+  const onSignUp = () => {
     if (confirmPassword === password) {
       firebase
         .auth()
@@ -44,48 +42,47 @@ export default class Register extends Component {
           console.log(err);
         });
     } else {
-      this.setState({ isMatching: "Passwords do not match" });
+      setIsMatching("Passwords do not match");
     }
-  }
+  };
 
-  render() {
-    const { isMatching } = this.state;
-    return (
-      <View style={styles.main}>
-        <Text style={styles.title}>Zeal 🦓</Text>
-        <View style={styles.register}>
-          <TextInput
-            placeholder="username"
-            style={styles.input}
-            onChangeText={(username) => this.setState({ username })}
-          />
-          <TextInput
-            placeholder="email"
-            style={styles.input}
-            onChangeText={(email) => this.setState({ email })}
-          />
-          <TextInput
-            placeholder="password"
-            secureTextEntry={true}
-            style={styles.input}
-            onChangeText={(password) => this.setState({ password })}
-          />
-          {/* need to add warning for non-matching passwords */}
-          <TextInput
-            placeholder="confirm password"
-            secureTextEntry={true}
-            style={styles.input}
-            onChangeText={(confirmPassword) =>
-              this.setState({ confirmPassword })
-            }
-          />
-          <Text style={styles.error}>{isMatching}</Text>
-        </View>
-        <Button onPress={() => this.onSignUp()} title="Sign up" />
+  return (
+    <View style={styles.main}>
+      <Text style={styles.title}>Zeal 🦓</Text>
+      <View style={styles.register}>
+        <TextInput
+          placeholder="username"
+          style={styles.input}
+          onChangeText={(username) => setUsername(username)}
+        />
+        <TextInput
+          placeholder="email"
+          style={styles.input}
+          onChangeText={(email) => setEmail(email)}
+        />
+        <TextInput
+          placeholder="password"
+          secureTextEntry={true}
+          style={styles.input}
+          onChangeText={(password) => setPassword(password)}
+        />
+        {/* need to add warning for non-matching passwords */}
+        <TextInput
+          placeholder="confirm password"
+          secureTextEntry={true}
+          style={styles.input}
+          onChangeText={(confirmPassword) =>
+            setConfirmPassword(confirmPassword)
+          }
+        />
+        <Text style={styles.error}>{isMatching}</Text>
       </View>
-    );
-  }
-}
+      <Button onPress={() => onSignUp()} title="Sign up" />
+    </View>
+  );
+};
+
+export default Register;
 
 const styles = StyleSheet.create({
   main: {

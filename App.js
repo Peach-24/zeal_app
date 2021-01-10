@@ -3,7 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 
 // React
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 // React-Navigation
@@ -38,60 +38,73 @@ if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
 
-export class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-      loggedIn: false,
-    };
-  }
+export const App = () => {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     loaded: false,
+  //     loggedIn: false,
+  //   };
+  // }
+  const [loaded, setLoaded] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (!user) {
-        this.setState({
-          loggedIn: false,
-          loaded: true,
-        });
-      } else {
-        this.setState({
-          loggedIn: true,
-          loaded: true,
-        });
-      }
-    });
-  }
+  // componentDidMount() {
+  //   firebase.auth().onAuthStateChanged((user) => {
+  //     if (!user) {
+  //       this.setState({
+  //         loggedIn: false,
+  //         loaded: true,
+  //       });
+  //     } else {
+  //       this.setState({
+  //         loggedIn: true,
+  //         loaded: true,
+  //       });
+  //     }
+  //   });
+  // }
 
-  render() {
-    const { loggedIn, loaded } = this.state;
-    if (!loaded) {
-      return (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text>Loading</Text>
-        </View>
-      );
-    }
+  useEffect(() => {
     if (!loggedIn) {
-      return (
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Landing">
-            <Stack.Screen
-              name="Landing"
-              component={LandingScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      );
+      firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          setLoggedIn(false);
+          setLoaded(true);
+        } else {
+          setLoggedIn(true);
+          setLoaded(true);
+        }
+      });
     }
+  }, [loggedIn, loaded]);
+
+  if (!loaded) {
     return (
-      <Provider store={store}>
-        <MainScreen />
-      </Provider>
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Text>Loading</Text>
+      </View>
     );
   }
-}
+  if (!loggedIn) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Landing">
+          <Stack.Screen
+            name="Landing"
+            component={LandingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  return (
+    <Provider store={store}>
+      <MainScreen />
+    </Provider>
+  );
+};
 
 export default App;

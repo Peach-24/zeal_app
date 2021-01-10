@@ -1,57 +1,62 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Text, View, Button, TextInput, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 
-export default class Landing extends Component {
-  constructor(props) {
-    super(props);
+const Landing = (props) => {
+  // constructor(props) {
+  //   super(props);
 
-    this.state = {
-      email: "",
-      password: "",
-    };
+  //   this.state = {
+  //     email: "",
+  //     password: "",
+  //   };
 
-    this.onSignIn = this.onSignIn.bind(this);
-  }
+  //   this.onSignIn = this.onSignIn.bind(this);
+  // }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  onSignIn() {
-    const { name, email, password } = this.state;
+  // onEmailChanged = (e) => setEmail(e.target.value)
+  // onPasswordChanged = (e) => setPassword(e.target.password)
+
+  const onSignIn = () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((res) => {})
       .catch((err) => {});
-  }
-  render() {
-    const { navigation } = this.props;
-    return (
-      <View style={styles.main}>
-        <Text style={styles.title}>Zeal 🦓</Text>
-        <View style={styles.login}>
-          <TextInput
-            placeholder="email"
-            style={styles.input}
-            onChangeText={(email) => this.setState({ email })}
-          />
-          <TextInput
-            placeholder="password"
-            secureTextEntry={true}
-            onChangeText={(password) => this.setState({ password })}
-            style={styles.input}
-          />
-          <Button onPress={() => this.onSignIn()} title="Login" />
-        </View>
-        <Text style={styles.noAccount}>Don't have an account? </Text>
-        <Button
-          title="Register"
-          onPress={() => {
-            navigation.navigate("Register");
-          }}
+  };
+
+  const { navigation } = props;
+  return (
+    <View style={styles.main}>
+      <Text style={styles.title}>Zeal 🦓</Text>
+      <View style={styles.login}>
+        <TextInput
+          placeholder="email"
+          style={styles.input}
+          onChangeText={(email) => setEmail(email)}
         />
+        <TextInput
+          placeholder="password"
+          secureTextEntry={true}
+          onChangeText={(password) => setPassword(password)}
+          style={styles.input}
+        />
+        <Button onPress={() => onSignIn()} title="Login" />
       </View>
-    );
-  }
-}
+      <Text style={styles.noAccount}>Don't have an account? </Text>
+      <Button
+        title="Register"
+        onPress={() => {
+          navigation.navigate("Register");
+        }}
+      />
+    </View>
+  );
+};
+
+export default Landing;
 
 const styles = StyleSheet.create({
   main: {
