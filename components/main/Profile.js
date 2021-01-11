@@ -18,31 +18,87 @@ import EditAvatar from "./EditAvatar";
 import * as firebase from "firebase";
 
 const Profile = () => {
-  const defaultAvatar = require("../../img/232-2329525_person-svg-shadow-default-profile-picture-png.png");
-  const [currentAvatar, setAvatar] = useState(defaultAvatar);
-  const groupsJoined = useSelector(selectGroupsJoined);
-  console.log(groupsJoined);
-  //change photo
   const user = firebase.auth().currentUser;
+  // const [avatarURL, setAvatarURL] = useState(user.photoURL);
+  const [email, setEmail] = useState(user.email);
+  const [username, setUsername] = useState(user.displayName);
+  const groupsJoined = useSelector(selectGroupsJoined);
+
+  console.log(user);
+
+  const groupList = groupsJoined.map((group) => group.name);
+  const createGroupsString = (arr) => {
+    let finalStr = "";
+    arr.forEach((group) => {
+      finalStr += `📸 ${group}\n`;
+    });
+    return finalStr;
+  };
+
   const updateAvatarImage = () => {
     console.log("Change Photo");
   };
-  const renderItem = ({ item }) => (
-    <View style={styles.groupCard}>
-      <Text
-        style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}
-      >
-        {item.name}
-      </Text>
-    </View>
-  );
+
+  const updateDetails = () => {
+    if (username !== user.displayName && username !== "") {
+      user
+        .updateProfile({ displayName: username })
+        .then(function () {
+          console.log("Updated username successful.");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .set({ email, username: username })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    if (email !== user.email && email !== "") {
+      user
+        .updateEmail(email)
+        .then(function () {
+          console.log("Update email successful.");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .set({ username, email: email })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const formatJoinDate = (timestamp) => {
+    let date = Date(timestamp);
+    let splitArr = date.split(" ");
+    const trimArr = splitArr.slice(1, 4);
+    return trimArr.join("/");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingTop: 50 }}>
           {/* Default image to be uploaded to DB and pulled down from fireStore, user should be able to edit avatar from a list of default images, or upload an image using their camera. */}
-          <Image style={styles.profileImage} source={currentAvatar} />
+          <Image
+            style={styles.profileImage}
+            source={{
+              uri: user.photoURL,
+            }}
+          />
 
           <View style={styles.changePhoto}>
             <Entypo
@@ -55,24 +111,29 @@ const Profile = () => {
         </View>
 
         <View>
-          <Text style={styles.userName}>{user.displayName}</Text>
+          <Text style={styles.username}>{user.displayName}</Text>
+          <Text style={styles.joinedDate}>
+            Member since: {formatJoinDate(user.createdAt)}
+          </Text>
         </View>
         <View style={styles.userForm}>
-          <Text>
-            email: <TextInput placeholder={user.email} />
-          </Text>
-          <FlatList
-            numColumns={1}
-            data={groupsJoined}
-            renderItem={renderItem}
-            style={styles.groupsList}
+          <Text style={styles.inputDesc}> Username: </Text>
+          <TextInput
+            placeholder={username}
+            style={styles.input}
+            onChangeText={(input) => setUsername(input)}
           />
+          <Text style={styles.inputDesc}>Email: </Text>
+          <TextInput
+            placeholder={email}
+            style={styles.input}
+            onChangeText={(input) => setEmail(input)}
+          />
+          <Button title="Update Details" onPress={() => updateDetails()} />
+          <Text style={styles.inputDesc}>Groups: </Text>
+          <Text style={styles.groupsList}>{createGroupsString(groupList)}</Text>
         </View>
         <View style={styles.SOButton}>
-          <Button
-            title="Update Details"
-            onPress={() => console.log("update details")}
-          />
           <Button title="Sign Out" onPress={() => signOut()} />
         </View>
       </ScrollView>
@@ -104,19 +165,36 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     overflow: "hidden",
   },
+  inputDesc: { fontSize: 16, margin: 5 },
+  input: {
+    backgroundColor: "white",
+    padding: 10,
+    marginBottom: 10,
+    fontSize: 18,
+    borderRadius: 5,
+  },
+  groupsList: {
+    fontSize: 18,
+  },
   SOButton: {
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: 36,
   },
-  userName: {
+  username: {
     flex: 1,
     fontSize: 30,
     alignSelf: "center",
-    padding: 10,
+    paddingTop: 20,
+    paddingBottom: 5,
+  },
+  joinedDate: {
+    alignSelf: "center",
+    paddingBottom: 20,
+    fontSize: 16,
+    color: "grey",
   },
   userForm: {
-    padding: 10,
+    margin: 0,
   },
   groupCard: {
     padding: 10,

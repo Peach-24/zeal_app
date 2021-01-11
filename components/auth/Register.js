@@ -26,6 +26,8 @@ const Register = () => {
           console.log(res);
           return res.user.updateProfile({
             displayName: username,
+            photoURL:
+              "https://firebasestorage.googleapis.com/v0/b/activity-club-3dfcf.appspot.com/o/app_assets%2Fdefault-avatar.png?alt=media&token=df0a35dd-c2c7-4615-a586-74ff37ef5bc3",
           });
         })
         .catch((err) => {
