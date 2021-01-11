@@ -15,24 +15,16 @@ import ProfileScreen from "./main/Profile";
 
 const Tab = createMaterialBottomTabNavigator();
 
-import store from "../App";
-import { fetchUser, fetchGroups } from "../redux/actions/index";
+import { useDispatch } from "react-redux";
+import store from "./main/redux/store";
+import { fetchUser } from "./main/redux/reducers/userSlice";
+import { fetchGroupsJoined } from "./main/redux/reducers/groupsSlice";
 // Once in main, we want to add the current user and their joined groups to the store
-fetchUser();
-fetchGroups();
 
 const Main = () => {
-  // componentDidMount() {
-  //   this.props.fetchUser();
-  //   this.props.fetchGroups();
-  // }
   //const [currentUser, setCurrentUser] = useState(fetchUser());
-
-  // const { currentUser, navigation } = this.props;
-  // will only happen if there is an application error
-  // if (currentUser === undefined) {
-  //   return <View />;
-  // }
+  store.dispatch(fetchUser());
+  store.dispatch(fetchGroupsJoined());
   return (
     <NavigationContainer>
       <Tab.Navigator

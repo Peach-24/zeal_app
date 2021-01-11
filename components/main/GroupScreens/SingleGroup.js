@@ -8,16 +8,18 @@ import {
   Button,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+import { joinGroup } from "../redux/reducers/groupsSlice";
 import * as firebase from "firebase";
-import {} from "react-native-gesture-handler";
 require("firebase/firestore");
 
 export default function SingleGroup(props, { navigation }) {
+  const dispatch = useDispatch();
   const [challenges, setChallenges] = useState([]);
   const [joined, setJoined] = useState(false);
 
   const groupInfo = props.route.params.item;
-  console.log(groupInfo);
+  console.log("incoming group info", groupInfo);
   useEffect(() => {
     firebase
       .firestore()
@@ -45,48 +47,51 @@ export default function SingleGroup(props, { navigation }) {
             item,
             groupDetails: groupInfo,
           })
-        }
-      >
+        }>
         <Text style={styles.submit}>Submit</Text>
       </TouchableOpacity>
     </View>
   );
 
-  const joinGroup = () => {
-    const user = firebase.auth().currentUser.uid;
-    firebase
-      .firestore()
-      .collection("groups")
-      .doc(groupInfo.groupId)
-      .collection("members")
-      .doc(user)
-      .set({ user })
-      .then(() => {
-        console.log("added!!");
-        setJoined(true);
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
+  const handleJoin = async () => {
+    await dispatch(joinGroup(groupInfo));
+    console.log("added");
   };
+  // const joinGroup = () => {
+  //   const user = firebase.auth().currentUser.uid;
+  //   firebase
+  //     .firestore()
+  //     .collection("groups")
+  //     .doc(groupInfo.groupId)
+  //     .collection("members")
+  //     .doc(user)
+  //     .set({ user })
+  //     .then(() => {
+  //       console.log("added!!");
+  //       setJoined(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log("error", err);
+  //     });
+  // };
 
-  const leaveGroup = () => {
-    const user = firebase.auth().currentUser.uid;
-    firebase
-      .firestore()
-      .collection("groups")
-      .doc(groupInfo.groupId)
-      .collection("members")
-      .doc(user)
-      .delete()
-      .then(() => {
-        console.log("left group!!");
-        setJoined(false);
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
-  };
+  // const leaveGroup = () => {
+  //   const user = firebase.auth().currentUser.uid;
+  //   firebase
+  //     .firestore()
+  //     .collection("groups")
+  //     .doc(groupInfo.groupId)
+  //     .collection("members")
+  //     .doc(user)
+  //     .delete()
+  //     .then(() => {
+  //       console.log("left group!!");
+  //       setJoined(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log("error", err);
+  //     });
+  // };
 
   return (
     <View>
@@ -99,7 +104,7 @@ export default function SingleGroup(props, { navigation }) {
       </View>
       <View>
         {!joined ? (
-          <Button title="Join Group" onPress={() => joinGroup()} />
+          <Button title="Join Group" onPress={() => handleJoin()} />
         ) : (
           <Button title="Leave Group" onPress={() => leaveGroup()} />
         )}
