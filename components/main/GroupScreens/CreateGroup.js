@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Button,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { challengeSet, challengeSets } from "../../testData/Data";
@@ -83,8 +84,8 @@ export default function CreateGroup() {
         <Text style={styles.heading}>Create a group...</Text>
       </View>
       {isCreated ? (
-        <View>
-          <Text style={{ color: "green" }}>Group Created!</Text>
+        <View style={styles.createdContainer}>
+          <Text style={styles.createdText}>Group Created!</Text>
         </View>
       ) : (
         <View style={styles.contentContainer}>
@@ -140,6 +141,8 @@ export default function CreateGroup() {
   );
 }
 
+const { width, height } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#000",
@@ -185,5 +188,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4.65,
     elevation: 2,
+  },
+  createdContainer: {
+    flex: 1,
+    alignItems: "center",
+    paddingTop: height / 3,
+  },
+  createdText: {
+    color: "green",
+    fontSize: 30,
   },
 });
