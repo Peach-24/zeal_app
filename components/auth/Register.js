@@ -1,21 +1,8 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { View, Button, TextInput, Text, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 
 const Register = () => {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     username: "",
-  //     email: "",
-  //     password: "",
-  //     confirmPassword: "",
-  //     isMatching: "",
-  //   };
-
-  //   this.onSignUp = this.onSignUp.bind(this);
-  // }
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -66,7 +53,6 @@ const Register = () => {
           style={styles.input}
           onChangeText={(password) => setPassword(password)}
         />
-        {/* need to add warning for non-matching passwords */}
         <TextInput
           placeholder="confirm password"
           secureTextEntry={true}

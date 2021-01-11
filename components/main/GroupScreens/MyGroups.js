@@ -3,35 +3,10 @@ require("firebase/firestore");
 import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, StyleSheet, FlatList } from "react-native";
 import { useSelector } from "react-redux";
-import { fetchGroups } from "../../../redux/actions/index";
-import { SearchBar } from "react-native-elements";
-import { ScrollView } from "react-native-gesture-handler";
+import { selectGroupsJoined } from "../redux/reducers/groupsSlice";
 
 export default function MyGroups({ navigation }) {
-  const [groups, setGroups] = useState([
-    { name: "test", description: "test description" },
-    { name: "test", description: "test description" },
-    { name: "test", description: "test description" },
-  ]);
-
-  //   useEffect(() => {
-  // firebase
-  //   .firestore()
-  //   .collection("users")
-  //   .doc(firebase.auth().currentUser.uid)
-  //   .collection("groupsJoined")
-  //   .then((snapshot) => {
-  //     let groups = snapshot.docs.map((doc) => {
-  //       const data = doc.data();
-  //       const id = doc.id;
-  //       return { id, ...data };
-  //     });
-  //     setGroups(groups);
-  //   });
-  //   }, []);
-
-  const userGroups = useSelector((state) => state.groups);
-  console.log(userGroups);
+  const groupsJoined = useSelector(selectGroupsJoined);
 
   const renderItem = ({ item }) => (
     <View style={styles.groupCard}>
@@ -47,27 +22,14 @@ export default function MyGroups({ navigation }) {
     </View>
   );
 
-  //   const searchFilter = (text) => {
-  //     setSearch(text);
-  //     const newData = groups.filter((item) => {
-  //       const itemName = item.name.toUpperCase();
-  //       const textData = text.toUpperCase();
-  //       return itemName.indexOf(textData) > -1;
-  //     });
-  //     setFiltered(newData);
-  //   };
-
   return (
     <View>
       <View style={styles.header}>
         <Text style={styles.headerText}>My Groups</Text>
-        <Text style={{ color: "red" }}>
-          Awaiting merge of James' joinGroup branch
-        </Text>
       </View>
       <FlatList
         numColumns={1}
-        data={groups}
+        data={groupsJoined}
         renderItem={renderItem}
         style={styles.groupsList}
       />

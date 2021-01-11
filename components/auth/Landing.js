@@ -3,21 +3,8 @@ import { Text, View, Button, TextInput, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 
 const Landing = (props) => {
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     email: "",
-  //     password: "",
-  //   };
-
-  //   this.onSignIn = this.onSignIn.bind(this);
-  // }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // onEmailChanged = (e) => setEmail(e.target.value)
-  // onPasswordChanged = (e) => setPassword(e.target.password)
 
   const onSignIn = () => {
     firebase

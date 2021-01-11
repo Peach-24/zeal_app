@@ -2,9 +2,7 @@ import * as firebase from "firebase";
 require("firebase/firestore");
 import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, StyleSheet, FlatList } from "react-native";
-import { fetchGroups } from "../../../redux/actions";
 import { SearchBar } from "react-native-elements";
-import { ScrollView } from "react-native-gesture-handler";
 
 export default function SearchGroups({ navigation }) {
   const [groups, setGroups] = useState([]);
@@ -31,8 +29,7 @@ export default function SearchGroups({ navigation }) {
     <View style={styles.groupCard}>
       <Text
         style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}
-      >
+        onPress={() => navigation.navigate("SingleGroup", { item })}>
         {item.name}
       </Text>
       <View style={styles.groupBody}>
@@ -58,6 +55,7 @@ export default function SearchGroups({ navigation }) {
         placeholder="Type Here..."
         onChangeText={(text) => searchFilter(text)}
         value={search}
+        style={styles.searchBar}
       />
 
       <FlatList

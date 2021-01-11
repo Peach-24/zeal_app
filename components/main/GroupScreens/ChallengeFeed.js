@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import { View, FlatList, Image, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 import { Text } from "react-native";
-import { render } from "react-dom";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 require("firebase/firestore");
 
-export default function ChallengeFeed(props, { navigation }) {
+export default function ChallengeFeed(props) {
   const [submissions, setSubmissions] = useState([]);
-
   const groupID = props.route.params.groupDetails.id;
   const challengeID = props.route.params.challengeInfo.id;
 

@@ -4,8 +4,9 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import * as firebase from "firebase";
+import { ThemeContext } from "react-native-elements";
 
-const initialState = { joinedGroups: [] };
+const initialState = [];
 
 export const fetchGroupsJoined = createAsyncThunk(
   "groups/fetchGroupsJoined",
@@ -27,47 +28,72 @@ export const fetchGroupsJoined = createAsyncThunk(
   }
 );
 
-// const db = firebase.firestore();
-//     const batch = db.batch();
-//     const groupRef = db.collection("groups").doc(groupId);
-//     batch.set(groupRef, groupData);
-
-//     challengeSet.forEach((challenge) => {
-//       const challengeRef = db
-//         .collection("groups")
-//         .doc(groupId)
-//         .collection("challenges")
-//         .doc(challenge.challengeNum.toString());
-//       batch.set(challengeRef, challenge);
-//     });
-
-//     await batch.commit().then(() => {
-//       setCreated(true);
-//     });
-
 export const joinGroup = createAsyncThunk(
-  "groups/fetchGroupsJoined",
+  "groups/joinGroup",
   async (groupInfo) => {
-    console.log(groupInfo);
     const user = firebase.auth().currentUser.uid;
     const { groupId } = groupInfo;
+    const db = firebase.firestore();
     const batch = db.batch();
-    const groupRef = db
-      .collection("groups")
-      .doc(groupId)
-      .collection("members")
-      .doc(user);
-    batch.set(groupRef, { user });
-    const groupsJoinedRef = db
-      .collection("users")
-      .doc(user)
-      .collection(groupsJoined)
-      .doc(groupId);
-    batch.set(groupsJoinedRef, groupInfo);
+    try {
+      // add member to the group
+      const groupRef = db
+        .collection("groups")
+        .doc(groupId)
+        .collection("members")
+        .doc(user);
+      batch.set(groupRef, { user });
+      // add groups to the user
+      const groupsJoinedRef = db
+        .collection("users")
+        .doc(user)
+        .collection("groupsJoined")
+        .doc(groupId);
+      batch.set(groupsJoinedRef, { groupInfo });
+      // send the batch command
+      await batch.commit().then(() => {
+        console.log("batch commit completed successfully");
+      });
+      const timestamp = groupInfo.startDate.toDate().toISOString();
+      const formattedGroupInfo = { ...groupInfo, startDate: timestamp };
+      console.log({ ...formattedGroupInfo });
+      return { ...formattedGroupInfo };
+    } catch (e) {
+      console.log("batch join failed");
+    }
+  }
+);
 
-    const response = await batch.commit();
-    console.log(response.data());
-    return response.data();
+export const leaveGroup = createAsyncThunk(
+  "groups/leaveGroup",
+  async (groupInfo) => {
+    const user = firebase.auth().currentUser.uid;
+    const { groupId } = groupInfo;
+    const db = firebase.firestore();
+    const batch = db.batch();
+    try {
+      // remove member from the group
+      const groupRef = db
+        .collection("groups")
+        .doc(groupId)
+        .collection("members")
+        .doc(user);
+      batch.delete(groupRef);
+      // remove groups from the user
+      const groupsJoinedRef = db
+        .collection("users")
+        .doc(user)
+        .collection("groupsJoined")
+        .doc(groupId);
+      batch.delete(groupsJoinedRef);
+      // send the batch command
+      await batch.commit().then(() => {
+        console.log("batch delete completed successfully");
+      });
+      return groupId;
+    } catch (e) {
+      console.log("batch join failed");
+    }
   }
 );
 
@@ -80,11 +106,20 @@ const groupsSlice = createSlice({
       return action.payload;
     },
     [joinGroup.fulfilled]: (state, action) => {
-      return action.payload;
+      // need to make sure this isn't overwriting everything
+      const newGroups = state.concat(action.payload);
+      return newGroups;
+    },
+    [leaveGroup.fulfilled]: (state, action) => {
+      // need to remove the deleted group
+      const updatedGroups = state.filter((group) => {
+        return group.groupId !== action.payload;
+      });
+      return updatedGroups;
     },
   },
 });
 
 export default groupsSlice.reducer;
 
-export const selectGroupsJoined = (state) => state.groups.groupsJoined;
+export const selectGroupsJoined = (state) => state.groups;

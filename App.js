@@ -28,41 +28,14 @@ import RegisterScreen from "./components/auth/Register";
 
 // Redux
 import { Provider } from "react-redux";
-// import { createStore, applyMiddleware } from "redux";
-// import rootReducer from "./redux/reducers";
-// import thunk from "redux-thunk";
-// const store = createStore(rootReducer, applyMiddleware(thunk));
 
 import store from "./components/main/redux/store";
 
 const Stack = createStackNavigator();
 
 export const App = () => {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     loaded: false,
-  //     loggedIn: false,
-  //   };
-  // }
   const [loaded, setLoaded] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-
-  // componentDidMount() {
-  //   firebase.auth().onAuthStateChanged((user) => {
-  //     if (!user) {
-  //       this.setState({
-  //         loggedIn: false,
-  //         loaded: true,
-  //       });
-  //     } else {
-  //       this.setState({
-  //         loggedIn: true,
-  //         loaded: true,
-  //       });
-  //     }
-  //   });
-  // }
 
   useEffect(() => {
     if (!loggedIn) {

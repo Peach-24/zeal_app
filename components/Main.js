@@ -1,12 +1,9 @@
-import React, { Component, useState } from "react";
+import React from "react";
 import { Text, View, Button, StyleSheet } from "react-native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import DashboardScreen from "./main/Dashboard";
 import ActivityScreen from "./main/Activity";
@@ -15,14 +12,12 @@ import ProfileScreen from "./main/Profile";
 
 const Tab = createMaterialBottomTabNavigator();
 
-import { useDispatch } from "react-redux";
 import store from "./main/redux/store";
 import { fetchUser } from "./main/redux/reducers/userSlice";
 import { fetchGroupsJoined } from "./main/redux/reducers/groupsSlice";
 // Once in main, we want to add the current user and their joined groups to the store
 
 const Main = () => {
-  //const [currentUser, setCurrentUser] = useState(fetchUser());
   store.dispatch(fetchUser());
   store.dispatch(fetchGroupsJoined());
   return (
