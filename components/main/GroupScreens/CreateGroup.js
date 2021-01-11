@@ -23,6 +23,7 @@ export default function CreateGroup() {
   const [frequency, setFrequency] = useState("Daily");
   const [startDate, setStartDate] = useState(new Date());
   const [isCreated, setCreated] = useState(false);
+  const [chosenChallengeSet, setChosenChallengeSet] = useState([]);
 
   const createGroup = async (groupName, desc, frequency) => {
     const groupId = Math.random().toString(36);
@@ -38,14 +39,13 @@ export default function CreateGroup() {
     const batch = db.batch();
     const groupRef = db.collection("groups").doc(groupId);
     batch.set(groupRef, groupData);
-
-    challengeSet.forEach((challenge, index) => {
-      const formatChallenge = setChallengeStartDate(
-        challenge,
-        index,
-        groupData.startDate,
-        groupData.frequency
-      );
+    chosenChallengeSet.challenges.forEach((challenge, index) => {
+      // const formatChallenge = setChallengeStartDate(
+      //   challenge,
+      //   index,
+      //   groupData.startDate,
+      //   groupData.frequency
+      // );
       const challengeRef = db
         .collection("groups")
         .doc(groupId)
@@ -56,6 +56,10 @@ export default function CreateGroup() {
 
     await batch.commit().then(() => {
       setCreated(true);
+      // can use timeout to reset the screen after certain amount of time
+      setTimeout(() => {
+        setCreated(false);
+      }, 3000);
     });
   };
 
@@ -66,6 +70,12 @@ export default function CreateGroup() {
   const handleDateChange = (newDate) => {
     setStartDate(newDate);
   };
+
+  const handleChosenChallengesChange = (newChallengeSet) => {
+    //console.log("newset>>", newChallengeSet);
+    setChosenChallengeSet(newChallengeSet);
+  };
+
   !isCreated;
   return (
     <ScrollView>
@@ -113,8 +123,12 @@ export default function CreateGroup() {
               </View>
               <Text style={styles.label}>Start Date:</Text>
               <DateSelect handleDateChange={handleDateChange} />
+              <Text style={styles.label}>Select a challenge set:</Text>
             </View>
-            <ChallengeScroll data={challengeSets} />
+            <ChallengeScroll
+              data={challengeSets}
+              handleChosenChallengesChange={handleChosenChallengesChange}
+            />
             <Button
               title="Create Group"
               onPress={() => createGroup(groupName, desc, frequency)}
@@ -143,11 +157,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     paddingTop: 10,
-    paddingBottom: 20,
+    paddingBottom: 30,
   },
   inputsContainer: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   radioContainer: {
     flex: 1,

@@ -12,6 +12,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
+import { RadioButton } from "react-native-paper";
 import { challengeSet, challengeSets } from "../../testData/Data";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 
@@ -27,13 +28,20 @@ const Loading = () => {
   </View>;
 };
 
-export default function ChallengeScroll({ data }) {
+export default function ChallengeScroll(props) {
   const [challSets, setChallSets] = useState([
     { key: "left-spacer", id: "left-spacer" },
     ...challengeSets,
     { key: "right-spacer", id: "right-spacer" },
   ]);
+  const [pickedSet, setPickedSet] = useState(challengeSets[0].setTitle);
   const scrollX = React.useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const sets = challSets.slice(1, -1);
+    const picked = sets.filter((set) => set.setTitle === pickedSet);
+    props.handleChosenChallengesChange(picked[0]);
+  }, [pickedSet]);
 
   const renderItem = ({ item, index }) => {
     const inputRange = [
@@ -50,11 +58,12 @@ export default function ChallengeScroll({ data }) {
       return <View style={{ width: SPACER_ITEM_SIZE }}></View>;
     }
     return (
-      <View style={{ width: ITEM_SIZE, paddingTop: 20, paddingBottom: 20 }}>
+      <View style={{ width: ITEM_SIZE, paddingTop: 10, paddingBottom: 10 }}>
         <Animated.View
           style={{
             marginHorizontal: SPACING,
-            padding: SPACING * 2,
+            paddingHorizontal: SPACING * 2,
+            paddingVertical: SPACING,
             alignItems: "center",
             backgroundColor: "white",
             borderRadius: 34,
@@ -63,11 +72,18 @@ export default function ChallengeScroll({ data }) {
           <Text style={styles.cardTitle}>{item.setTitle}</Text>
           {item.challenges.map((challenge) => {
             return (
-              <Text key={challenge.challengeNum.toString()}>
+              <Text
+                style={styles.cardTopic}
+                key={challenge.challengeNum.toString()}>
                 {challenge.topic}
               </Text>
             );
           })}
+          <RadioButton
+            value={item.setTitle}
+            status={pickedSet === item.setTitle ? "checked" : "unchecked"}
+            onPress={() => setPickedSet(item.setTitle)}
+          />
         </Animated.View>
       </View>
     );
@@ -109,21 +125,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 20,
+    paddingBottom: 10,
   },
-  // container: {
-  //   flex: 1,
-  // },
-  // cardsWrapper: {
-  //   height: 130,
-  //   marginTop: 20,
-  // },
-  // paragraph: {
-  //   margin: 24,
-  //   fontSize: 18,
-  //   fontWeight: "bold",
-  //   textAlign: "center",
-  // },
+  cardTopic: {
+    fontSize: 16,
+    paddingVertical: 1,
+  },
+  container: {
+    paddingBottom: 20,
+  },
   scrollContainer: {
     flex: 1,
     backgroundColor: "white",
@@ -131,7 +142,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 35,
     paddingHorizontal: 20,
   },
 });
