@@ -8,8 +8,6 @@ import CreateGroupScreen from "./GroupScreens/CreateGroup";
 import SingleGroupScreen from "./GroupScreens/SingleGroup";
 import PhotoCaptureScreen from "./PhotoCapture";
 import ChallengeFeedScreen from "./GroupScreens/ChallengeFeed";
-import Profile from "./Profile";
-import EditAvatar from "./EditAvatar";
 
 const GroupStack = createStackNavigator();
 
@@ -38,8 +36,6 @@ const Groups = () => {
         component={ChallengeFeedScreen}
         options={{ headerShown: false }}
       />
-      <GroupStack.screen name="Profile" component={Profile} />
-      <GroupStack.screen name="EditAvatar" component={EditAvatar} />
     </GroupStack.Navigator>
   );
 };
