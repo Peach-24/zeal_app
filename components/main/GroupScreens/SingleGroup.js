@@ -16,6 +16,8 @@ import {
 } from "../redux/reducers/groupsSlice";
 import * as firebase from "firebase";
 require("firebase/firestore");
+import formatDistance from "date-fns/formatDistance";
+import { isAfter } from "date-fns";
 
 export default function SingleGroup(props, { navigation }) {
   const dispatch = useDispatch();
@@ -34,27 +36,55 @@ export default function SingleGroup(props, { navigation }) {
       .collection("challenges")
       .get()
       .then((snapshot) => {
-        let challenges = snapshot.docs.map((task) => {
+        let challenges = snapshot.docs.map((task, index) => {
           const data = task.data();
           const id = task.id;
-          return { id, ...data };
+          const challengeDate = setChallengeStartDate(
+            index,
+            groupInfo.startDate,
+            groupInfo.frequency
+          );
+          const isDisabled = isAfter(challengeDate, new Date());
+          return { id, ...data, challengeDate, isDisabled };
         });
         setChallenges(challenges);
       });
   }, []);
 
+  const setChallengeStartDate = (index, groupStartDate, frequency) => {
+    //add 24hrs/1 week to each challenge and return a challenge
+    const frequencyTable = {
+      daily: 86400000,
+      weekly: 604800000,
+    };
+    const groupDate = { ...groupStartDate };
+    const challengeDate =
+      groupDate.seconds * 1000 +
+      index * frequencyTable[frequency.toLowerCase()];
+    return new Date(challengeDate);
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.challengeCard}>
       <Text style={styles.challengeNum}>{item.challengeNum}</Text>
       <Text style={styles.challengeTitle}>{item.topic}</Text>
+      <Text>
+        {formatDistance(item.challengeDate, new Date(), {
+          addSuffix: true,
+        })}
+      </Text>
       <TouchableOpacity
         onPress={() =>
           props.navigation.navigate("PhotoCapture", {
             item,
             groupDetails: groupInfo,
           })
-        }>
-        <Text style={styles.submit}>Submit</Text>
+        }
+        disabled={item.isDisabled}
+      >
+        <Text style={item.isDisabled ? styles.disabled : styles.enabled}>
+          Submit
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -155,9 +185,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "grey",
   },
-  submit: {
+  disabled: {
     color: "red",
     backgroundColor: "pink",
+    padding: 5,
+  },
+  enabled: {
+    color: "black",
+    backgroundColor: "#adf09d",
     padding: 5,
   },
 });

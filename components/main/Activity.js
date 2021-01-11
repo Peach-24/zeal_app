@@ -11,7 +11,7 @@ const Activity = () => {
   const groupsJoined = useSelector(selectGroupsJoined);
 
   const handlePress = async () => {
-    console.log("store before dispatch", store.getState());
+    console.log(fontFamily, "store before dispatch", store.getState());
   };
 
   return (
