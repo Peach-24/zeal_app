@@ -31,7 +31,13 @@ export default function CreateGroup() {
     const groupRef = db.collection("groups").doc(groupId);
     batch.set(groupRef, groupData);
 
-    challengeSet.forEach((challenge) => {
+    challengeSet.forEach((challenge, index) => {
+      const formatChallenge = setChallengeStartDate(
+        challenge,
+        index,
+        groupData.startDate,
+        groupData.frequency
+      );
       const challengeRef = db
         .collection("groups")
         .doc(groupId)

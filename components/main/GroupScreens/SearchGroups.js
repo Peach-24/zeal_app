@@ -3,6 +3,7 @@ require("firebase/firestore");
 import React, { useEffect, useState } from "react";
 import { View, TextInput, Text, StyleSheet, FlatList } from "react-native";
 import { SearchBar } from "react-native-elements";
+import formatDistance from "date-fns/formatDistance";
 
 export default function SearchGroups({ navigation }) {
   const [groups, setGroups] = useState([]);
@@ -29,12 +30,19 @@ export default function SearchGroups({ navigation }) {
     <View style={styles.groupCard}>
       <Text
         style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}>
+        onPress={() => navigation.navigate("SingleGroup", { item })}
+      >
         {item.name}
       </Text>
       <View style={styles.groupBody}>
         <Text>{item.description}</Text>
         <Text>Frequency: {item.frequency}</Text>
+        <Text>
+          Start date:{" "}
+          {formatDistance(item.startDate.toDate(), new Date(), {
+            addSuffix: true,
+          })}
+        </Text>
       </View>
     </View>
   );
