@@ -1,5 +1,9 @@
+import * as firebase from "firebase";
+import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { formatJoinDate, createGroupsString } from "../main/Utils/functions";
+import { signOut } from "./redux/reducers/userSlice";
 import { selectGroupsJoined } from "./redux/reducers/groupsSlice";
 import {
   Text,
@@ -9,54 +13,39 @@ import {
   Image,
   ScrollView,
   Button,
-  FlatList,
   TextInput,
 } from "react-native";
-import { signOut } from "./redux/reducers/userSlice";
-import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
-import EditAvatar from "./EditAvatar";
-import * as firebase from "firebase";
-import * as ImagePicker from "expo-image-picker";
+
+import { Entypo } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Profile = () => {
-  const user = firebase.auth().currentUser;
-  // const [avatarURL, setAvatarURL] = useState(user.photoURL);
+  const [user, setUser] = useState(firebase.auth().currentUser);
+
   const [email, setEmail] = useState(user.email);
-  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
-  const [image, setImage] = useState(null);
   const [username, setUsername] = useState(user.displayName);
+  const [emailUpdate, setEmailUpdate] = useState("");
+  const [usernameUpdate, setUsernameUpdate] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+
+  const [uploadFinished, setUploadFinished] = useState(false);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+  const [image, setImage] = useState(user.photoURL);
+  const [newImage, setNewImage] = useState("");
+
   const groupsJoined = useSelector(selectGroupsJoined);
-
-  console.log(user);
-
   const groupList = groupsJoined.map((group) => group.name);
-  const createGroupsString = (arr) => {
-    let finalStr = "";
-    arr.forEach((group) => {
-      finalStr += `📸 ${group}\n`;
-    });
-    return finalStr;
-  };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      // specify which types of media you want user to be able to select
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    if (!result.cancelled) {
-      setImage(result.uri);
-      uploadImage();
-    }
-  };
+  useEffect(() => {
+    setImage(user.photoURL);
+    setUsername(user.displayName);
+    setEmail(user.email);
+  }, [uploadFinished, usernameUpdate, emailUpdate]);
 
   const uploadImage = async () => {
-    const uri = image;
-    const childPath = `avatars/${
-      firebase.auth().currentUser.uid
-    }/${Math.random().toString(36)}`;
+    const uri = newImage;
+    const childPath = `avatars/${user.uid}/${Math.random().toString(36)}`;
     const res = await fetch(uri);
     const blob = await res.blob();
     const task = firebase.storage().ref().child(childPath).put(blob);
@@ -65,98 +54,105 @@ const Profile = () => {
     };
     const taskCompleted = () => {
       task.snapshot.ref.getDownloadURL().then((snapshot) => {
-        savePostData(snapshot);
+        updateUserPhotoURL(snapshot);
+        console.log("uploaded to STORAGE");
       });
     };
     const taskError = (snapshot) => {
-      console.log(snapshot);
+      console.log(snapshot, "<------ Task Error snapshot");
     };
-
     task.on("state_changed", taskProgress, taskError, taskCompleted);
   };
 
-  const savePostData = (downloadURL) => {
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setNewImage(result.uri);
+      uploadImage();
+    }
+  };
+
+  const updateUserPhotoURL = (downloadURL) => {
     user
-      .updateProfile({ displayName, photoURL: downloadURL })
-      .then(() => {
-        console.log("avatar changed");
+      .updateProfile({ photoURL: downloadURL })
+      .then(function () {
+        var photoURL = user.photoURL;
+        setImage(photoURL);
+        setUploadFinished(true);
+        console.log(user, "<---- user profile details updated");
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err, "<------ updateUserPhotoURL error");
       });
   };
   const updateAvatarImage = async () => {
     const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
     setHasGalleryPermission(galleryStatus.status === "granted");
-
     if (galleryStatus.status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
     }
-
     pickImage();
     console.log("Change Photo");
   };
 
-  const updateDetails = () => {
+  const updateUsername = () => {
     if (username !== user.displayName && username !== "") {
       user
         .updateProfile({ displayName: username })
         .then(function () {
           console.log("Updated username successful.");
+          setUsernameUpdate("Username changed.");
         })
         .catch(function (error) {
           console.log(error);
         });
-
       firebase
         .firestore()
         .collection("users")
         .doc(user.uid)
         .set({ email, username: username })
         .catch((err) => {
-          console.log(err);
+          setUsernameError(true);
+          setUsernameUpdate(
+            "Unable to change email. Please sign out and try again"
+          );
         });
     }
-
+  };
+  const updateEmail = () => {
     if (email !== user.email && email !== "") {
       user
         .updateEmail(email)
         .then(function () {
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .set({ username, email: email })
+            .catch((err) => {
+              console.log(err);
+            });
           console.log("Update email successful.");
+          setEmailUpdate("Email changed.");
         })
         .catch(function (error) {
-          console.log(error);
-        });
-
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(user.uid)
-        .set({ username, email: email })
-        .catch((err) => {
-          console.log(err);
+          console.log(error, "<------- updateEmail Error");
+          setEmailError(true);
+          setEmailUpdate("Error: Please log out and try again");
         });
     }
-  };
-
-  const formatJoinDate = (timestamp) => {
-    let date = Date(timestamp);
-    let splitArr = date.split(" ");
-    const trimArr = splitArr.slice(1, 4);
-    return trimArr.join("/");
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ paddingTop: 50 }}>
-          {/* Default image to be uploaded to DB and pulled down from fireStore, user should be able to edit avatar from a list of default images, or upload an image using their camera. */}
-          <Image
-            style={styles.profileImage}
-            source={{
-              uri: user.photoURL,
-            }}
-          />
+        <View style={styles.profileBox}>
+          <Image style={styles.profileImage} source={{ uri: image }} />
 
           <View style={styles.changePhoto}>
             <Entypo
@@ -176,23 +172,46 @@ const Profile = () => {
         </View>
         <View style={styles.userForm}>
           <Text style={styles.inputDesc}> Username: </Text>
-          <TextInput
-            placeholder={username}
-            style={styles.input}
-            onChangeText={(input) => setUsername(input)}
-          />
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder={username}
+              style={styles.input}
+              onChangeText={(input) => setUsername(input)}
+            />
+            <TouchableOpacity onPress={() => updateUsername()}>
+              <Text style={styles.edit}>✍️</Text>
+            </TouchableOpacity>
+          </View>
+          {!usernameError ? (
+            <Text style={styles.success}>{usernameUpdate}</Text>
+          ) : (
+            <Text style={styles.error}>{emailUpdate}</Text>
+          )}
+
           <Text style={styles.inputDesc}>Email: </Text>
-          <TextInput
-            placeholder={email}
-            style={styles.input}
-            onChangeText={(input) => setEmail(input)}
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder={email}
+              style={styles.input}
+              onChangeText={(input) => setEmail(input)}
+            />
+            <TouchableOpacity onPress={() => updateEmail()}>
+              <Text style={styles.edit}>✍️</Text>
+            </TouchableOpacity>
+          </View>
+          {!emailError ? (
+            <Text style={styles.success}>{emailUpdate}</Text>
+          ) : (
+            <Text style={styles.error}>{emailUpdate}</Text>
+          )}
+
+          <Button
+            title="Sign Out"
+            onPress={() => signOut()}
+            style={styles.SOButton}
           />
-          <Button title="Update Details" onPress={() => updateDetails()} />
-          <Text style={styles.inputDesc}>Groups: </Text>
+          <Text style={styles.groups}>Groups: </Text>
           <Text style={styles.groupsList}>{createGroupsString(groupList)}</Text>
-        </View>
-        <View style={styles.SOButton}>
-          <Button title="Sign Out" onPress={() => signOut()} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -204,24 +223,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#41444B",
     position: "absolute",
     bottom: 0,
-    right: 0,
+    right: 20,
     width: 48,
     height: 48,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 50,
+    // alignItems: "center",
   },
   container: {
     flex: 1,
-    justifyContent: "center",
     alignSelf: "center",
-    paddingTop: 50,
+    justifyContent: "center",
   },
+  profileBox: {
+    paddingTop: 25,
+  },
+
   profileImage: {
-    width: 200,
-    height: 200,
+    width: 175,
+    height: 175,
     borderRadius: 100,
     overflow: "hidden",
+    alignSelf: "center",
+    borderColor: "lightgrey",
+    borderWidth: 5,
   },
   inputDesc: { fontSize: 16, margin: 5 },
   input: {
@@ -229,14 +253,14 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     fontSize: 18,
-    borderRadius: 5,
+    // borderRadius: 5,
+    width: 200,
   },
   groupsList: {
     fontSize: 18,
   },
   SOButton: {
     flex: 1,
-    justifyContent: "flex-end",
   },
   username: {
     flex: 1,
@@ -267,8 +291,26 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 5,
   },
+  groups: { fontSize: 16, color: "grey", paddingTop: 20, paddingBottom: 10 },
   groupTitle: {
     fontSize: 18,
+  },
+  success: {
+    color: "green",
+    textAlign: "center",
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+  },
+  inputContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  edit: {
+    fontSize: 25,
+    padding: 8,
+    justifyContent: "center",
   },
 });
 
