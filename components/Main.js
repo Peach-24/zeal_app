@@ -1,13 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, View, Button, StyleSheet } from "react-native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { fetchUser, fetchGroups, signOut } from "../redux/actions/index";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import DashboardScreen from "./main/Dashboard";
 import ActivityScreen from "./main/Activity";
@@ -16,91 +12,88 @@ import ProfileScreen from "./main/Profile";
 
 const Tab = createMaterialBottomTabNavigator();
 
-export class Main extends Component {
-  componentDidMount() {
-    this.props.fetchUser();
-    this.props.fetchGroups();
-  }
+import store from "./main/redux/store";
+import { fetchUser } from "./main/redux/reducers/userSlice";
+import { fetchGroupsJoined } from "./main/redux/reducers/groupsSlice";
+// Once in main, we want to add the current user and their joined groups to the store
 
-  render() {
-    const { currentUser, navigation } = this.props;
-    if (currentUser === undefined) {
-      return <View />;
-    }
-    return (
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName="Dashboard"
-          backBehavior="history"
-          labeled={false}
-          shifting={false}
-          barStyle={styles.tabBar}
-        >
-          <Tab.Screen
-            name="Dashboard"
-            component={DashboardScreen}
-            options={{
-              tabBarIcon: ({ focused }) => {
-                let iconName = `home-circle${focused ? "" : "-outline"}`;
-                return (
-                  <MaterialCommunityIcons
-                    name={iconName}
-                    style={styles.tabIcon}
-                  />
-                );
-              },
-            }}
-          />
-          <Tab.Screen
-            name="Activity"
-            component={ActivityScreen}
-            options={{
-              tabBarIcon: ({ focused }) => {
-                let iconName = `view-dashboard${focused ? "" : "-outline"}`;
-                return (
-                  <MaterialCommunityIcons
-                    name={iconName}
-                    style={styles.tabIcon}
-                  />
-                );
-              },
-            }}
-          />
-          <Tab.Screen
-            name="Groups"
-            component={GroupsScreen}
-            options={{
-              tabBarIcon: ({ focused }) => {
-                let iconName = `account-group${focused ? "" : "-outline"}`;
-                return (
-                  <MaterialCommunityIcons
-                    name={iconName}
-                    style={styles.tabIcon}
-                  />
-                );
-              },
-            }}
-          />
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              tabBarIcon: ({ focused }) => {
-                let iconName = `account-circle${focused ? "" : "-outline"}`;
-                return (
-                  <MaterialCommunityIcons
-                    name={iconName}
-                    style={styles.tabIcon}
-                  />
-                );
-              },
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    );
-  }
-}
+const Main = () => {
+  store.dispatch(fetchUser());
+  store.dispatch(fetchGroupsJoined());
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName="Dashboard"
+        backBehavior="history"
+        labeled={false}
+        shifting={false}
+        barStyle={styles.tabBar}>
+        <Tab.Screen
+          name="Dashboard"
+          component={DashboardScreen}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              let iconName = `home-circle${focused ? "" : "-outline"}`;
+              return (
+                <MaterialCommunityIcons
+                  name={iconName}
+                  style={styles.tabIcon}
+                />
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Activity"
+          component={ActivityScreen}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              let iconName = `view-dashboard${focused ? "" : "-outline"}`;
+              return (
+                <MaterialCommunityIcons
+                  name={iconName}
+                  style={styles.tabIcon}
+                />
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Groups"
+          component={GroupsScreen}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              let iconName = `account-group${focused ? "" : "-outline"}`;
+              return (
+                <MaterialCommunityIcons
+                  name={iconName}
+                  style={styles.tabIcon}
+                />
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              let iconName = `account-circle${focused ? "" : "-outline"}`;
+              return (
+                <MaterialCommunityIcons
+                  name={iconName}
+                  style={styles.tabIcon}
+                />
+              );
+            },
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default Main;
 
 const styles = StyleSheet.create({
   tabBar: {
@@ -112,11 +105,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (store) => ({
-  currentUser: store.userState.currentUser,
-});
+// replace these with useSelector
 
-const mapDispatchProps = (dispatch) =>
-  bindActionCreators({ fetchUser, fetchGroups }, dispatch);
+// const mapStateToProps = (store) => ({
+//   currentUser: store.userState.currentUser,
+// });
 
-export default connect(mapStateToProps, mapDispatchProps)(Main);
+// const mapDispatchProps = (dispatch) =>
+//   bindActionCreators({ fetchUser, fetchGroups }, dispatch);
+
+// export default connect(mapStateToProps, mapDispatchProps)(Main);

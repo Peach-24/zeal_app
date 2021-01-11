@@ -8,16 +8,24 @@ import {
   Button,
 } from "react-native";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  joinGroup,
+  leaveGroup,
+  selectGroupsJoined,
+} from "../redux/reducers/groupsSlice";
 import * as firebase from "firebase";
-import {} from "react-native-gesture-handler";
 require("firebase/firestore");
 
 export default function SingleGroup(props, { navigation }) {
-  const [challenges, setChallenges] = useState([]);
-  const [joined, setJoined] = useState(false);
-
+  const dispatch = useDispatch();
+  const groupsJoined = useSelector(selectGroupsJoined);
+  const groupsJoinedIds = groupsJoined.map((group) => group.groupId);
   const groupInfo = props.route.params.item;
-  console.log(groupInfo);
+  const { groupId } = groupInfo;
+  const [challenges, setChallenges] = useState([]);
+  const [joined, setJoined] = useState(groupsJoinedIds.includes(groupId));
+
   useEffect(() => {
     firebase
       .firestore()
@@ -45,47 +53,24 @@ export default function SingleGroup(props, { navigation }) {
             item,
             groupDetails: groupInfo,
           })
-        }
-      >
+        }>
         <Text style={styles.submit}>Submit</Text>
       </TouchableOpacity>
     </View>
   );
 
-  const joinGroup = () => {
-    const user = firebase.auth().currentUser.uid;
-    firebase
-      .firestore()
-      .collection("groups")
-      .doc(groupInfo.groupId)
-      .collection("members")
-      .doc(user)
-      .set({ user })
-      .then(() => {
-        console.log("added!!");
-        setJoined(true);
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
+  const handleJoin = async () => {
+    console.log("handleJoin");
+    setJoined(true);
+    await dispatch(joinGroup(groupInfo));
+    console.log("added");
   };
 
-  const leaveGroup = () => {
-    const user = firebase.auth().currentUser.uid;
-    firebase
-      .firestore()
-      .collection("groups")
-      .doc(groupInfo.groupId)
-      .collection("members")
-      .doc(user)
-      .delete()
-      .then(() => {
-        console.log("left group!!");
-        setJoined(false);
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
+  const handleLeave = async () => {
+    console.log("handleLeave");
+    setJoined(false);
+    await dispatch(leaveGroup(groupInfo));
+    console.log("removed");
   };
 
   return (
@@ -95,13 +80,14 @@ export default function SingleGroup(props, { navigation }) {
         <View style={styles.subHead}>
           <Text style={styles.description}>{groupInfo.description}</Text>
           <Text style={styles.members}>Members: 0</Text>
+          <Text></Text>
         </View>
       </View>
       <View>
         {!joined ? (
-          <Button title="Join Group" onPress={() => joinGroup()} />
+          <Button title="Join Group" onPress={() => handleJoin()} />
         ) : (
-          <Button title="Leave Group" onPress={() => leaveGroup()} />
+          <Button title="Leave Group" onPress={() => handleLeave()} />
         )}
 
         <Text style={styles.listHeader}>Challenges</Text>

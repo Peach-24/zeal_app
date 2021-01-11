@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, Button, StyleSheet } from "react-native";
-import { signOut } from "../../redux/actions/index";
+import { signOut } from "../main/redux/reducers/userSlice";
 
 const Profile = () => {
   return (

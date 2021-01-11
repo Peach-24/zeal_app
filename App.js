@@ -1,9 +1,21 @@
 import * as firebase from "firebase";
 import "firebase/auth";
 import "firebase/firestore";
-
+var firebaseConfig = {
+  apiKey: "AIzaSyBPm46Yqq4vkJ0_hEj9-nsbtm3Z8XyUv6A",
+  authDomain: "activity-club-3dfcf.firebaseapp.com",
+  projectId: "activity-club-3dfcf",
+  storageBucket: "activity-club-3dfcf.appspot.com",
+  messagingSenderId: "100041602249",
+  appId: "1:100041602249:web:1d3e659dc288fe89cc8918",
+};
+// Below IF checks that we are not running any fb instance atm (avoids crashing)
+if (firebase.apps.length === 0) {
+  // initializes fb
+  firebase.initializeApp(firebaseConfig);
+}
 // React
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 // React-Navigation
@@ -16,82 +28,55 @@ import RegisterScreen from "./components/auth/Register";
 
 // Redux
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-import rootReducer from "./redux/reducers";
-import thunk from "redux-thunk";
-const store = createStore(rootReducer, applyMiddleware(thunk));
 
-var firebaseConfig = {
-  apiKey: "AIzaSyBPm46Yqq4vkJ0_hEj9-nsbtm3Z8XyUv6A",
-  authDomain: "activity-club-3dfcf.firebaseapp.com",
-  projectId: "activity-club-3dfcf",
-  storageBucket: "activity-club-3dfcf.appspot.com",
-  messagingSenderId: "100041602249",
-  appId: "1:100041602249:web:1d3e659dc288fe89cc8918",
-};
+import store from "./components/main/redux/store";
 
 const Stack = createStackNavigator();
 
-// Below IF checks that we are not running any fb instance atm (avoids crashing)
-if (firebase.apps.length === 0) {
-  // initializes fb
-  firebase.initializeApp(firebaseConfig);
-}
+export const App = () => {
+  const [loaded, setLoaded] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
-export class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-      loggedIn: false,
-    };
-  }
-
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (!user) {
-        this.setState({
-          loggedIn: false,
-          loaded: true,
-        });
-      } else {
-        this.setState({
-          loggedIn: true,
-          loaded: true,
-        });
-      }
-    });
-  }
-
-  render() {
-    const { loggedIn, loaded } = this.state;
-    if (!loaded) {
-      return (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text>Loading</Text>
-        </View>
-      );
-    }
+  useEffect(() => {
     if (!loggedIn) {
-      return (
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Landing">
-            <Stack.Screen
-              name="Landing"
-              component={LandingScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      );
+      firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          setLoggedIn(false);
+          setLoaded(true);
+        } else {
+          setLoggedIn(true);
+          setLoaded(true);
+        }
+      });
     }
+  }, [loggedIn, loaded]);
+
+  if (!loaded) {
     return (
-      <Provider store={store}>
-        <MainScreen />
-      </Provider>
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <Text>Loading</Text>
+      </View>
     );
   }
-}
+  if (!loggedIn) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Landing">
+          <Stack.Screen
+            name="Landing"
+            component={LandingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  return (
+    <Provider store={store}>
+      <MainScreen />
+    </Provider>
+  );
+};
 
 export default App;

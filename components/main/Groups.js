@@ -11,16 +11,19 @@ import ChallengeFeedScreen from "./GroupScreens/ChallengeFeed";
 
 const GroupStack = createStackNavigator();
 
-const Groups = (props) => {
-  const { navigation } = props;
+const Groups = () => {
   return (
-    <GroupStack.Navigator>
+    <GroupStack.Navigator initialRouteName="MyGroups">
       <GroupStack.Screen
         name="MyGroups"
         component={MyGroupsScreen}
         options={{ headerShown: false }}
       />
-      <GroupStack.Screen name="SearchGroups" component={SearchGroupsScreen} />
+      <GroupStack.Screen
+        name="SearchGroups"
+        component={SearchGroupsScreen}
+        options={{ headerShown: true }}
+      />
       <GroupStack.Screen name="CreateGroup" component={CreateGroupScreen} />
       <GroupStack.Screen
         name="SingleGroup"
@@ -45,11 +48,3 @@ const styles = StyleSheet.create({
 });
 
 export default Groups;
-
-{
-  /* <View style={styles.container}>
-      <Text>Groups</Text>
-      <Button/>
-      <Button title="Camera" onPress={() => navigation.navigate("Camera")} />
-    </View> */
-}
