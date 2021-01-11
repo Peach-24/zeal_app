@@ -13,6 +13,8 @@ import { challengeSet, challengeSets } from "../../testData/Data";
 import * as firebase from "firebase";
 require("firebase/firestore");
 
+import format from "date-fns/format";
+
 import DateSelect from "../Utils/DateTimePicker";
 import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
 
@@ -122,8 +124,14 @@ export default function CreateGroup() {
                 />
                 <Text>Weekly</Text>
               </View>
-              <Text style={styles.label}>Start Date:</Text>
+              <View style={styles.dateContainer}>
+                <Text style={styles.label}>Start Date:</Text>
+                <Text style={styles.label}>
+                  {format(startDate, "dd/MM/yyyy")}
+                </Text>
+              </View>
               <DateSelect handleDateChange={handleDateChange} />
+
               <Text style={styles.label}>Select a challenge set:</Text>
             </View>
             <ChallengeScroll
@@ -144,6 +152,11 @@ export default function CreateGroup() {
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  dateContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
   header: {
     backgroundColor: "#000",
     padding: 20,
@@ -156,6 +169,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
+    paddingRight: 10,
   },
   contentContainer: {
     flex: 1,
