@@ -16,11 +16,14 @@ import { signOut } from "./redux/reducers/userSlice";
 import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
 import EditAvatar from "./EditAvatar";
 import * as firebase from "firebase";
+import * as ImagePicker from "expo-image-picker";
 
 const Profile = () => {
   const user = firebase.auth().currentUser;
   // const [avatarURL, setAvatarURL] = useState(user.photoURL);
   const [email, setEmail] = useState(user.email);
+  const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+  const [image, setImage] = useState(null);
   const [username, setUsername] = useState(user.displayName);
   const groupsJoined = useSelector(selectGroupsJoined);
 
@@ -35,7 +38,62 @@ const Profile = () => {
     return finalStr;
   };
 
-  const updateAvatarImage = () => {
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      // specify which types of media you want user to be able to select
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setImage(result.uri);
+      uploadImage();
+    }
+  };
+
+  const uploadImage = async () => {
+    const uri = image;
+    const childPath = `avatars/${
+      firebase.auth().currentUser.uid
+    }/${Math.random().toString(36)}`;
+    const res = await fetch(uri);
+    const blob = await res.blob();
+    const task = firebase.storage().ref().child(childPath).put(blob);
+    const taskProgress = (snapshot) => {
+      console.log(`transferred: ${snapshot.bytesTransferred}`);
+    };
+    const taskCompleted = () => {
+      task.snapshot.ref.getDownloadURL().then((snapshot) => {
+        savePostData(snapshot);
+      });
+    };
+    const taskError = (snapshot) => {
+      console.log(snapshot);
+    };
+
+    task.on("state_changed", taskProgress, taskError, taskCompleted);
+  };
+
+  const savePostData = (downloadURL) => {
+    user
+      .updateProfile({ displayName, photoURL: downloadURL })
+      .then(() => {
+        console.log("avatar changed");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const updateAvatarImage = async () => {
+    const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    setHasGalleryPermission(galleryStatus.status === "granted");
+
+    if (galleryStatus.status !== "granted") {
+      alert("Sorry, we need camera roll permissions to make this work!");
+    }
+
+    pickImage();
     console.log("Change Photo");
   };
 
