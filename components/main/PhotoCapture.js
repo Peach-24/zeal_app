@@ -93,6 +93,7 @@ export default function PhotoCapture(props, { navigation }) {
         downloadURL,
         caption,
         creation: firebase.firestore.FieldValue.serverTimestamp(),
+        author: firebase.auth().currentUser.displayName,
       })
       .then(function () {
         // the below means that it will go to the beginning route of our navigator in App
