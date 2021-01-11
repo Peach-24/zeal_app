@@ -24,6 +24,9 @@ const Register = () => {
               email,
             });
           console.log(res);
+          return res.user.updateProfile({
+            displayName: username,
+          });
         })
         .catch((err) => {
           console.log(err);
