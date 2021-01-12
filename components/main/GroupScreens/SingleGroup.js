@@ -49,10 +49,6 @@ export default function SingleGroup(props, { navigation }) {
       });
   };
 
-  // UNCOMMENT TO SEE DATA FROM ABOVE FUNCTION  (line below)
-  //console.log(challenges);
-  //console.log(usersWhoHaveSubmitted);
-
   useEffect(() => {
     // Gets information about the users who have submitted to each challenge
     fetchUsersWhoHaveSubmitted();
@@ -130,7 +126,8 @@ export default function SingleGroup(props, { navigation }) {
                 groupDetails: groupInfo,
                 challengeInfo,
               })
-            }>
+            }
+          >
             <Text style={styles[item.status]}>View</Text>
           </TouchableOpacity>
         ) : (
@@ -140,7 +137,8 @@ export default function SingleGroup(props, { navigation }) {
                 item,
                 groupDetails: groupInfo,
               })
-            }>
+            }
+          >
             <Text style={styles[item.status]}>
               {challengeButtonText[item.status]}
             </Text>
