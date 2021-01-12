@@ -140,8 +140,8 @@ export default function SingleGroup(props, { navigation }) {
         </View>
         <Text style={styles.challengeTimeText}>{timeText}</Text>
         {item.status === "hidden" ? null : didNotSubmit ? (
-          <Text>Did not submit</Text>
-        ) : (
+          <Text>{joined ? "Did not submit" : "Closed"}</Text>
+        ) : !joined ? null : (
           <TouchableOpacity
             style={styles.challengeButton}
             onPress={() => {
