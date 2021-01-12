@@ -62,7 +62,6 @@ const Dashboard = ({ navigation }) => {
   }, []);
 
   console.log(groups);
-
   const renderItem = ({ item }) => (
     <>
       {item.status === "current" && (
@@ -75,38 +74,38 @@ const Dashboard = ({ navigation }) => {
   );
 
   return (
-    <View>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <SafeAreaView>
-          <View style={styles.header}>
-            <Text style={styles.title}>Dashboard</Text>
-          </View>
-          <View>
-            <Text style={styles.subhead}>Current Challenges</Text>
-          </View>
-          <FlatList
-            numColumns={1}
-            data={challenges}
-            renderItem={renderItem}
-            style={styles.groupsList}
-          />
-          <Button
-            title="Search for a group"
-            onPress={() =>
-              navigation.navigate("Groups", { screen: "SearchGroups" })
-            }
-          />
-          <Button
-            title="Create a group"
-            onPress={() =>
-              navigation.navigate("Groups", { screen: "CreateGroup" })
-            }
-          />
-        </SafeAreaView>
-      )}
-    </View>
+    // <SafeAreaView>
+    //   {!isLoading ? (
+    <SafeAreaView>
+      <View style={styles.header}>
+        <Text style={styles.title}>Dashboard</Text>
+      </View>
+      <View>
+        <Text style={styles.subhead}>Current Challenges</Text>
+      </View>
+      <FlatList
+        numColumns={1}
+        data={challenges}
+        renderItem={renderItem}
+        style={styles.groupsList}
+      />
+      <Button
+        title="Search for a group"
+        onPress={() =>
+          navigation.navigate("Groups", { screen: "SearchGroups" })
+        }
+      />
+      <Button
+        title="Create a group"
+        onPress={() => navigation.navigate("Groups", { screen: "CreateGroup" })}
+      />
+    </SafeAreaView>
+    //   ) : (
+    //     <SafeAreaView>
+    //       <Loading />
+    //     </SafeAreaView>
+    //   )}
+    // </SafeAreaView>
   );
 };
 

@@ -100,50 +100,65 @@ export default function SingleGroup(props, { navigation }) {
   const submitOrView = (challengeSubmitters, challengeName, currentUserId) => {
     // true >> View
     // false >> submit
-    return challengeSubmitters[challengeName].users.includes(currentUserId);
+    // This logic checks that the challengeSubmitters object exists before doing the includes check
+    if (challengeSubmitters && challengeSubmitters[challengeName]) {
+      return challengeSubmitters[challengeName].users.includes(currentUserId);
+    } else {
+      return false;
+    }
   };
 
   const renderItem = ({ item, index }) => {
-    const challengeInfo = item;
+    // use hasSubmitted to make decisions on button render
+    const hasSubmitted = submitOrView(
+      usersWhoHaveSubmitted,
+      item.name,
+      currentUser.uid
+    );
+    const timeText =
+      item.status === "closed"
+        ? ``
+        : item.status === "hidden"
+        ? `opens ${formatDistance(new Date(item.dates.startDate), new Date(), {
+            addSuffix: true,
+          })}`
+        : `closes ${formatDistance(new Date(item.dates.endDate), new Date(), {
+            addSuffix: true,
+          })}`;
+    // if challenge is closed and the user did not submit, we want to block
+    // them viewing the submissions
+    const didNotSubmit = item.status === "closed" && !hasSubmitted;
     return (
       <View style={styles.challengeCard}>
-        <Text style={styles.challengeNum}>{index + 1}</Text>
-        <Text style={styles.challengeTitle}>{item.topic}</Text>
-        <Text>
-          {item.status === "hidden" ? "opens " : "opened "}
-          {formatDistance(new Date(item.dates.startDate), new Date(), {
-            addSuffix: true,
-          })}
-        </Text>
-        {item.status === "hidden" ? null : submitOrView(
-            usersWhoHaveSubmitted,
-            item.name,
-            currentUser.uid
-          ) ? (
-          <TouchableOpacity
-            onPress={() =>
-              props.navigation.navigate("ChallengeFeed", {
-                groupDetails: groupInfo,
-                challengeInfo,
-              })
-            }
-          >
-            <Text style={styles[item.status]}>View</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() =>
-              props.navigation.navigate("PhotoCapture", {
-                item,
-                groupDetails: groupInfo,
-              })
-            }
-          >
-            <Text style={styles[item.status]}>
-              {challengeButtonText[item.status]}
-            </Text>
-          </TouchableOpacity>
-        )}
+        <View style={styles.challengeHeader}>
+          <Text style={styles.challengeNum}>{index + 1}</Text>
+          <Text style={styles.challengeTitle}>{item.topic}</Text>
+        </View>
+        <View style={styles.challengeContent}>
+          <Text style={styles.challengeTimeText}>{timeText}</Text>
+          {item.status === "hidden" ? null : didNotSubmit ? (
+            <Text>{joined ? "Did not submit" : "Closed"}</Text>
+          ) : !joined ? null : (
+            <TouchableOpacity
+              style={styles.challengeButton}
+              onPress={() => {
+                return hasSubmitted
+                  ? props.navigation.navigate("ChallengeFeed", {
+                      groupDetails: groupInfo,
+                      challengeInfo: item,
+                    })
+                  : props.navigation.navigate("PhotoCapture", {
+                      item,
+                      groupDetails: groupInfo,
+                    });
+              }}
+            >
+              <Text style={styles[hasSubmitted ? "view" : "submit"]}>
+                {hasSubmitted ? "View" : "Submit"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     );
   };
@@ -174,9 +189,17 @@ export default function SingleGroup(props, { navigation }) {
       </View>
       <View>
         {!joined ? (
-          <Button title="Join Group" onPress={() => handleJoin()} />
+          <Button
+            style={styles.joinButton}
+            title="Join Group"
+            onPress={() => handleJoin()}
+          />
         ) : (
-          <Button title="Leave Group" onPress={() => handleLeave()} />
+          <Button
+            style={styles.joinButton}
+            title="Leave Group"
+            onPress={() => handleLeave()}
+          />
         )}
 
         <Text style={styles.listHeader}>Challenges</Text>
@@ -192,37 +215,13 @@ export default function SingleGroup(props, { navigation }) {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: "#000",
-    padding: 20,
-  },
-  subHead: {},
-  groupName: {
-    color: "#FFF",
-    fontSize: 32,
-    marginBottom: 10,
-  },
-  description: {
-    color: "#FFF",
-    fontSize: 16,
-    fontStyle: "italic",
-    marginBottom: 5,
-  },
-  members: {
-    color: "grey",
-  },
-  listHeader: {
-    padding: 20,
-    fontSize: 20,
-  },
-  challengeList: {
+  challengeButton: {
     paddingLeft: 10,
-    paddingRight: 10,
   },
   challengeCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: "column",
+    //justifyContent: "space-between",
+    alignItems: "flex-start",
     padding: 10,
     margin: 10,
     backgroundColor: "#fff",
@@ -235,24 +234,71 @@ const styles = StyleSheet.create({
     shadowRadius: 2.65,
     elevation: 2,
   },
-  challengeTitle: {
-    fontSize: 20,
-    textAlign: "left",
+  challengeContent: {
+    flex: 1,
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    alignItems: "center",
+    paddingRight: 5,
+    height: 30,
   },
-
+  challengeHeader: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingBottom: 5,
+  },
+  challengeList: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
   challengeNum: {
     fontSize: 24,
+    paddingRight: 10,
     color: "grey",
   },
-  hidden: {
-    color: "red",
-    backgroundColor: "pink",
-    padding: 5,
+  challengeTimeText: {
+    fontSize: 14,
   },
-  current: {
+  challengeTitle: {
+    fontSize: 24,
+  },
+  submit: {
     color: "black",
     backgroundColor: "#adf09d",
     padding: 5,
+  },
+  view: {
+    color: "black",
+    backgroundColor: "#adf09d",
+    padding: 5,
+  },
+  header: {
+    backgroundColor: "#000",
+    padding: 20,
+    paddingBottom: 5,
+    marginBottom: 10,
+  },
+  subHead: {},
+  groupName: {
+    color: "#FFF",
+    fontSize: 34,
+    marginBottom: 8,
+  },
+  description: {
+    color: "#FFF",
+    fontSize: 24,
+    fontStyle: "italic",
+    marginBottom: 5,
+  },
+  members: {
+    color: "grey",
+    fontSize: 16,
+  },
+  listHeader: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    fontSize: 26,
   },
   closed: {
     color: "blue",
