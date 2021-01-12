@@ -17,7 +17,7 @@ import {
 import * as firebase from "firebase";
 require("firebase/firestore");
 import formatDistance from "date-fns/formatDistance";
-import { isAfter } from "date-fns";
+import { isAfter, isBefore } from "date-fns";
 
 export default function SingleGroup(props, { navigation }) {
   const dispatch = useDispatch();
@@ -42,8 +42,19 @@ export default function SingleGroup(props, { navigation }) {
           const id = task.id;
           const { dates } = data;
           const startDate = new Date(dates.startDate);
-          const isDisabled = isAfter(startDate, new Date());
-          return { id, ...data, isDisabled };
+          const endDate = new Date(dates.endDate);
+          const started = isAfter(new Date(), startDate);
+          const ended = isAfter(new Date(), endDate);
+          if (started && ended) {
+            data.status = "closed";
+          }
+          if (started && !ended) {
+            data.status = "current";
+          }
+          if (!started) {
+            data.status = "hidden";
+          }
+          return { id, ...data };
         });
         setChallenges(challenges);
       });
@@ -56,7 +67,11 @@ export default function SingleGroup(props, { navigation }) {
       .get()
       .then((snapshot) => setMembersCount(snapshot.docs.length));
   }, [joined]);
-
+  const challengeButtonText = {
+    closed: "Closed",
+    current: "Submit",
+    hidden: "",
+  };
   const renderItem = ({ item }) => (
     <View style={styles.challengeCard}>
       <Text style={styles.challengeNum}>{item.challengeNum}</Text>
@@ -66,18 +81,20 @@ export default function SingleGroup(props, { navigation }) {
           addSuffix: true,
         })}
       </Text>
-      <TouchableOpacity
-        onPress={() =>
-          props.navigation.navigate("PhotoCapture", {
-            item,
-            groupDetails: groupInfo,
-          })
-        }
-        disabled={item.isDisabled}>
-        <Text style={item.isDisabled ? styles.disabled : styles.enabled}>
-          Submit
-        </Text>
-      </TouchableOpacity>
+      {item.status === "hidden" ? null : (
+        <TouchableOpacity
+          onPress={() =>
+            props.navigation.navigate("PhotoCapture", {
+              item,
+              groupDetails: groupInfo,
+            })
+          }
+        >
+          <Text style={styles[item.status]}>
+            {challengeButtonText[item.status]}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 
@@ -177,14 +194,18 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "grey",
   },
-  disabled: {
+  hidden: {
     color: "red",
     backgroundColor: "pink",
     padding: 5,
   },
-  enabled: {
+  current: {
     color: "black",
     backgroundColor: "#adf09d",
+    padding: 5,
+  },
+  closed: {
+    color: "blue",
     padding: 5,
   },
 });
