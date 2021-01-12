@@ -11,11 +11,13 @@ import {
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import formatDistance from "date-fns/formatDistance";
+import Loading from "../Loading";
 
 export default function SearchGroups({ navigation }) {
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     firebase
@@ -30,6 +32,7 @@ export default function SearchGroups({ navigation }) {
         });
         setGroups(groups);
         setFiltered(groups);
+        setIsLoading(false);
       });
   }, []);
 
@@ -65,21 +68,27 @@ export default function SearchGroups({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <SearchBar
-        placeholder="Type Here..."
-        onChangeText={(text) => searchFilter(text)}
-        value={search}
-        style={styles.searchBar}
-      />
+    <View>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <SafeAreaView style={styles.container}>
+          <SearchBar
+            placeholder="Type Here..."
+            onChangeText={(text) => searchFilter(text)}
+            value={search}
+            style={styles.searchBar}
+          />
 
-      <FlatList
-        numColumns={1}
-        data={filtered}
-        renderItem={renderItem}
-        style={styles.groupsList}
-      />
-    </SafeAreaView>
+          <FlatList
+            numColumns={1}
+            data={filtered}
+            renderItem={renderItem}
+            style={styles.groupsList}
+          />
+        </SafeAreaView>
+      )}
+    </View>
   );
 }
 

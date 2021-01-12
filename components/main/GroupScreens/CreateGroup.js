@@ -101,15 +101,15 @@ export default function CreateGroup() {
                 style={styles.input}
                 defaultValue={groupName}
                 placeholder="Group name"
-                onChangeText={(groupName) =>
-                  setGroupName(groupName)
-                }></TextInput>
+                onChangeText={(groupName) => setGroupName(groupName)}
+              ></TextInput>
               <Text style={styles.label}>A brief description</Text>
               <TextInput
                 style={styles.input}
                 placeholder="What's it about?"
                 defaultValue={desc}
-                onChangeText={(desc) => setDesc(desc)}></TextInput>
+                onChangeText={(desc) => setDesc(desc)}
+              ></TextInput>
               <Text style={styles.label}>
                 How often do you want your challenges?
               </Text>

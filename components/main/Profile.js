@@ -147,7 +147,7 @@ const Profile = () => {
         });
     }
   };
-
+  console.log(user);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
