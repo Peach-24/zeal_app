@@ -92,7 +92,7 @@ const Profile = () => {
 
         setImage(photoURL);
         setUploadFinished(true);
-        console.log(user, "<---- user profile details updated");
+        console.log("<---- user profile details updated");
       })
       .catch((err) => {
         console.log(err, "<------ updateUserPhotoURL error");
@@ -155,7 +155,7 @@ const Profile = () => {
         });
     }
   };
-  console.log(user);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

@@ -19,24 +19,34 @@ import { isAfter, isBefore } from "date-fns";
 const Dashboard = ({ navigation }) => {
   const [challenges, setChallenges] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const user = firebase.auth().currentUser;
-  const rightNow = new Date();
+
   const groupsJoined = useSelector(selectGroupsJoined);
 
-  const groupIDs = groupsJoined.map((group) => group.id);
-  const groups = groupsJoined.map((group) => group.name);
-  console.log("GroupIDs", groupIDs, "LENGTH:", groupIDs.length);
+  const groupObjRef = groupsJoined.map((group) => {
+    const newObj = {
+      groupID: group.id,
+      groupName: group.name,
+    };
+    return newObj;
+  });
+  console.log("Group Obj Ref ----->", groupObjRef);
 
   useEffect(() => {
-    groupIDs.forEach((id) => {
-      firebase
+    const someArr = [];
+
+    groupObjRef.forEach(async (group) => {
+      const { groupID, groupName } = group;
+
+      await firebase
         .firestore()
         .collection("groups")
-        .doc(id)
+        .doc(groupID)
         .collection("challenges")
         .get()
         .then((snapshot) => {
-          let challenges = snapshot.docs.map((task, index) => {
+          let tasks = snapshot.docs.map((task, index) => {
+            console.log("groupname ", groupName);
+
             const data = task.data();
             const id = task.id;
             const { dates } = data;
@@ -53,59 +63,79 @@ const Dashboard = ({ navigation }) => {
             if (!started) {
               data.status = "hidden";
             }
-            return { id, groups, ...data };
+            return { id, groupName, ...data };
           });
-          setChallenges(challenges);
+
+          return tasks;
+        })
+        .then((tasks) => {
+          console.log(
+            "tasks ",
+            tasks.map((x) => x.groupName)
+          );
+          someArr.push(...tasks);
+
           setIsLoading(false);
         });
     });
+
+    console.log(
+      "someArr ",
+      someArr.map((x) => x.groupName)
+    );
+
+    setChallenges(someArr);
   }, []);
 
-  console.log(groups);
+  console.log("CHALLENGES", challenges);
+
   const renderItem = ({ item }) => (
     <>
-      {item.status === "current" && (
+      {item.status === "current" ? (
         <View style={styles.groupCard}>
           <Text style={styles.groupTitle}>{item.topic}</Text>
-          <Text style={styles.groupName}>in {item.groups}</Text>
+          <Text style={styles.groupName}>in {item.groupName}</Text>
         </View>
-      )}
+      ) : null}
     </>
   );
 
   return (
-    // <SafeAreaView>
-    //   {!isLoading ? (
     <SafeAreaView>
-      <View style={styles.header}>
-        <Text style={styles.title}>Dashboard</Text>
-      </View>
-      <View>
-        <Text style={styles.subhead}>Current Challenges</Text>
-      </View>
-      <FlatList
-        numColumns={1}
-        data={challenges}
-        renderItem={renderItem}
-        style={styles.groupsList}
-      />
-      <Button
-        title="Search for a group"
-        onPress={() =>
-          navigation.navigate("Groups", { screen: "SearchGroups" })
-        }
-      />
-      <Button
-        title="Create a group"
-        onPress={() => navigation.navigate("Groups", { screen: "CreateGroup" })}
-      />
+      {!isLoading ? (
+        <SafeAreaView>
+          <View style={styles.header}>
+            <Text style={styles.title}>Dashboard</Text>
+          </View>
+          <View>
+            <Text style={styles.subhead}>Current Challenges</Text>
+          </View>
+          <FlatList
+            numColumns={1}
+            data={challenges}
+            renderItem={renderItem}
+            style={styles.groupsList}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          <Button
+            title="Search for a group"
+            onPress={() =>
+              navigation.navigate("Groups", { screen: "SearchGroups" })
+            }
+          />
+          <Button
+            title="Create a group"
+            onPress={() =>
+              navigation.navigate("Groups", { screen: "CreateGroup" })
+            }
+          />
+        </SafeAreaView>
+      ) : (
+        <SafeAreaView>
+          <Loading />
+        </SafeAreaView>
+      )}
     </SafeAreaView>
-    //   ) : (
-    //     <SafeAreaView>
-    //       <Loading />
-    //     </SafeAreaView>
-    //   )}
-    // </SafeAreaView>
   );
 };
 
