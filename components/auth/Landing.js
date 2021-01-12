@@ -5,13 +5,17 @@ import * as firebase from "firebase";
 const Landing = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const onSignIn = () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((res) => {})
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err);
+        setError(true);
+      });
   };
 
   const { navigation } = props;
@@ -30,6 +34,16 @@ const Landing = (props) => {
           onChangeText={(password) => setPassword(password)}
           style={styles.input}
         />
+        {error ? (
+          <View style={styles.errorBox}>
+            <Text style={styles.error}>Unable to login.</Text>
+            <Text style={styles.error}>
+              Please check your details and try again.
+            </Text>
+          </View>
+        ) : (
+          <Text />
+        )}
         <Button onPress={() => onSignIn()} title="Login" />
       </View>
       <Text style={styles.noAccount}>Don't have an account? </Text>
@@ -59,7 +73,7 @@ const styles = StyleSheet.create({
   login: {
     padding: 50,
     marginTop: 50,
-    marginBottom: 50,
+    marginBottom: 25,
   },
   noAccount: {
     textAlign: "center",
@@ -78,5 +92,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4.65,
     elevation: 2,
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
+  },
+  errorBox: {
+    margin: 20,
   },
 });
