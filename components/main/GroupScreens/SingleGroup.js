@@ -26,6 +26,7 @@ export default function SingleGroup(props, { navigation }) {
   const groupInfo = props.route.params.item;
   const { groupId } = groupInfo;
   const [challenges, setChallenges] = useState([]);
+  const [membersCount, setMembersCount] = useState(0);
   const [joined, setJoined] = useState(groupsJoinedIds.includes(groupId));
 
   useEffect(() => {
@@ -49,7 +50,15 @@ export default function SingleGroup(props, { navigation }) {
         });
         setChallenges(challenges);
       });
-  }, []);
+
+    firebase
+      .firestore()
+      .collection("groups")
+      .doc(groupInfo.groupId)
+      .collection("members")
+      .get()
+      .then((snapshot) => setMembersCount(snapshot.docs.length));
+  }, [joined]);
 
   const setChallengeStartDate = (index, groupStartDate, frequency) => {
     //add 24hrs/1 week to each challenge and return a challenge
@@ -109,7 +118,7 @@ export default function SingleGroup(props, { navigation }) {
         <Text style={styles.groupName}>{groupInfo.name}</Text>
         <View style={styles.subHead}>
           <Text style={styles.description}>{groupInfo.description}</Text>
-          <Text style={styles.members}>Members: 0</Text>
+          <Text style={styles.members}>Members: {membersCount}</Text>
           <Text></Text>
         </View>
       </View>

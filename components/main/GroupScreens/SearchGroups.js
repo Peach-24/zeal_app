@@ -1,7 +1,14 @@
 import * as firebase from "firebase";
 require("firebase/firestore");
 import React, { useEffect, useState } from "react";
-import { View, TextInput, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+} from "react-native";
 import { SearchBar } from "react-native-elements";
 import formatDistance from "date-fns/formatDistance";
 
@@ -58,7 +65,7 @@ export default function SearchGroups({ navigation }) {
   };
 
   return (
-    <View>
+    <SafeAreaView style={styles.container}>
       <SearchBar
         placeholder="Type Here..."
         onChangeText={(text) => searchFilter(text)}
@@ -72,11 +79,12 @@ export default function SearchGroups({ navigation }) {
         renderItem={renderItem}
         style={styles.groupsList}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: { marginBottom: 80 },
   groupCard: {
     padding: 10,
     margin: 10,
@@ -90,6 +98,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 5,
   },
+  searchBar: { padding: 5 },
   groupsList: {
     padding: 10,
   },
