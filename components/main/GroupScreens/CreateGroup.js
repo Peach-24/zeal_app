@@ -15,6 +15,7 @@ require("firebase/firestore");
 
 import format from "date-fns/format";
 
+import ModalDatePicker from "../Utils/ModalDatePicker";
 import DateSelect from "../Utils/DateTimePicker";
 import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
 
@@ -126,12 +127,8 @@ export default function CreateGroup() {
               </View>
               <View style={styles.dateContainer}>
                 <Text style={styles.label}>Start Date:</Text>
-                <Text style={styles.label}>
-                  {format(startDate, "dd/MM/yyyy")}
-                </Text>
+                <ModalDatePicker handleDateChange={handleDateChange} />
               </View>
-              <DateSelect handleDateChange={handleDateChange} />
-
               <Text style={styles.label}>Select a challenge set:</Text>
             </View>
             <ChallengeScroll
@@ -155,7 +152,7 @@ const styles = StyleSheet.create({
   dateContainer: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   header: {
     backgroundColor: "#000",
