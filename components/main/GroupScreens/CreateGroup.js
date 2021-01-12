@@ -18,14 +18,18 @@ import format from "date-fns/format";
 import ModalDatePicker from "../Utils/ModalDatePicker";
 import DateSelect from "../Utils/DateTimePicker";
 import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
+const { setChallengeDates } = require("../Utils/challengesDates");
 
 // import UUIDGenerator from "react-native-uuid-generator";
 
 export default function CreateGroup() {
+  const defaultDate = new Date();
+  defaultDate.setHours(0, 0, 0, 0);
+
   const [groupName, setGroupName] = useState("");
   const [desc, setDesc] = useState("");
   const [frequency, setFrequency] = useState("Daily");
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(defaultDate);
   const [isCreated, setCreated] = useState(false);
   const [chosenChallengeSet, setChosenChallengeSet] = useState([]);
 
@@ -44,12 +48,12 @@ export default function CreateGroup() {
     const groupRef = db.collection("groups").doc(groupId);
     batch.set(groupRef, groupData);
     chosenChallengeSet.challenges.forEach((challenge, index) => {
-      // const formatChallenge = setChallengeStartDate(
-      //   challenge,
-      //   index,
-      //   groupData.startDate,
-      //   groupData.frequency
-      // );
+      const dates = setChallengeDates(
+        index,
+        groupData.startDate,
+        groupData.frequency
+      );
+      challenge.dates = dates;
       const challengeRef = db
         .collection("groups")
         .doc(groupId)
@@ -101,15 +105,15 @@ export default function CreateGroup() {
                 style={styles.input}
                 defaultValue={groupName}
                 placeholder="Group name"
-                onChangeText={(groupName) =>
-                  setGroupName(groupName)
-                }></TextInput>
+                onChangeText={(groupName) => setGroupName(groupName)}
+              ></TextInput>
               <Text style={styles.label}>A brief description</Text>
               <TextInput
                 style={styles.input}
                 placeholder="What's it about?"
                 defaultValue={desc}
-                onChangeText={(desc) => setDesc(desc)}></TextInput>
+                onChangeText={(desc) => setDesc(desc)}
+              ></TextInput>
               <Text style={styles.label}>
                 How often do you want your challenges?
               </Text>
