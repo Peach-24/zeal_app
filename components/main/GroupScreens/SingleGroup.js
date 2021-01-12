@@ -105,7 +105,7 @@ export default function SingleGroup(props, { navigation }) {
     // true >> View
     // false >> submit
     // This logic checks that the challengeSubmitters object exists before doing the includes check
-    if (challengeSubmitters) {
+    if (challengeSubmitters && challengeSubmitters[challengeName]) {
       return challengeSubmitters[challengeName].users.includes(currentUserId);
     } else {
       return false;
@@ -113,7 +113,12 @@ export default function SingleGroup(props, { navigation }) {
   };
 
   const renderItem = ({ item, index }) => {
-    const challengeInfo = item;
+    // use hasSubmitted to make decisions on button render
+    const hasSubmitted = submitOrView(
+      usersWhoHaveSubmitted,
+      item.name,
+      currentUser.uid
+    );
     return (
       <View style={styles.challengeCard}>
         <Text style={styles.challengeNum}>{index + 1}</Text>
@@ -124,30 +129,21 @@ export default function SingleGroup(props, { navigation }) {
             addSuffix: true,
           })}
         </Text>
-        {item.status === "hidden" ? null : submitOrView(
-            usersWhoHaveSubmitted,
-            item.name,
-            currentUser.uid
-          ) ? (
+        {item.status === "hidden" ? null : (
           <TouchableOpacity
-            onPress={() =>
-              props.navigation.navigate("ChallengeFeed", {
-                groupDetails: groupInfo,
-                challengeInfo: item,
-              })
-            }>
-            <Text style={styles[item.status]}>View</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() =>
-              props.navigation.navigate("PhotoCapture", {
-                item,
-                groupDetails: groupInfo,
-              })
-            }>
+            onPress={() => {
+              return hasSubmitted
+                ? props.navigation.navigate("ChallengeFeed", {
+                    groupDetails: groupInfo,
+                    challengeInfo: item,
+                  })
+                : props.navigation.navigate("PhotoCapture", {
+                    item,
+                    groupDetails: groupInfo,
+                  });
+            }}>
             <Text style={styles[item.status]}>
-              {challengeButtonText[item.status]}
+              {hasSubmitted ? "View" : "Submit"}
             </Text>
           </TouchableOpacity>
         )}
