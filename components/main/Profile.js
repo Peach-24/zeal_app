@@ -212,12 +212,12 @@ const Profile = () => {
           ) : (
             <Text style={styles.error}>{emailUpdate}</Text>
           )}
-
-          <Button
-            title="Sign Out"
+          <TouchableOpacity
             onPress={() => signOut()}
-            style={styles.SOButton}
-          />
+            style={styles.buttonContainer}
+          >
+            <Text style={styles.buttonText}>Sign Out</Text>
+          </TouchableOpacity>
           <Text style={styles.groups}>Groups: </Text>
           <Text style={styles.groupsList}>{createGroupsString(groupList)}</Text>
         </View>
@@ -227,6 +227,20 @@ const Profile = () => {
 };
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#009688",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
   changePhoto: {
     backgroundColor: "#41444B",
     position: "absolute",
@@ -235,7 +249,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 50,
-    // alignItems: "center",
   },
   container: {
     flex: 1,
@@ -252,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     overflow: "hidden",
     alignSelf: "center",
-    borderColor: "lightgrey",
+    borderColor: "#009688",
     borderWidth: 5,
   },
   inputDesc: { fontSize: 16, margin: 5 },
@@ -266,9 +279,6 @@ const styles = StyleSheet.create({
   },
   groupsList: {
     fontSize: 18,
-  },
-  SOButton: {
-    flex: 1,
   },
   username: {
     flex: 1,

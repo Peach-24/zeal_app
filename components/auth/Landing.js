@@ -1,5 +1,12 @@
 import React, { Component, useState } from "react";
-import { Text, View, Button, TextInput, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import * as firebase from "firebase";
 
 const Landing = (props) => {
@@ -44,15 +51,21 @@ const Landing = (props) => {
         ) : (
           <Text />
         )}
-        <Button onPress={() => onSignIn()} title="Login" />
+        <TouchableOpacity
+          onPress={() => onSignIn()}
+          style={styles.buttonContainer}
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
       </View>
       <Text style={styles.noAccount}>Don't have an account? </Text>
-      <Button
-        title="Register"
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      />
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Register")}
+        style={styles.buttonContainer}
+      >
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -60,6 +73,20 @@ const Landing = (props) => {
 export default Landing;
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#009688",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
   main: {
     flex: 1,
     justifyContent: "center",

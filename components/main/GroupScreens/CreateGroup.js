@@ -7,6 +7,7 @@ import {
   Button,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { challengeSet, challengeSets } from "../../testData/Data";
@@ -141,10 +142,13 @@ export default function CreateGroup() {
               data={challengeSets}
               handleChosenChallengesChange={handleChosenChallengesChange}
             />
-            <Button
-              title="Create Group"
+
+            <TouchableOpacity
               onPress={() => createGroup(groupName, desc, frequency)}
-            />
+              style={styles.buttonContainer}
+            >
+              <Text style={styles.buttonText}>Create Group</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -155,6 +159,20 @@ export default function CreateGroup() {
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#009688",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
   dateContainer: {
     flex: 1,
     flexDirection: "row",
