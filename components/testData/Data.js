@@ -27,27 +27,27 @@ const mixSet = {
   setTitle: "Mix",
   challenges: [
     {
-      challengeNum: 1,
+      name: "challenge1",
       topic: "Portrait",
       desc: "",
     },
     {
-      challengeNum: 2,
+      name: "challenge2",
       topic: "Rule of Thirds",
       desc: "",
     },
     {
-      challengeNum: 3,
+      name: "challenge3",
       topic: "Human Form",
       desc: "",
     },
     {
-      challengeNum: 4,
+      name: "challenge4",
       topic: "Covidiots",
       desc: "",
     },
     {
-      challengeNum: 5,
+      name: "challenge5",
       topic: "Masktapiece",
       desc: "",
     },
@@ -59,27 +59,27 @@ const techSet = {
   setTitle: "Technical",
   challenges: [
     {
-      challengeNum: 1,
+      name: "challenge1",
       topic: "Leading Lines",
       desc: "",
     },
     {
-      challengeNum: 2,
+      name: "challenge2",
       topic: "Frame in a Frame",
       desc: "",
     },
     {
-      challengeNum: 3,
+      name: "challenge3",
       topic: "Low Angle",
       desc: "",
     },
     {
-      challengeNum: 4,
+      name: "challenge4",
       topic: "Rule of Thirds",
       desc: "",
     },
     {
-      challengeNum: 5,
+      name: "challenge5",
       topic: "Macro",
       desc: "",
     },
@@ -91,27 +91,27 @@ const creativeSet = {
   setTitle: "Creative",
   challenges: [
     {
-      challengeNum: 1,
+      name: "challenge1",
       topic: "Comfort",
       desc: "",
     },
     {
-      challengeNum: 2,
+      name: "challenge2",
       topic: "Resilience",
       desc: "",
     },
     {
-      challengeNum: 3,
+      name: "challenge3",
       topic: "Precision",
       desc: "",
     },
     {
-      challengeNum: 4,
+      name: "challenge4",
       topic: "Connection",
       desc: "",
     },
     {
-      challengeNum: 5,
+      name: "challenge5",
       topic: "Opposites",
       desc: "",
     },

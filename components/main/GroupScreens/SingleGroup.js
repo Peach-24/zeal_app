@@ -22,6 +22,7 @@ import { isAfter, isBefore } from "date-fns";
 export default function SingleGroup(props, { navigation }) {
   const dispatch = useDispatch();
   const groupsJoined = useSelector(selectGroupsJoined);
+  const currentUser = firebase.auth().currentUser;
   const groupsJoinedIds = groupsJoined.map((group) => group.groupId);
   const groupInfo = props.route.params.item;
   const { groupId } = groupInfo;
@@ -49,9 +50,13 @@ export default function SingleGroup(props, { navigation }) {
   };
 
   // UNCOMMENT TO SEE DATA FROM ABOVE FUNCTION  (line below)
-  console.log(usersWhoHaveSubmitted);
+  //console.log(challenges);
+  //console.log(usersWhoHaveSubmitted);
 
   useEffect(() => {
+    // Gets information about the users who have submitted to each challenge
+    fetchUsersWhoHaveSubmitted();
+    // Gets the challenge information from firebase
     firebase
       .firestore()
       .collection("groups")
@@ -80,7 +85,7 @@ export default function SingleGroup(props, { navigation }) {
         });
         setChallenges(challenges);
       });
-
+    // gets the number of members from firebase
     firebase
       .firestore()
       .collection("groups")
@@ -89,36 +94,61 @@ export default function SingleGroup(props, { navigation }) {
       .get()
       .then((snapshot) => setMembersCount(snapshot.docs.length));
   }, [joined]);
+
   const challengeButtonText = {
     closed: "Closed",
     current: "Submit",
     hidden: "",
   };
-  const renderItem = ({ item }) => (
-    <View style={styles.challengeCard}>
-      <Text style={styles.challengeNum}>{item.challengeNum}</Text>
-      <Text style={styles.challengeTitle}>{item.topic}</Text>
-      <Text>
-        {formatDistance(new Date(item.dates.startDate), new Date(), {
-          addSuffix: true,
-        })}
-      </Text>
-      {item.status === "hidden" ? null : (
-        <TouchableOpacity
-          onPress={() =>
-            props.navigation.navigate("PhotoCapture", {
-              item,
-              groupDetails: groupInfo,
-            })
-          }
-        >
-          <Text style={styles[item.status]}>
-            {challengeButtonText[item.status]}
-          </Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
+
+  const submitOrView = (challengeSubmitters, challengeName, currentUserId) => {
+    // true >> View
+    // false >> submit
+    return challengeSubmitters[challengeName].users.includes(currentUserId);
+  };
+
+  const renderItem = ({ item, index }) => {
+    const challengeInfo = item;
+    return (
+      <View style={styles.challengeCard}>
+        <Text style={styles.challengeNum}>{index + 1}</Text>
+        <Text style={styles.challengeTitle}>{item.topic}</Text>
+        <Text>
+          {item.status === "hidden" ? "opens " : "opened "}
+          {formatDistance(new Date(item.dates.startDate), new Date(), {
+            addSuffix: true,
+          })}
+        </Text>
+        {item.status === "hidden" ? null : submitOrView(
+            usersWhoHaveSubmitted,
+            item.name,
+            currentUser.uid
+          ) ? (
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate("ChallengeFeed", {
+                groupDetails: groupInfo,
+                challengeInfo,
+              })
+            }>
+            <Text style={styles[item.status]}>View</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate("PhotoCapture", {
+                item,
+                groupDetails: groupInfo,
+              })
+            }>
+            <Text style={styles[item.status]}>
+              {challengeButtonText[item.status]}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  };
 
   const handleJoin = async () => {
     console.log("handleJoin");
