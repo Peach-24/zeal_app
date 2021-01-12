@@ -104,7 +104,12 @@ export default function SingleGroup(props, { navigation }) {
   const submitOrView = (challengeSubmitters, challengeName, currentUserId) => {
     // true >> View
     // false >> submit
-    return challengeSubmitters[challengeName].users.includes(currentUserId);
+    // This logic checks that the challengeSubmitters object exists before doing the includes check
+    if (challengeSubmitters) {
+      return challengeSubmitters[challengeName].users.includes(currentUserId);
+    } else {
+      return false;
+    }
   };
 
   const renderItem = ({ item, index }) => {
@@ -128,7 +133,7 @@ export default function SingleGroup(props, { navigation }) {
             onPress={() =>
               props.navigation.navigate("ChallengeFeed", {
                 groupDetails: groupInfo,
-                challengeInfo,
+                challengeInfo: item,
               })
             }>
             <Text style={styles[item.status]}>View</Text>
