@@ -138,28 +138,30 @@ export default function SingleGroup(props, { navigation }) {
           <Text style={styles.challengeNum}>{index + 1}</Text>
           <Text style={styles.challengeTitle}>{item.topic}</Text>
         </View>
-        <Text style={styles.challengeTimeText}>{timeText}</Text>
-        {item.status === "hidden" ? null : didNotSubmit ? (
-          <Text>{joined ? "Did not submit" : "Closed"}</Text>
-        ) : !joined ? null : (
-          <TouchableOpacity
-            style={styles.challengeButton}
-            onPress={() => {
-              return hasSubmitted
-                ? props.navigation.navigate("ChallengeFeed", {
-                    groupDetails: groupInfo,
-                    challengeInfo: item,
-                  })
-                : props.navigation.navigate("PhotoCapture", {
-                    item,
-                    groupDetails: groupInfo,
-                  });
-            }}>
-            <Text style={styles[item.status]}>
-              {hasSubmitted ? "View" : "Submit"}
-            </Text>
-          </TouchableOpacity>
-        )}
+        <View style={styles.challengeContent}>
+          <Text style={styles.challengeTimeText}>{timeText}</Text>
+          {item.status === "hidden" ? null : didNotSubmit ? (
+            <Text>{joined ? "Did not submit" : "Closed"}</Text>
+          ) : !joined ? null : (
+            <TouchableOpacity
+              style={styles.challengeButton}
+              onPress={() => {
+                return hasSubmitted
+                  ? props.navigation.navigate("ChallengeFeed", {
+                      groupDetails: groupInfo,
+                      challengeInfo: item,
+                    })
+                  : props.navigation.navigate("PhotoCapture", {
+                      item,
+                      groupDetails: groupInfo,
+                    });
+              }}>
+              <Text style={styles[hasSubmitted ? "view" : "submit"]}>
+                {hasSubmitted ? "View" : "Submit"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     );
   };
@@ -190,9 +192,17 @@ export default function SingleGroup(props, { navigation }) {
       </View>
       <View>
         {!joined ? (
-          <Button title="Join Group" onPress={() => handleJoin()} />
+          <Button
+            style={styles.joinButton}
+            title="Join Group"
+            onPress={() => handleJoin()}
+          />
         ) : (
-          <Button title="Leave Group" onPress={() => handleLeave()} />
+          <Button
+            style={styles.joinButton}
+            title="Leave Group"
+            onPress={() => handleLeave()}
+          />
         )}
 
         <Text style={styles.listHeader}>Challenges</Text>
@@ -212,9 +222,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   challengeCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: "column",
+    //justifyContent: "space-between",
+    alignItems: "flex-start",
     padding: 10,
     margin: 10,
     backgroundColor: "#fff",
@@ -227,10 +237,19 @@ const styles = StyleSheet.create({
     shadowRadius: 2.65,
     elevation: 2,
   },
+  challengeContent: {
+    flex: 1,
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    alignItems: "center",
+    paddingRight: 5,
+    height: 30,
+  },
   challengeHeader: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    paddingBottom: 5,
   },
   challengeList: {
     paddingLeft: 10,
@@ -238,45 +257,51 @@ const styles = StyleSheet.create({
   },
   challengeNum: {
     fontSize: 24,
-    paddingRight: 5,
+    paddingRight: 10,
     color: "grey",
   },
-  challengeTimeText: {},
+  challengeTimeText: {
+    fontSize: 14,
+  },
   challengeTitle: {
-    fontSize: 20,
+    fontSize: 24,
+  },
+  submit: {
+    color: "black",
+    backgroundColor: "#adf09d",
+    padding: 5,
+  },
+  view: {
+    color: "black",
+    backgroundColor: "#adf09d",
+    padding: 5,
   },
   header: {
     backgroundColor: "#000",
     padding: 20,
+    paddingBottom: 5,
+    marginBottom: 10,
   },
   subHead: {},
   groupName: {
     color: "#FFF",
-    fontSize: 32,
-    marginBottom: 10,
+    fontSize: 34,
+    marginBottom: 8,
   },
   description: {
     color: "#FFF",
-    fontSize: 16,
+    fontSize: 24,
     fontStyle: "italic",
     marginBottom: 5,
   },
   members: {
     color: "grey",
+    fontSize: 16,
   },
   listHeader: {
-    padding: 20,
-    fontSize: 20,
-  },
-  hidden: {
-    color: "red",
-    backgroundColor: "pink",
-    padding: 5,
-  },
-  current: {
-    color: "black",
-    backgroundColor: "#adf09d",
-    padding: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    fontSize: 26,
   },
   closed: {
     color: "blue",
