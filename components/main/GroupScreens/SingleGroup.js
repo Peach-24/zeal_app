@@ -119,18 +119,31 @@ export default function SingleGroup(props, { navigation }) {
       item.name,
       currentUser.uid
     );
+    const timeText =
+      item.status === "closed"
+        ? ``
+        : item.status === "hidden"
+        ? `opens ${formatDistance(new Date(item.dates.startDate), new Date(), {
+            addSuffix: true,
+          })}`
+        : `closes ${formatDistance(new Date(item.dates.endDate), new Date(), {
+            addSuffix: true,
+          })}`;
+    // if challenge is closed and the user did not submit, we want to block
+    // them viewing the submissions
+    const didNotSubmit = item.status === "closed" && !hasSubmitted;
     return (
       <View style={styles.challengeCard}>
-        <Text style={styles.challengeNum}>{index + 1}</Text>
-        <Text style={styles.challengeTitle}>{item.topic}</Text>
-        <Text>
-          {item.status === "hidden" ? "opens " : "opened "}
-          {formatDistance(new Date(item.dates.startDate), new Date(), {
-            addSuffix: true,
-          })}
-        </Text>
-        {item.status === "hidden" ? null : (
+        <View style={styles.challengeHeader}>
+          <Text style={styles.challengeNum}>{index + 1}</Text>
+          <Text style={styles.challengeTitle}>{item.topic}</Text>
+        </View>
+        <Text style={styles.challengeTimeText}>{timeText}</Text>
+        {item.status === "hidden" ? null : didNotSubmit ? (
+          <Text>Did not submit</Text>
+        ) : (
           <TouchableOpacity
+            style={styles.challengeButton}
             onPress={() => {
               return hasSubmitted
                 ? props.navigation.navigate("ChallengeFeed", {
@@ -195,6 +208,43 @@ export default function SingleGroup(props, { navigation }) {
 }
 
 const styles = StyleSheet.create({
+  challengeButton: {
+    paddingLeft: 10,
+  },
+  challengeCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    margin: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 2.65,
+    elevation: 2,
+  },
+  challengeHeader: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  challengeList: {
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  challengeNum: {
+    fontSize: 24,
+    paddingRight: 5,
+    color: "grey",
+  },
+  challengeTimeText: {},
+  challengeTitle: {
+    fontSize: 20,
+  },
   header: {
     backgroundColor: "#000",
     padding: 20,
@@ -217,35 +267,6 @@ const styles = StyleSheet.create({
   listHeader: {
     padding: 20,
     fontSize: 20,
-  },
-  challengeList: {
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  challengeCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    margin: 10,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 1,
-      height: 2,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 2.65,
-    elevation: 2,
-  },
-  challengeTitle: {
-    fontSize: 20,
-    textAlign: "left",
-  },
-
-  challengeNum: {
-    fontSize: 24,
-    color: "grey",
   },
   hidden: {
     color: "red",
