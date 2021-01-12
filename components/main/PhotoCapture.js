@@ -5,7 +5,7 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { TextInput } from "react-native-gesture-handler";
-import firebase from "firebase";
+import * as firebase from "firebase";
 require("firebase/firestore");
 require("firebase/firebase-storage");
 
@@ -20,6 +20,8 @@ export default function PhotoCapture(props, { navigation }) {
 
   const challengeInfo = props.route.params.item;
   const groupDetails = props.route.params.groupDetails;
+
+  const user = firebase.auth().currentUser;
 
   useEffect(() => {
     (async () => {
@@ -94,14 +96,41 @@ export default function PhotoCapture(props, { navigation }) {
         caption,
         creation: firebase.firestore.FieldValue.serverTimestamp(),
         author: firebase.auth().currentUser.displayName,
+        uid: user.uid,
       })
       .then(function () {
         // the below means that it will go to the beginning route of our navigator in App
-        console.log("image upload successful");
+        console.log("----> Image upload successful");
         props.navigation.navigate("ChallengeFeed", {
           groupDetails,
           challengeInfo,
         });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // Adds user to the group's alreadyUploaded object arr
+    const challengeId = challengeInfo.id;
+    firebase
+      .firestore()
+      .collection("groups")
+      .doc(groupDetails.id)
+      .set(
+        {
+          alreadyUploaded: {
+            [`challenge${challengeId}`]: {
+              users: firebase.firestore.FieldValue.arrayUnion(user.uid),
+            },
+          },
+        },
+        { merge: true }
+      )
+
+      .then(function () {
+        console.log(
+          "----> Current user uid added to alreadyUploaded collection"
+        );
       })
       .catch((error) => {
         console.log(error);
