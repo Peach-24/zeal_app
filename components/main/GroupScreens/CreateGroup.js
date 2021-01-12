@@ -60,6 +60,8 @@ export default function CreateGroup() {
 
     await batch.commit().then(() => {
       setCreated(true);
+      // ***need to reset fields back to defaults
+
       // can use timeout to reset the screen after certain amount of time
       setTimeout(() => {
         setCreated(false);
