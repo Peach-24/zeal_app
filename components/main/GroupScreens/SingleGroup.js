@@ -28,12 +28,34 @@ export default function SingleGroup(props, { navigation }) {
   const [challenges, setChallenges] = useState([]);
   const [membersCount, setMembersCount] = useState(0);
   const [joined, setJoined] = useState(groupsJoinedIds.includes(groupId));
+  const [usersWhoHaveSubmitted, setUsersWhoHaveSubmitted] = useState({});
+
+  const fetchUsersWhoHaveSubmitted = () => {
+    firebase
+      .firestore()
+      .collection("groups")
+      .doc(groupId)
+      .get()
+      .then(function (doc) {
+        if (doc.exists) {
+          setUsersWhoHaveSubmitted(doc.data().alreadyUploaded);
+        } else {
+          console.log("Cannot retrieve group document");
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document:", error);
+      });
+  };
+
+  // UNCOMMENT TO SEE DATA FROM ABOVE FUNCTION  (line below)
+  console.log(usersWhoHaveSubmitted);
 
   useEffect(() => {
     firebase
       .firestore()
       .collection("groups")
-      .doc(groupInfo.groupId)
+      .doc(groupId)
       .collection("challenges")
       .get()
       .then((snapshot) => {
