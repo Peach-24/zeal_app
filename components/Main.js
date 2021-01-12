@@ -27,7 +27,8 @@ const Main = () => {
         backBehavior="history"
         labeled={false}
         shifting={false}
-        barStyle={styles.tabBar}>
+        barStyle={styles.tabBar}
+      >
         <Tab.Screen
           name="Dashboard"
           component={DashboardScreen}
@@ -104,14 +105,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-// replace these with useSelector
-
-// const mapStateToProps = (store) => ({
-//   currentUser: store.userState.currentUser,
-// });
-
-// const mapDispatchProps = (dispatch) =>
-//   bindActionCreators({ fetchUser, fetchGroups }, dispatch);
-
-// export default connect(mapStateToProps, mapDispatchProps)(Main);
