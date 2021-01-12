@@ -40,13 +40,10 @@ export default function SingleGroup(props, { navigation }) {
         let challenges = snapshot.docs.map((task, index) => {
           const data = task.data();
           const id = task.id;
-          const challengeDate = setChallengeStartDate(
-            index,
-            groupInfo.startDate,
-            groupInfo.frequency
-          );
-          const isDisabled = isAfter(challengeDate, new Date());
-          return { id, ...data, challengeDate, isDisabled };
+          const { dates } = data;
+          const startDate = new Date(dates.startDate);
+          const isDisabled = isAfter(startDate, new Date());
+          return { id, ...data, isDisabled };
         });
         setChallenges(challenges);
       });
@@ -60,25 +57,12 @@ export default function SingleGroup(props, { navigation }) {
       .then((snapshot) => setMembersCount(snapshot.docs.length));
   }, [joined]);
 
-  const setChallengeStartDate = (index, groupStartDate, frequency) => {
-    //add 24hrs/1 week to each challenge and return a challenge
-    const frequencyTable = {
-      daily: 86400000,
-      weekly: 604800000,
-    };
-    const groupDate = { ...groupStartDate };
-    const challengeDate =
-      groupDate.seconds * 1000 +
-      index * frequencyTable[frequency.toLowerCase()];
-    return new Date(challengeDate);
-  };
-
   const renderItem = ({ item }) => (
     <View style={styles.challengeCard}>
       <Text style={styles.challengeNum}>{item.challengeNum}</Text>
       <Text style={styles.challengeTitle}>{item.topic}</Text>
       <Text>
-        {formatDistance(item.challengeDate, new Date(), {
+        {formatDistance(new Date(item.dates.startDate), new Date(), {
           addSuffix: true,
         })}
       </Text>
@@ -89,8 +73,7 @@ export default function SingleGroup(props, { navigation }) {
             groupDetails: groupInfo,
           })
         }
-        disabled={item.isDisabled}
-      >
+        disabled={item.isDisabled}>
         <Text style={item.isDisabled ? styles.disabled : styles.enabled}>
           Submit
         </Text>
