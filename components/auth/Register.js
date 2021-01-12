@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Button, TextInput, Text, StyleSheet } from "react-native";
 import * as firebase from "firebase";
+import ZealNoTextSmall from "../../assets/zealNoTextSmall";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -40,6 +41,9 @@ const Register = () => {
 
   return (
     <View style={styles.main}>
+      <View style={styles.logoContainer}>
+        <ZealNoTextSmall />
+      </View>
       <Text style={styles.title}>Zeal 🦓</Text>
       <View style={styles.register}>
         <TextInput
@@ -80,6 +84,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     textAlign: "center",
+  },
+  logoContainer: {
+    width: "100%",
+    alignItems: "center",
   },
   title: {
     fontSize: 30,

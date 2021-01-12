@@ -1,6 +1,7 @@
 import React, { Component, useState } from "react";
 import { Text, View, Button, TextInput, StyleSheet } from "react-native";
 import * as firebase from "firebase";
+import ZealNoTextSmall from "../../assets/zealNoTextSmall";
 
 const Landing = (props) => {
   const [email, setEmail] = useState("");
@@ -21,6 +22,9 @@ const Landing = (props) => {
   const { navigation } = props;
   return (
     <View style={styles.main}>
+      <View style={styles.logoContainer}>
+        <ZealNoTextSmall />
+      </View>
       <Text style={styles.title}>Zeal 🦓</Text>
       <View style={styles.login}>
         <TextInput
@@ -65,6 +69,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
   },
+  logoContainer: {
+    width: "100%",
+    alignItems: "center",
+  },
   title: {
     fontSize: 30,
     textTransform: "uppercase",
@@ -72,6 +80,7 @@ const styles = StyleSheet.create({
   },
   login: {
     padding: 50,
+    paddingTop: 20,
     marginTop: 50,
     marginBottom: 25,
   },
