@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, Button, StyleSheet, Alert, Image } from "react-native";
-import Svg, { Circle, Rect } from "react-native-svg";
+
 const Dashboard = ({ navigation }) => {
   const currentChallengeAlert = () =>
     Alert.alert(
@@ -19,10 +19,7 @@ const Dashboard = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>Dashboard</Text>
-      <Image
-        source={require("../../assets/Zeal Logo - No text.svg")}
-        style={{ width: 200, height: "auto" }}
-      />
+
       <Button
         title="Search for a group"
         onPress={() =>

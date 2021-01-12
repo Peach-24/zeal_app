@@ -72,9 +72,7 @@ export default function ChallengeScroll(props) {
           <Text style={styles.cardTitle}>{item.setTitle}</Text>
           {item.challenges.map((challenge) => {
             return (
-              <Text
-                style={styles.cardTopic}
-                key={challenge.challengeNum.toString()}>
+              <Text style={styles.cardTopic} key={challenge.name.slice(-1)}>
                 {challenge.topic}
               </Text>
             );
