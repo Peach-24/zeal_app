@@ -57,8 +57,7 @@ export default function ChallengeFeed(props) {
         <TouchableOpacity
           onPress={() => {
             handleFavourite(item);
-          }}
-        >
+          }}>
           {!hasVoted && <Text style={styles.heart}>♥️</Text>}
         </TouchableOpacity>
       </View>
