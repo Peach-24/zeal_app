@@ -11,6 +11,12 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
 import { challengeSet, challengeSets } from "../../testData/Data";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  joinGroup,
+  fetchGroupsJoined,
+  selectGroupsJoined,
+} from "../redux/reducers/groupsSlice";
 import * as firebase from "firebase";
 require("firebase/firestore");
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -19,7 +25,8 @@ import ModalDatePicker from "../Utils/ModalDatePicker";
 import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
 const { setChallengeDates } = require("../Utils/challengesDates");
 
-export default function CreateGroup() {
+export default function CreateGroup({ navigation }) {
+  const dispatch = useDispatch();
   const defaultDate = new Date();
   defaultDate.setHours(0, 0, 0, 0);
 
@@ -31,6 +38,7 @@ export default function CreateGroup() {
   const [startDate, setStartDate] = useState(defaultDate);
   const [isCreated, setCreated] = useState(false);
   const [chosenChallengeSet, setChosenChallengeSet] = useState([]);
+  const [groupsJoined, setGroupsJoined] = useSelector(selectGroupsJoined);
 
   const createGroup = async (groupName, desc, frequency) => {
     const groupId = Math.random().toString(36);
@@ -40,6 +48,7 @@ export default function CreateGroup() {
       description: desc,
       frequency,
       startDate,
+      id: groupId,
     };
     const db = firebase.firestore();
     const batch = db.batch();
@@ -60,8 +69,12 @@ export default function CreateGroup() {
       batch.set(challengeRef, challenge);
     });
 
-    await batch.commit().then(() => {
+    await batch.commit().then(async () => {
       setCreated(true);
+      // add the group creator to the group
+      await dispatch(joinGroup(groupData));
+      // once joined, update redux with the new group
+      await dispatch(fetchGroupsJoined());
       // ***need to reset fields back to defaults
       setGroupName("");
       setFrequency("Daily");
@@ -70,7 +83,9 @@ export default function CreateGroup() {
       // can use timeout to reset the screen after certain amount of time
       setTimeout(() => {
         setCreated(false);
-      }, 3000);
+        // navigate to the my groups screen
+        navigation.navigate("MyGroups");
+      }, 2000);
     });
   };
 
