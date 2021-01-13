@@ -8,6 +8,7 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
 import { challengeSet, challengeSets } from "../../testData/Data";
 import * as firebase from "firebase";
@@ -148,19 +149,23 @@ export default function CreateGroup() {
               data={challengeSets}
               handleChosenChallengesChange={handleChosenChallengesChange}
             />
-            <Button
-              title="Create Group"
-              onPress={() => {
-                if (groupName === "") {
-                  setGroupError("(group name required)");
-                }
-                if (desc === "") {
-                  setDescError("(description required)");
-                } else {
-                  createGroup(groupName, desc, frequency);
-                }
-              }}
-            />
+            <View style={styles.buttonSize}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (groupName === "") {
+                    setGroupError("(group name required)");
+                  }
+                  if (desc === "") {
+                    setDescError("(description required)");
+                  } else {
+                    createGroup(groupName, desc, frequency);
+                  }
+                }}
+                style={styles.buttonContainer}
+              >
+                <Text style={styles.buttonText}>Create Group</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       )}
@@ -171,6 +176,25 @@ export default function CreateGroup() {
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  buttonSize: {
+    alignSelf: "center",
+    justifyContent: "center",
+    width: 300,
+  },
   dateContainer: {
     flex: 1,
     flexDirection: "row",

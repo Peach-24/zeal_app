@@ -36,7 +36,7 @@ const Dashboard = ({ navigation }) => {
   useEffect(() => {
     console.log("inside useEffect");
     const holdingArr = [];
-    setIsLoading(true);
+    //setIsLoading(true);
 
     const getChallenges = async () => {
       groupObjRef.forEach(async (group) => {

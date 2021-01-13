@@ -1,8 +1,18 @@
 import React, { Component, useState } from "react";
-import { Text, View, Button, TextInput, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  TextInput,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
 import * as firebase from "firebase";
 import store from "../main/redux/store";
 import { fetchUser } from "../main/redux/reducers/userSlice";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
+const backgroundImage = require("../../assets/image1.jpeg");
 
 const Landing = (props) => {
   const [email, setEmail] = useState("");
@@ -22,46 +32,77 @@ const Landing = (props) => {
 
   const { navigation } = props;
   return (
-    <View style={styles.main}>
-      <Text style={styles.title}>Zeal 🦓</Text>
-      <View style={styles.login}>
-        <TextInput
-          placeholder="email"
-          style={styles.input}
-          onChangeText={(email) => setEmail(email)}
-        />
-        <TextInput
-          placeholder="password"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-          style={styles.input}
-        />
-        {error ? (
-          <View style={styles.errorBox}>
-            <Text style={styles.error}>Unable to login.</Text>
-            <Text style={styles.error}>
-              Please check your details and try again.
-            </Text>
-          </View>
-        ) : (
-          <Text />
-        )}
-        <Button onPress={() => onSignIn()} title="Login" />
+    <ImageBackground source={backgroundImage} style={styles.image}>
+      <View style={styles.main}>
+        <Text style={styles.title}>Zeal 🦓</Text>
+        <View style={styles.login}>
+          <TextInput
+            placeholder="email"
+            style={styles.input}
+            onChangeText={(email) => setEmail(email)}
+          />
+          <TextInput
+            placeholder="password"
+            secureTextEntry={true}
+            onChangeText={(password) => setPassword(password)}
+            style={styles.input}
+          />
+          {error ? (
+            <View style={styles.errorBox}>
+              <Text style={styles.error}>Unable to login.</Text>
+              <Text style={styles.error}>
+                Please check your details and try again.
+              </Text>
+            </View>
+          ) : (
+            <Text />
+          )}
+          <TouchableOpacity
+            onPress={() => onSignIn()}
+            style={styles.buttonContainer}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.register}>
+          <Text style={styles.noAccount}>Don't have an account? </Text>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Register")}
+            style={styles.buttonContainer}
+          >
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Text style={styles.noAccount}>Don't have an account? </Text>
-      <Button
-        title="Register"
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      />
-    </View>
+    </ImageBackground>
   );
 };
 
 export default Landing;
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+  },
+  buttonContainer: {
+    borderWidth: 1,
+    borderColor: "#ffffff",
+    elevation: 8,
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
   main: {
     flex: 1,
     justifyContent: "center",
@@ -77,8 +118,13 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginBottom: 25,
   },
+  register: {
+    padding: 50,
+    marginTop: -80,
+  },
   noAccount: {
     textAlign: "center",
+    color: "#303030",
   },
   input: {
     padding: 5,
