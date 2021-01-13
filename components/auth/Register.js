@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Button, TextInput, Text, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import * as firebase from "firebase";
 import ZealNoTextSmall from "../../assets/zealNoTextSmall";
 
@@ -72,7 +73,14 @@ const Register = () => {
         />
         <Text style={styles.error}>{isMatching}</Text>
       </View>
-      <Button onPress={() => onSignUp()} title="Sign up" />
+      <View style={styles.register}>
+        <TouchableOpacity
+          onPress={() => onSignUp()}
+          style={styles.buttonContainer}
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -80,6 +88,23 @@ const Register = () => {
 export default Register;
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  register: {
+    flex: 1,
+  },
   main: {
     flex: 1,
     justifyContent: "center",

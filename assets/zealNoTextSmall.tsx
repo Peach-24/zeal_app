@@ -7,8 +7,8 @@ const ZealNoTextSmall = () => {
       id="Layer_1"
       data-name="Layer 1"
       viewBox="0 0 405.35 433.7"
-      width='300'
-      height='350'
+      width='200'
+      height='250'
     >
       <Path
       fill='#fff'
