@@ -1,9 +1,18 @@
 import * as firebase from "firebase";
 require("firebase/firestore");
 import React, { useEffect, useState } from "react";
-import { View, TextInput, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  FlatList,
+  SafeAreaView,
+} from "react-native";
 import { useSelector } from "react-redux";
 import { selectGroupsJoined } from "../redux/reducers/groupsSlice";
+const backgroundImage = require("../../../assets/image1.jpeg");
 
 export default function MyGroups({ navigation }) {
   const groupsJoined = useSelector(selectGroupsJoined);
@@ -25,21 +34,29 @@ export default function MyGroups({ navigation }) {
   };
 
   return (
-    <View>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>My Groups</Text>
-      </View>
-      <FlatList
-        numColumns={1}
-        data={groupsJoined}
-        renderItem={renderItem}
-        style={styles.groupsList}
-      />
-    </View>
+    <ImageBackground source={backgroundImage} style={styles.image}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>My Groups</Text>
+        </View>
+        <FlatList
+          numColumns={1}
+          data={groupsJoined}
+          renderItem={renderItem}
+          style={styles.groupsList}
+        />
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+    position: "relative",
+  },
   header: {
     textAlign: "center",
     marginTop: 60,
