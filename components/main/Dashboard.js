@@ -42,6 +42,7 @@ const Dashboard = ({ navigation }) => {
   });
 
   const getUserChallenges = async () => {
+    setIsLoading(true);
     const promises = groupObjRef.map((group) => {
       const { groupID, groupName } = group;
       return firebase
@@ -81,8 +82,8 @@ const Dashboard = ({ navigation }) => {
   };
 
   useEffect(() => {
-    setChallenges([]);
     setIsLoading(true);
+    setChallenges([]);
     getUserChallenges();
   }, [user, groupsJoined]);
 

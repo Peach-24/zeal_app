@@ -161,13 +161,13 @@ const Profile = () => {
         });
     }
   };
-  const signOut = () => {
+  const signOut = async () => {
+    await dispatch(userSignedOut());
     firebase
       .auth()
       .signOut()
       .then(() => {
         console.log("logged user out");
-        dispatch(userSignedOut());
       })
       .catch((error) => {
         console.log(error);
