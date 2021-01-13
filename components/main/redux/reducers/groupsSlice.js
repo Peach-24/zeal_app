@@ -122,4 +122,5 @@ const groupsSlice = createSlice({
 
 export default groupsSlice.reducer;
 
-export const selectGroupsJoined = (state) => state.groups;
+export const selectGroupsJoined = (state) =>
+  state.groups.filter((group) => Boolean(group));
