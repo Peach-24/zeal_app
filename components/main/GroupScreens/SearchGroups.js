@@ -68,7 +68,7 @@ export default function SearchGroups({ navigation }) {
   };
 
   return (
-    <View>
+    <SafeAreaView style={styles.container}>
       {isLoading ? (
         <Loading />
       ) : (
@@ -88,12 +88,12 @@ export default function SearchGroups({ navigation }) {
           />
         </SafeAreaView>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { marginBottom: 80 },
+  container: { marginBottom: 70 },
   groupCard: {
     padding: 10,
     margin: 10,

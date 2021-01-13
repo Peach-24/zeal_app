@@ -11,14 +11,17 @@ import {
 import * as firebase from "firebase";
 
 import { useDispatch, useSelector } from "react-redux";
+import { selectUser } from "../main/redux/reducers/userSlice";
 import { selectGroupsJoined } from "../main/redux/reducers/groupsSlice";
 import Loading from "./Loading";
 
 import { isAfter, isBefore } from "date-fns";
 
 const Dashboard = ({ navigation }) => {
+  const currentUser = useSelector(selectUser);
   const [challenges, setChallenges] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(currentUser);
 
   const groupsJoined = useSelector(selectGroupsJoined);
 
@@ -29,71 +32,65 @@ const Dashboard = ({ navigation }) => {
     };
     return newObj;
   });
-  console.log("Group Obj Ref ----->", groupObjRef);
 
   useEffect(() => {
-    const someArr = [];
+    console.log("inside useEffect");
+    const holdingArr = [];
+    setIsLoading(true);
 
-    groupObjRef.forEach(async (group) => {
-      const { groupID, groupName } = group;
+    const getChallenges = async () => {
+      groupObjRef.forEach(async (group) => {
+        const { groupID, groupName } = group;
+        await firebase
+          .firestore()
+          .collection("groups")
+          .doc(groupID)
+          .collection("challenges")
+          .get()
+          .then((snapshot) => {
+            let tasks = snapshot.docs.map((task, index) => {
+              const data = task.data();
+              const id = task.id;
+              const { dates } = data;
+              const startDate = new Date(dates.startDate);
+              const endDate = new Date(dates.endDate);
+              const started = isAfter(new Date(), startDate);
+              const ended = isAfter(new Date(), endDate);
+              if (started && ended) {
+                data.status = "closed";
+              }
+              if (started && !ended) {
+                data.status = "current";
+              }
+              if (!started) {
+                data.status = "hidden";
+              }
+              return { id, groupName, ...data };
+            });
 
-      await firebase
-        .firestore()
-        .collection("groups")
-        .doc(groupID)
-        .collection("challenges")
-        .get()
-        .then((snapshot) => {
-          let tasks = snapshot.docs.map((task, index) => {
-            console.log("groupname ", groupName);
-
-            const data = task.data();
-            const id = task.id;
-            const { dates } = data;
-            const startDate = new Date(dates.startDate);
-            const endDate = new Date(dates.endDate);
-            const started = isAfter(new Date(), startDate);
-            const ended = isAfter(new Date(), endDate);
-            if (started && ended) {
-              data.status = "closed";
-            }
-            if (started && !ended) {
-              data.status = "current";
-            }
-            if (!started) {
-              data.status = "hidden";
-            }
-            return { id, groupName, ...data };
+            return tasks;
+          })
+          .then((tasks) => {
+            holdingArr.push(...tasks);
+            setIsLoading(false);
           });
+      });
+    };
 
-          return tasks;
-        })
-        .then((tasks) => {
-          console.log(
-            "tasks ",
-            tasks.map((x) => x.groupName)
-          );
-          someArr.push(...tasks);
-
-          setIsLoading(false);
-        });
-    });
-
-    console.log(
-      "someArr ",
-      someArr.map((x) => x.groupName)
-    );
-
-    setChallenges(someArr);
-  }, []);
-
-  console.log("CHALLENGES", challenges);
+    getChallenges();
+    setChallenges(holdingArr);
+  }, [user, groupsJoined]);
 
   const renderItem = ({ item }) => (
     <>
       {item.status === "current" ? (
         <View style={styles.groupCard}>
-          <Text style={styles.groupTitle}>{item.topic}</Text>
+          <Text
+            style={styles.groupTitle}
+            // onPress={() => navigation.navigate("SingleGroup",{})}
+          >
+            {item.topic}{" "}
+          </Text>
           <Text style={styles.groupName}>in {item.groupName}</Text>
         </View>
       ) : null}
@@ -117,6 +114,7 @@ const Dashboard = ({ navigation }) => {
             style={styles.groupsList}
             keyExtractor={(item, index) => index.toString()}
           />
+
           <Button
             title="Search for a group"
             onPress={() =>
