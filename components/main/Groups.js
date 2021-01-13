@@ -13,7 +13,9 @@ const GroupStack = createStackNavigator();
 
 const Groups = () => {
   return (
-    <GroupStack.Navigator initialRouteName="MyGroups">
+    <GroupStack.Navigator
+      initialRouteName="MyGroups"
+      backBehavior="initialRoute">
       <GroupStack.Screen
         name="MyGroups"
         component={MyGroupsScreen}

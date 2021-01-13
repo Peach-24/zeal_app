@@ -24,14 +24,15 @@ const Main = () => {
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName="Dashboard"
-        backBehavior="history"
-        labeled={false}
+        backBehavior="initialRoute"
+        labeled={true}
         shifting={false}
         barStyle={styles.tabBar}>
         <Tab.Screen
           name="Dashboard"
           component={DashboardScreen}
           options={{
+            tabBarLabel: "Dashboard",
             tabBarIcon: ({ focused }) => {
               let iconName = `home-circle${focused ? "" : "-outline"}`;
               return (
@@ -48,6 +49,7 @@ const Main = () => {
           name="Activity"
           component={ActivityScreen}
           options={{
+            tabBarLabel: "Activity",
             tabBarIcon: ({ focused }) => {
               let iconName = `view-dashboard${focused ? "" : "-outline"}`;
               return (
@@ -63,6 +65,7 @@ const Main = () => {
           name="Groups"
           component={GroupsScreen}
           options={{
+            tabBarLabel: "Groups",
             tabBarIcon: ({ focused }) => {
               let iconName = `account-group${focused ? "" : "-outline"}`;
               return (
@@ -78,6 +81,7 @@ const Main = () => {
           name="Profile"
           component={ProfileScreen}
           options={{
+            tabBarLabel: "Profile",
             tabBarIcon: ({ focused }) => {
               let iconName = `account-circle${focused ? "" : "-outline"}`;
               return (
