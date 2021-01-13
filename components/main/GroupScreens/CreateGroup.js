@@ -27,7 +27,9 @@ export default function CreateGroup() {
   defaultDate.setHours(0, 0, 0, 0);
 
   const [groupName, setGroupName] = useState("");
+  const [groupError, setGroupError] = useState(null);
   const [desc, setDesc] = useState("");
+  const [descError, setDescError] = useState(null);
   const [frequency, setFrequency] = useState("Daily");
   const [startDate, setStartDate] = useState(defaultDate);
   const [isCreated, setCreated] = useState(false);
@@ -105,15 +107,20 @@ export default function CreateGroup() {
                 style={styles.input}
                 defaultValue={groupName}
                 placeholder="Group name"
-                onChangeText={(groupName) =>
-                  setGroupName(groupName)
-                }></TextInput>
+                maxLength={20}
+                require
+                onChangeText={(groupName) => setGroupName(groupName)}
+              />
+              {!!groupError && <Text style={styles.error}>{groupError}</Text>}
               <Text style={styles.label}>A brief description</Text>
               <TextInput
                 style={styles.input}
                 placeholder="What's it about?"
                 defaultValue={desc}
-                onChangeText={(desc) => setDesc(desc)}></TextInput>
+                onChangeText={(desc) => setDesc(desc)}
+              />
+              {!!descError && <Text style={styles.error}>{descError}</Text>}
+
               <Text style={styles.label}>
                 How often do you want your challenges?
               </Text>
@@ -143,7 +150,16 @@ export default function CreateGroup() {
             />
             <Button
               title="Create Group"
-              onPress={() => createGroup(groupName, desc, frequency)}
+              onPress={() => {
+                if (groupName === "") {
+                  setGroupError("(group name required)");
+                }
+                if (desc === "") {
+                  setDescError("(description required)");
+                } else {
+                  createGroup(groupName, desc, frequency);
+                }
+              }}
             />
           </View>
         </View>
@@ -214,5 +230,8 @@ const styles = StyleSheet.create({
   createdText: {
     color: "green",
     fontSize: 30,
+  },
+  error: {
+    color: "red",
   },
 });

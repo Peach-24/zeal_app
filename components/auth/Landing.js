@@ -2,6 +2,8 @@ import React, { Component, useState } from "react";
 import { Text, View, Button, TextInput, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 import ZealNoTextSmall from "../../assets/zealNoTextSmall";
+import store from "../main/redux/store";
+import { fetchUser } from "../main/redux/reducers/userSlice";
 
 const Landing = (props) => {
   const [email, setEmail] = useState("");
@@ -12,7 +14,7 @@ const Landing = (props) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then((res) => {})
+      .then(() => {})
       .catch((err) => {
         console.error(err);
         setError(true);
