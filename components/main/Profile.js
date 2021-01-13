@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { formatJoinDate, createGroupsString } from "../main/Utils/functions";
-import { signOut } from "./redux/reducers/userSlice";
+// import { signOut } from "./redux/reducers/userSlice";
 import { selectGroupsJoined } from "./redux/reducers/groupsSlice";
 import {
   Text,
@@ -20,10 +20,13 @@ import {
 
 import { Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { userSignedOut } from "./redux/reducers/groupsSlice";
+import { useDispatch } from "react-redux";
 
 const backgroundImage = require("../../assets/image1.jpeg");
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const [user, setUser] = useState(firebase.auth().currentUser);
 
   const [email, setEmail] = useState(user.email);
@@ -158,6 +161,18 @@ const Profile = () => {
         });
     }
   };
+  const signOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        console.log("logged user out");
+        dispatch(userSignedOut());
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <ImageBackground source={backgroundImage} style={styles.image}>
@@ -171,8 +186,7 @@ const Profile = () => {
                 name="circle-with-plus"
                 size={48}
                 color="#fff"
-                onPress={() => updateAvatarImage()}
-              ></Entypo>
+                onPress={() => updateAvatarImage()}></Entypo>
             </View>
           </View>
 
@@ -219,8 +233,7 @@ const Profile = () => {
 
             <TouchableOpacity
               onPress={() => signOut()}
-              style={styles.buttonContainer}
-            >
+              style={styles.buttonContainer}>
               <Text style={styles.buttonText}>Sign Out</Text>
             </TouchableOpacity>
 
