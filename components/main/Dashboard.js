@@ -24,7 +24,7 @@ import { ScrollView } from "react-native-gesture-handler";
 const Dashboard = ({ navigation }) => {
   const currentUser = useSelector(selectUser);
   const [challenges, setChallenges] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(currentUser);
   const groupsJoined = useSelector(selectGroupsJoined);
 
