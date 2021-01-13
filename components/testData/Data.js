@@ -6,19 +6,19 @@ export const challengeSet = [
   },
   {
     challengeNum: 2,
-    topic: "RuleOfThirds",
+    topic: "Rule of Thirds",
   },
   {
     challengeNum: 3,
-    topic: "Human Form",
+    topic: "Texture",
   },
   {
     challengeNum: 4,
-    topic: "Covidiots",
+    topic: "Reflections",
   },
   {
     challengeNum: 5,
-    topic: "Masktapiece",
+    topic: "Black & White",
   },
 ];
 
@@ -38,17 +38,17 @@ const mixSet = {
     },
     {
       name: "challenge3",
-      topic: "Human Form",
+      topic: "Texture",
       desc: "",
     },
     {
       name: "challenge4",
-      topic: "Covidiots",
+      topic: "Reflections",
       desc: "",
     },
     {
       name: "challenge5",
-      topic: "Masktapiece",
+      topic: "Black & White",
       desc: "",
     },
   ],
