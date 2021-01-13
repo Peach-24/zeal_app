@@ -5,8 +5,6 @@ import { fetchUser, selectUser } from "./redux/reducers/userSlice";
 import { selectGroupsJoined } from "./redux/reducers/groupsSlice";
 import store from "../main/redux/store";
 
-import ZealNoText from "../../assets/ZealTest";
-
 const Activity = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
@@ -19,9 +17,7 @@ const Activity = () => {
   return (
     <View style={styles.container}>
       <Text>Activity</Text>
-      <View style={styles.svgContainer}>
-        <ZealNoText />
-      </View>
+      <View style={styles.svgContainer}></View>
       <Button title="button" onPress={() => handlePress()}>
         Click for users
       </Button>
