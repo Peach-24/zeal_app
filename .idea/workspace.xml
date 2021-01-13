@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc5bd01c-903f-43a6-8432-63ef60363298" name="Default Changelist" comment="">
+    <list default="true" id="dc5bd01c-903f-43a6-8432-63ef60363298" name="Default Changelist" comment=" ">
       <change beforePath="$PROJECT_DIR$/components/auth/Landing.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/Landing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/auth/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/Register.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/main/GroupScreens/CreateGroup.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/main/GroupScreens/CreateGroup.js" afterDir="false" />
