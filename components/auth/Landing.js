@@ -8,7 +8,6 @@ import {
   ImageBackground,
 } from "react-native";
 import * as firebase from "firebase";
-import ZealNoTextSmall from "../../assets/zealNoTextSmall";
 import store from "../main/redux/store";
 import { fetchUser } from "../main/redux/reducers/userSlice";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -35,9 +34,6 @@ const Landing = (props) => {
   return (
     <ImageBackground source={backgroundImage} style={styles.image}>
       <View style={styles.main}>
-        <View style={styles.logoContainer}>
-          <ZealNoTextSmall />
-        </View>
         <Text style={styles.title}>Zeal 🦓</Text>
         <View style={styles.login}>
           <TextInput
@@ -63,15 +59,18 @@ const Landing = (props) => {
           )}
           <TouchableOpacity
             onPress={() => onSignIn()}
-            style={styles.buttonContainer}>
+            style={styles.buttonContainer}
+          >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.register}>
           <Text style={styles.noAccount}>Don't have an account? </Text>
+
           <TouchableOpacity
             onPress={() => navigation.navigate("Register")}
-            style={styles.buttonContainer}>
+            style={styles.buttonContainer}
+          >
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
         </View>
@@ -106,13 +105,8 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-    marginTop: -50,
     justifyContent: "center",
     textAlign: "center",
-  },
-  logoContainer: {
-    width: "100%",
-    alignItems: "center",
   },
   title: {
     fontSize: 30,
@@ -121,8 +115,7 @@ const styles = StyleSheet.create({
   },
   login: {
     padding: 50,
-    paddingTop: 10,
-    marginTop: 10,
+    marginTop: 50,
     marginBottom: 25,
   },
   register: {
@@ -130,10 +123,8 @@ const styles = StyleSheet.create({
     marginTop: -80,
   },
   noAccount: {
-    paddingTop: 10,
-    paddingBottom: 10,
     textAlign: "center",
-    color: "#fff",
+    color: "#303030",
   },
   input: {
     padding: 5,

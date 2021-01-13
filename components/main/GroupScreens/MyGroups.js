@@ -37,7 +37,7 @@ export default function MyGroups({ navigation }) {
 
   return (
     <ImageBackground source={backgroundImage} style={styles.image}>
-      <SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
           <Text style={styles.headerText}>My Groups</Text>
         </View>
