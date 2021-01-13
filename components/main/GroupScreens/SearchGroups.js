@@ -43,8 +43,7 @@ export default function SearchGroups({ navigation }) {
     <View style={styles.groupCard}>
       <Text
         style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}
-      >
+        onPress={() => navigation.navigate("SingleGroup", { item })}>
         {item.name}
       </Text>
       <View style={styles.groupBody}>
@@ -77,13 +76,13 @@ export default function SearchGroups({ navigation }) {
           <Loading />
         ) : (
           <SafeAreaView style={styles.container}>
+            <View style={styles.searchWrapper} />
             <SearchBar
               placeholder="Type Here..."
               onChangeText={(text) => searchFilter(text)}
               value={search}
               style={styles.searchBar}
             />
-
             <FlatList
               numColumns={1}
               data={filtered}
@@ -104,6 +103,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     justifyContent: "center",
   },
+
   groupCard: {
     padding: 10,
     margin: 10,
@@ -116,6 +116,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 4.65,
     elevation: 5,
+  },
+  searchWrapper: {
+    marginTop: 50,
   },
   searchBar: { padding: 5 },
   groupsList: {

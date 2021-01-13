@@ -19,6 +19,7 @@ import Loading from "./Loading";
 import { isAfter, isBefore } from "date-fns";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { ScrollView } from "react-native-gesture-handler";
 
 const Dashboard = ({ navigation }) => {
   const currentUser = useSelector(selectUser);
@@ -127,11 +128,10 @@ const Dashboard = ({ navigation }) => {
                 <Text style={styles.visitMyGroupsLink}>Visit My Groups</Text>
               </TouchableOpacity>
             </View>
-
             <View>
               <Text style={styles.subhead}>Your current challenges...</Text>
             </View>
-            <View style={{ backgroundColor: "white" }}>
+            <View style={styles.flatList}>
               <FlatList
                 numColumns={1}
                 data={challenges}
@@ -139,12 +139,13 @@ const Dashboard = ({ navigation }) => {
                 style={styles.groupsList}
                 keyExtractor={(item, index) => index.toString()}
               />
-
               <View styles={styles.buttonSection}>
                 <View style={styles.buttonLeft}>
                   <TouchableOpacity
                     onPress={() =>
-                      navigation.navigate("Groups", { screen: "SearchGroups" })
+                      navigation.navigate("Groups", {
+                        screen: "SearchGroups",
+                      })
                     }>
                     <View style={styles.buttonContainer}>
                       <Text style={styles.buttonText}>Discover groups</Text>
@@ -187,6 +188,10 @@ const Dashboard = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  flatList: {
+    backgroundColor: "white",
+    height: 380,
+  },
   title: {
     fontSize: 35,
     color: "white",
@@ -220,6 +225,7 @@ const styles = StyleSheet.create({
   buttonSection: {
     flex: 1,
     padding: 50,
+    backgroundColor: "#fff",
   },
   buttonContainer: {
     elevation: 8,
@@ -262,9 +268,9 @@ const styles = StyleSheet.create({
     paddingTop: 5,
   },
   groupsList: {
+    marginTop: -10,
     marginHorizontal: 10,
-    marginBottom: 30,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
   },
   groupTitle: {
     fontSize: 24,
