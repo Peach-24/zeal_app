@@ -27,8 +27,7 @@ const Main = () => {
         backBehavior="history"
         labeled={false}
         shifting={false}
-        barStyle={styles.tabBar}
-      >
+        barStyle={styles.tabBar}>
         <Tab.Screen
           name="Dashboard"
           component={DashboardScreen}
@@ -44,7 +43,8 @@ const Main = () => {
             },
           }}
         />
-        <Tab.Screen
+        {/* commented out as functionality not finished */}
+        {/* <Tab.Screen
           name="Activity"
           component={ActivityScreen}
           options={{
@@ -58,7 +58,7 @@ const Main = () => {
               );
             },
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Groups"
           component={GroupsScreen}

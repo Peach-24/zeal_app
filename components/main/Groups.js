@@ -28,7 +28,7 @@ const Groups = () => {
       <GroupStack.Screen
         name="SingleGroup"
         component={SingleGroupScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: false }}
       />
       <GroupStack.Screen name="PhotoCapture" component={PhotoCaptureScreen} />
       <GroupStack.Screen

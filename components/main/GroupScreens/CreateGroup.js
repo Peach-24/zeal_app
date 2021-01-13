@@ -14,14 +14,9 @@ import { challengeSet, challengeSets } from "../../testData/Data";
 import * as firebase from "firebase";
 require("firebase/firestore");
 
-import format from "date-fns/format";
-
 import ModalDatePicker from "../Utils/ModalDatePicker";
-import DateSelect from "../Utils/DateTimePicker";
 import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
 const { setChallengeDates } = require("../Utils/challengesDates");
-
-// import UUIDGenerator from "react-native-uuid-generator";
 
 export default function CreateGroup() {
   const defaultDate = new Date();
@@ -67,7 +62,10 @@ export default function CreateGroup() {
     await batch.commit().then(() => {
       setCreated(true);
       // ***need to reset fields back to defaults
-
+      setGroupName("");
+      setFrequency("Daily");
+      setStartDate(defaultDate);
+      setDesc("");
       // can use timeout to reset the screen after certain amount of time
       setTimeout(() => {
         setCreated(false);
@@ -75,16 +73,11 @@ export default function CreateGroup() {
     });
   };
 
-  //look into this at some point!
-  // UUIDGenerator.getRandomUUID().then((uuid) => {
-  //   console.log(uuid);
-  // });
   const handleDateChange = (newDate) => {
     setStartDate(newDate);
   };
 
   const handleChosenChallengesChange = (newChallengeSet) => {
-    //console.log("newset>>", newChallengeSet);
     setChosenChallengeSet(newChallengeSet);
   };
 
@@ -160,8 +153,7 @@ export default function CreateGroup() {
                     createGroup(groupName, desc, frequency);
                   }
                 }}
-                style={styles.buttonContainer}
-              >
+                style={styles.buttonContainer}>
                 <Text style={styles.buttonText}>Create Group</Text>
               </TouchableOpacity>
             </View>
