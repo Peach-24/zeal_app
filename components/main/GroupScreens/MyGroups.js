@@ -8,20 +8,21 @@ import { selectGroupsJoined } from "../redux/reducers/groupsSlice";
 export default function MyGroups({ navigation }) {
   const groupsJoined = useSelector(selectGroupsJoined);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.groupCard}>
-      <Text
-        style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}
-      >
-        {item.name}
-      </Text>
-      <View style={styles.groupBody}>
-        <Text>{item.description}</Text>
-        <Text>Frequency: {item.frequency}</Text>
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.groupCard}>
+        <Text
+          style={styles.groupTitle}
+          onPress={() => navigation.navigate("SingleGroup", { item })}>
+          {item.name}
+        </Text>
+        <View style={styles.groupBody}>
+          <Text>{item.description}</Text>
+          <Text>Frequency: {item.frequency}</Text>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <View>
