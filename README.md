@@ -4,6 +4,6 @@ Zeal is a social activity app that allows friends to get creative and collective
 
 ## Tech Used:
 
-React Native | JavaScript | Redux | Firebase Realtime Database | Firebase Authentication | Firebase Hosting | Google Cloud Storage
+React Native | JavaScript | Redux | Firebase Firestore | Firebase Authentication | Google Cloud Storage | Expo
 
 ## How to deploy:
