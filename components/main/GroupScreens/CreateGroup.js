@@ -7,6 +7,7 @@ import {
   Button,
   ScrollView,
   Dimensions,
+  ImageBackground,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
@@ -22,6 +23,8 @@ import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
 const { setChallengeDates } = require("../Utils/challengesDates");
 
 // import UUIDGenerator from "react-native-uuid-generator";
+
+const backgroundImage = require("../../../assets/image1.jpeg");
 
 export default function CreateGroup() {
   const defaultDate = new Date();
@@ -90,91 +93,98 @@ export default function CreateGroup() {
 
   !isCreated;
   return (
-    <ScrollView>
-      <View style={styles.header}>
-        <Text style={styles.heading}>Create a group...</Text>
-      </View>
-      {isCreated ? (
-        <View style={styles.createdContainer}>
-          <Text style={styles.createdText}>Group Created!</Text>
+    <ImageBackground source={backgroundImage} style={styles.image}>
+      <ScrollView>
+        <View style={styles.header}>
+          <Text style={styles.heading}>Create a group...</Text>
         </View>
-      ) : (
-        <View style={styles.contentContainer}>
-          <View>
-            <View style={styles.inputsContainer}>
-              <Text style={styles.label}>What will you call your group?</Text>
-              <TextInput
-                style={styles.input}
-                defaultValue={groupName}
-                placeholder="Group name"
-                maxLength={20}
-                require
-                onChangeText={(groupName) => setGroupName(groupName)}
-              />
-              {!!groupError && <Text style={styles.error}>{groupError}</Text>}
-              <Text style={styles.label}>A brief description</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="What's it about?"
-                defaultValue={desc}
-                onChangeText={(desc) => setDesc(desc)}
-              />
-              {!!descError && <Text style={styles.error}>{descError}</Text>}
+        {isCreated ? (
+          <View style={styles.createdContainer}>
+            <Text style={styles.createdText}>Group Created!</Text>
+          </View>
+        ) : (
+          <View style={styles.contentContainer}>
+            <View>
+              <View style={styles.inputsContainer}>
+                <Text style={styles.label}>What will you call your group?</Text>
+                <TextInput
+                  style={styles.input}
+                  defaultValue={groupName}
+                  placeholder="Group name"
+                  maxLength={20}
+                  require
+                  onChangeText={(groupName) => setGroupName(groupName)}
+                />
+                {!!groupError && <Text style={styles.error}>{groupError}</Text>}
+                <Text style={styles.label}>A brief description</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="What's it about?"
+                  defaultValue={desc}
+                  onChangeText={(desc) => setDesc(desc)}
+                />
+                {!!descError && <Text style={styles.error}>{descError}</Text>}
 
-              <Text style={styles.label}>
-                How often do you want your challenges?
-              </Text>
-              <View style={styles.radioContainer}>
-                <RadioButton
-                  value="Daily"
-                  status={frequency === "Daily" ? "checked" : "unchecked"}
-                  onPress={() => setFrequency("Daily")}
-                />
-                <Text>Daily</Text>
-                <RadioButton
-                  value="Weekly"
-                  status={frequency === "Weekly" ? "checked" : "unchecked"}
-                  onPress={() => setFrequency("Weekly")}
-                />
-                <Text>Weekly</Text>
+                <Text style={styles.label}>
+                  How often do you want your challenges?
+                </Text>
+                <View style={styles.radioContainer}>
+                  <RadioButton
+                    value="Daily"
+                    status={frequency === "Daily" ? "checked" : "unchecked"}
+                    onPress={() => setFrequency("Daily")}
+                  />
+                  <Text>Daily</Text>
+                  <RadioButton
+                    value="Weekly"
+                    status={frequency === "Weekly" ? "checked" : "unchecked"}
+                    onPress={() => setFrequency("Weekly")}
+                  />
+                  <Text>Weekly</Text>
+                </View>
+                <View style={styles.dateContainer}>
+                  <Text style={styles.label}>Start Date:</Text>
+                  <ModalDatePicker handleDateChange={handleDateChange} />
+                </View>
+                <Text style={styles.label}>Select a challenge set:</Text>
               </View>
-              <View style={styles.dateContainer}>
-                <Text style={styles.label}>Start Date:</Text>
-                <ModalDatePicker handleDateChange={handleDateChange} />
+              <ChallengeScroll
+                data={challengeSets}
+                handleChosenChallengesChange={handleChosenChallengesChange}
+              />
+              <View style={styles.buttonSize}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (groupName === "") {
+                      setGroupError("(group name required)");
+                    }
+                    if (desc === "") {
+                      setDescError("(description required)");
+                    } else {
+                      createGroup(groupName, desc, frequency);
+                    }
+                  }}
+                  style={styles.buttonContainer}
+                >
+                  <Text style={styles.buttonText}>Create Group</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.label}>Select a challenge set:</Text>
-            </View>
-            <ChallengeScroll
-              data={challengeSets}
-              handleChosenChallengesChange={handleChosenChallengesChange}
-            />
-            <View style={styles.buttonSize}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (groupName === "") {
-                    setGroupError("(group name required)");
-                  }
-                  if (desc === "") {
-                    setDescError("(description required)");
-                  } else {
-                    createGroup(groupName, desc, frequency);
-                  }
-                }}
-                style={styles.buttonContainer}
-              >
-                <Text style={styles.buttonText}>Create Group</Text>
-              </TouchableOpacity>
             </View>
           </View>
-        </View>
-      )}
-    </ScrollView>
+        )}
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+  },
   buttonContainer: {
     elevation: 8,
     backgroundColor: "#303030",

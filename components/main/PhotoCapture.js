@@ -8,7 +8,7 @@ import { TextInput } from "react-native-gesture-handler";
 import * as firebase from "firebase";
 require("firebase/firestore");
 require("firebase/firebase-storage");
-
+import { TouchableOpacity } from "react-native-gesture-handler";
 export default function PhotoCapture(props, { navigation }) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
@@ -206,22 +206,50 @@ export default function PhotoCapture(props, { navigation }) {
         placeholder="Write a caption..."
         onChangeText={(caption) => setCaption(caption)}
       />
-      <Button
-        title={!submit ? "Submit" : "Posting image..."}
-        style={styles.submitBtn}
-        onPress={() => handleUploadClick()}
-        disabled={submit}
-      ></Button>
-      <Button
-        title="Retake photograph"
-        style={styles.submitBtn}
-        onPress={() => resetImage()}
-      ></Button>
+      <View style={styles.buttonSize}>
+        <TouchableOpacity
+          onPress={() => handleUploadClick()}
+          disabled={submit}
+          style={styles.buttonContainer}
+        >
+          <Text style={styles.buttonText}>
+            {!submit ? "Submit" : "Posting image..."}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => resetImage()}
+          style={styles.buttonContainer}
+        >
+          <Text style={styles.buttonText}>Retake photograph</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: "#ffffff",
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  buttonSize: {
+    alignSelf: "center",
+    justifyContent: "center",
+    width: 300,
+  },
   cameraContainer: {
     flex: 1,
     flexDirection: "row",
@@ -257,10 +285,6 @@ const styles = StyleSheet.create({
   },
   cameraBtn: {
     backgroundColor: "black",
-  },
-  submitBtn: {
-    paddingTop: 20,
-    fontSize: 50,
   },
   captionBox: {
     backgroundColor: "white",
