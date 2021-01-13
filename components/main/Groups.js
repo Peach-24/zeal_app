@@ -24,7 +24,11 @@ const Groups = () => {
         component={SearchGroupsScreen}
         options={{ headerShown: false }}
       />
-      <GroupStack.Screen name="CreateGroup" component={CreateGroupScreen} />
+      <GroupStack.Screen
+        name="CreateGroup"
+        component={CreateGroupScreen}
+        options={{ headerShown: false }}
+      />
       <GroupStack.Screen
         name="SingleGroup"
         component={SingleGroupScreen}
