@@ -13,6 +13,7 @@ import { RadioButton } from "react-native-paper";
 import { challengeSet, challengeSets } from "../../testData/Data";
 import * as firebase from "firebase";
 require("firebase/firestore");
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import ModalDatePicker from "../Utils/ModalDatePicker";
 import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
@@ -89,6 +90,10 @@ export default function CreateGroup() {
       </View>
       {isCreated ? (
         <View style={styles.createdContainer}>
+          <MaterialCommunityIcons
+            name={"check-circle-outline"}
+            style={styles.createdIcon}
+          />
           <Text style={styles.createdText}>Group Created!</Text>
         </View>
       ) : (
@@ -186,6 +191,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 300,
   },
+  createdIcon: {
+    fontSize: 140,
+    color: "green",
+  },
   dateContainer: {
     flex: 1,
     flexDirection: "row",
@@ -240,7 +249,7 @@ const styles = StyleSheet.create({
   createdContainer: {
     flex: 1,
     alignItems: "center",
-    paddingTop: height / 3,
+    paddingTop: height / 7,
   },
   createdText: {
     color: "green",
