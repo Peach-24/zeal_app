@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import * as firebase from "firebase";
 
@@ -16,6 +17,8 @@ import { selectGroupsJoined } from "../main/redux/reducers/groupsSlice";
 import Loading from "./Loading";
 
 import { isAfter, isBefore } from "date-fns";
+
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Dashboard = ({ navigation }) => {
   const currentUser = useSelector(selectUser);
@@ -108,56 +111,139 @@ const Dashboard = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
-      {!isLoading ? (
-        <SafeAreaView>
-          <View style={styles.header}>
-            <Text style={styles.title}>Dashboard</Text>
-          </View>
-          <View>
-            <Text style={styles.subhead}>Current Challenges</Text>
-          </View>
-          <FlatList
-            numColumns={1}
-            data={challenges}
-            renderItem={renderItem}
-            style={styles.groupsList}
-            keyExtractor={(item, index) => index.toString()}
-          />
-          <Button
-            title="Search for a group"
-            onPress={() =>
-              navigation.navigate("Groups", { screen: "SearchGroups" })
-            }
-          />
-          <Button
-            title="Create a group"
-            onPress={() =>
-              navigation.navigate("Groups", { screen: "CreateGroup" })
-            }
-          />
-        </SafeAreaView>
-      ) : (
-        <SafeAreaView>
-          <Loading />
-        </SafeAreaView>
-      )}
-    </SafeAreaView>
+    <View style={{ backgroundColor: "black" }}>
+      <SafeAreaView>
+        {!isLoading ? (
+          <SafeAreaView>
+            <View style={styles.header}>
+              <Text style={styles.title}>Dashboard </Text>
+              <Text style={styles.visitMyGroups}>
+                Got some snaps to upload?
+              </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Groups", { screen: "MyGroups" })
+                }>
+                <Text style={styles.visitMyGroupsLink}>Visit My Groups</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View>
+              <Text style={styles.subhead}>Your current challenges...</Text>
+            </View>
+            <View style={{ backgroundColor: "white" }}>
+              <FlatList
+                numColumns={1}
+                data={challenges}
+                renderItem={renderItem}
+                style={styles.groupsList}
+                keyExtractor={(item, index) => index.toString()}
+              />
+
+              <View styles={styles.buttonSection}>
+                <View style={styles.buttonLeft}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Groups", { screen: "SearchGroups" })
+                    }>
+                    <View style={styles.buttonContainer}>
+                      <Text style={styles.buttonText}>Discover groups</Text>
+                      <MaterialCommunityIcons
+                        name="magnify"
+                        size={40}
+                        color="white"
+                        style={{ alignSelf: "center", paddingTop: 5 }}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.buttonRight}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Groups", { screen: "CreateGroup" })
+                    }>
+                    <View style={styles.buttonContainer}>
+                      <Text style={styles.buttonText}>Create a group</Text>
+                      <MaterialCommunityIcons
+                        name="account-group"
+                        size={40}
+                        color="white"
+                        style={{ alignSelf: "center", paddingTop: 5 }}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </SafeAreaView>
+        ) : (
+          <SafeAreaView>
+            <Loading />
+          </SafeAreaView>
+        )}
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 30,
+    fontSize: 35,
     color: "white",
+    marginBottom: 20,
+  },
+  visitMyGroups: {
+    fontSize: 20,
+    fontStyle: "italic",
+    color: "grey",
+  },
+  visitMyGroupsLink: {
+    fontSize: 20,
+    color: "lightblue",
+    marginTop: 10,
+    fontWeight: "700",
   },
   header: {
     backgroundColor: "black",
     padding: 30,
   },
-  subhead: { fontSize: 20, padding: 20 },
+  buttonLeft: {
+    flex: 1,
+    alignSelf: "flex-start",
+    marginLeft: 60,
+  },
+  buttonRight: {
+    flex: 1,
+    alignSelf: "flex-end",
+    marginRight: 60,
+  },
+  buttonSection: {
+    flex: 1,
+    padding: 50,
+  },
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 12,
+    marginTop: 20,
+    width: 130,
+    height: 130,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textAlign: "center",
+    textTransform: "uppercase",
+  },
+  subhead: { fontSize: 20, padding: 20, backgroundColor: "#fff" },
+
   groupCard: {
-    padding: 20,
+    flex: 1,
+    padding: 15,
     margin: 10,
     backgroundColor: "#fff",
     shadowColor: "#000",
@@ -175,15 +261,17 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     paddingTop: 5,
   },
-  searchBar: { padding: 5 },
   groupsList: {
-    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 30,
+    backgroundColor: "#fff",
   },
   groupTitle: {
     fontSize: 24,
   },
   groupBody: {
     paddingTop: 10,
+    flex: 1,
   },
 });
 
