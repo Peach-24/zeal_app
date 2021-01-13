@@ -13,7 +13,7 @@ const Loading = () => {
         rightDistance={-250}
         leftDistance={-180}
         rightDistance={-250}
-        speed={1400}
+        speed={1000}
       />
       <Text style={{ fontSize: 30 }}>Loading...</Text>
     </View>

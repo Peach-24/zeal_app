@@ -47,5 +47,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  svgContainer: {},
 });
 export default Activity;

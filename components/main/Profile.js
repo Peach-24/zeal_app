@@ -15,10 +15,13 @@ import {
   ScrollView,
   Button,
   TextInput,
+  ImageBackground,
 } from "react-native";
 
 import { Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+
+const backgroundImage = require("../../assets/image1.jpeg");
 
 const Profile = () => {
   const [user, setUser] = useState(firebase.auth().currentUser);
@@ -157,76 +160,103 @@ const Profile = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.profileBox}>
-          <Image style={styles.profileImage} source={{ uri: image }} />
+    <ImageBackground source={backgroundImage} style={styles.image}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.profileBox}>
+            <Image style={styles.profileImage} source={{ uri: image }} />
 
-          <View style={styles.changePhoto}>
-            <Entypo
-              name="circle-with-plus"
-              size={48}
-              color="#fff"
-              onPress={() => updateAvatarImage()}
-            ></Entypo>
+            <View style={styles.changePhoto}>
+              <Entypo
+                name="circle-with-plus"
+                size={48}
+                color="#fff"
+                onPress={() => updateAvatarImage()}
+              ></Entypo>
+            </View>
           </View>
-        </View>
 
-        <View>
-          <Text style={styles.username}>{user.displayName}</Text>
-          <Text style={styles.joinedDate}>
-            Member since: {formatJoinDate(user.createdAt)}
-          </Text>
-        </View>
-        <View style={styles.userForm}>
-          <Text style={styles.inputDesc}> Username: </Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder={username}
-              style={styles.input}
-              onChangeText={(input) => setUsername(input)}
-            />
-            <TouchableOpacity onPress={() => updateUsername()}>
-              <Text style={styles.edit}>✍️</Text>
+          <View>
+            <Text style={styles.username}>{user.displayName}</Text>
+            <Text style={styles.joinedDate}>
+              Member since: {formatJoinDate(user.createdAt)}
+            </Text>
+          </View>
+          <View style={styles.userForm}>
+            <Text style={styles.inputDesc}> Username: </Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder={username}
+                style={styles.input}
+                onChangeText={(input) => setUsername(input)}
+              />
+              <TouchableOpacity onPress={() => updateUsername()}>
+                <Text style={styles.edit}>✍️</Text>
+              </TouchableOpacity>
+            </View>
+            {!usernameError ? (
+              <Text style={styles.success}>{usernameUpdate}</Text>
+            ) : (
+              <Text style={styles.error}>{emailUpdate}</Text>
+            )}
+
+            <Text style={styles.inputDesc}>Email: </Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                placeholder={email}
+                style={styles.input}
+                onChangeText={(input) => setEmail(input)}
+              />
+              <TouchableOpacity onPress={() => updateEmail()}>
+                <Text style={styles.edit}>✍️</Text>
+              </TouchableOpacity>
+            </View>
+            {!emailError ? (
+              <Text style={styles.success}>{emailUpdate}</Text>
+            ) : (
+              <Text style={styles.error}>{emailUpdate}</Text>
+            )}
+
+            <TouchableOpacity
+              onPress={() => signOut()}
+              style={styles.buttonContainer}
+            >
+              <Text style={styles.buttonText}>Sign Out</Text>
             </TouchableOpacity>
-          </View>
-          {!usernameError ? (
-            <Text style={styles.success}>{usernameUpdate}</Text>
-          ) : (
-            <Text style={styles.error}>{emailUpdate}</Text>
-          )}
 
-          <Text style={styles.inputDesc}>Email: </Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              placeholder={email}
-              style={styles.input}
-              onChangeText={(input) => setEmail(input)}
-            />
-            <TouchableOpacity onPress={() => updateEmail()}>
-              <Text style={styles.edit}>✍️</Text>
-            </TouchableOpacity>
+            <Text style={styles.groups}>Groups: </Text>
+            <Text style={styles.groupsList}>
+              {createGroupsString(groupList)}
+            </Text>
           </View>
-          {!emailError ? (
-            <Text style={styles.success}>{emailUpdate}</Text>
-          ) : (
-            <Text style={styles.error}>{emailUpdate}</Text>
-          )}
-
-          <Button
-            title="Sign Out"
-            onPress={() => signOut()}
-            style={styles.SOButton}
-          />
-          <Text style={styles.groups}>Groups: </Text>
-          <Text style={styles.groupsList}>{createGroupsString(groupList)}</Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+  },
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: "#ffffff",
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
   changePhoto: {
     backgroundColor: "#41444B",
     position: "absolute",
@@ -252,7 +282,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     overflow: "hidden",
     alignSelf: "center",
-    borderColor: "lightgrey",
+    borderColor: "#303030",
     borderWidth: 5,
   },
   inputDesc: { fontSize: 16, margin: 5 },
@@ -266,6 +296,7 @@ const styles = StyleSheet.create({
   },
   groupsList: {
     fontSize: 18,
+    color: "#ffffff",
   },
   SOButton: {
     flex: 1,

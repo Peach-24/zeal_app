@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
+  ImageBackground,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,9 @@ require("firebase/firestore");
 import formatDistance from "date-fns/formatDistance";
 import { isAfter, isBefore } from "date-fns";
 
+const backgroundImage = require("../../../assets/image1.jpeg");
+import Loading from "../Loading";
+
 export default function SingleGroup(props, { navigation }) {
   const dispatch = useDispatch();
   const groupsJoined = useSelector(selectGroupsJoined);
@@ -30,6 +34,7 @@ export default function SingleGroup(props, { navigation }) {
   const [membersCount, setMembersCount] = useState(0);
   const [joined, setJoined] = useState(groupsJoinedIds.includes(groupId));
   const [usersWhoHaveSubmitted, setUsersWhoHaveSubmitted] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUsersWhoHaveSubmitted = () => {
     firebase
@@ -88,7 +93,12 @@ export default function SingleGroup(props, { navigation }) {
       .doc(groupInfo.groupId)
       .collection("members")
       .get()
-      .then((snapshot) => setMembersCount(snapshot.docs.length));
+      .then((snapshot) => {
+        setMembersCount(snapshot.docs.length);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 780);
+      });
   }, [joined]);
 
   const challengeButtonText = {
@@ -151,8 +161,7 @@ export default function SingleGroup(props, { navigation }) {
                       item,
                       groupDetails: groupInfo,
                     });
-              }}
-            >
+              }}>
               <Text style={styles[hasSubmitted ? "view" : "submit"]}>
                 {hasSubmitted ? "View" : "Submit"}
               </Text>
@@ -176,45 +185,94 @@ export default function SingleGroup(props, { navigation }) {
     await dispatch(leaveGroup(groupInfo));
     console.log("removed");
   };
-
+  isLoading;
   return (
-    <View>
-      <View style={styles.header}>
-        <Text style={styles.groupName}>{groupInfo.name}</Text>
-        <View style={styles.subHead}>
-          <Text style={styles.description}>{groupInfo.description}</Text>
-          <Text style={styles.members}>Members: {membersCount}</Text>
-          <Text></Text>
+    <ImageBackground source={backgroundImage} style={styles.image}>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <View>
+          <View style={styles.header}>
+            <Text style={styles.groupName}>{groupInfo.name}</Text>
+            <View style={styles.subHead}>
+              <Text style={styles.description}>{groupInfo.description}</Text>
+              <Text style={styles.members}>Members: {membersCount}</Text>
+              <Text></Text>
+            </View>
+          </View>
+          <View>
+            {!joined ? (
+              <View style={styles.buttonSize}>
+                <TouchableOpacity
+                  onPress={() => handleJoin()}
+                  style={styles.buttonContainer}>
+                  <Text style={styles.buttonText}>Join Group</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.buttonSize}>
+                <TouchableOpacity
+                  onPress={() => handleLeave()}
+                  style={styles.buttonOnPress}>
+                  <Text style={styles.buttonOnPressText}>Leave Group</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            <Text style={styles.listHeader}>Challenges</Text>
+            <FlatList
+              numColumns={1}
+              data={challenges}
+              renderItem={renderItem}
+              style={styles.challengeList}
+            />
+          </View>
         </View>
-      </View>
-      <View>
-        {!joined ? (
-          <Button
-            style={styles.joinButton}
-            title="Join Group"
-            onPress={() => handleJoin()}
-          />
-        ) : (
-          <Button
-            style={styles.joinButton}
-            title="Leave Group"
-            onPress={() => handleLeave()}
-          />
-        )}
-
-        <Text style={styles.listHeader}>Challenges</Text>
-        <FlatList
-          numColumns={1}
-          data={challenges}
-          renderItem={renderItem}
-          style={styles.challengeList}
-        />
-      </View>
-    </View>
+      )}
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonOnPress: {
+    elevation: 8,
+    borderWidth: 2,
+    borderColor: "#303030",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+  },
+  buttonOnPressText: {
+    fontSize: 18,
+    color: "#303030",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  buttonContainer: {
+    elevation: 8,
+    backgroundColor: "#303030",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  buttonSize: {
+    alignSelf: "center",
+    justifyContent: "center",
+    width: 300,
+  },
   challengeButton: {
     paddingLeft: 10,
   },
