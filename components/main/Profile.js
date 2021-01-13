@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
 import * as ImagePicker from "expo-image-picker";
+
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { formatJoinDate, createGroupsString } from "../main/Utils/functions";
@@ -53,10 +54,15 @@ const Profile = () => {
       console.log(`transferred: ${snapshot.bytesTransferred}`);
     };
     const taskCompleted = () => {
-      task.snapshot.ref.getDownloadURL().then((snapshot) => {
-        updateUserPhotoURL(snapshot);
-        console.log("uploaded to STORAGE");
-      });
+      task.snapshot.ref
+        .getDownloadURL()
+        .then((snapshot) => {
+          updateUserPhotoURL(snapshot);
+          console.log("uploaded to STORAGE");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     };
     const taskError = (snapshot) => {
       console.log(snapshot, "<------ Task Error snapshot");
@@ -73,6 +79,7 @@ const Profile = () => {
     });
     if (!result.cancelled) {
       setNewImage(result.uri);
+
       uploadImage();
     }
   };
@@ -82,9 +89,10 @@ const Profile = () => {
       .updateProfile({ photoURL: downloadURL })
       .then(function () {
         var photoURL = user.photoURL;
+
         setImage(photoURL);
         setUploadFinished(true);
-        console.log(user, "<---- user profile details updated");
+        console.log("<---- user profile details updated");
       })
       .catch((err) => {
         console.log(err, "<------ updateUserPhotoURL error");

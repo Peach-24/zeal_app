@@ -52,11 +52,7 @@ export const App = () => {
   }, [loggedIn, loaded]);
 
   if (!loaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <Text>Loading</Text>
-      </View>
-    );
+    return <View style={{ flex: 1, justifyContent: "center" }}></View>;
   }
   if (!loggedIn) {
     return (

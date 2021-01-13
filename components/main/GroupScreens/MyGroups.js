@@ -12,7 +12,8 @@ export default function MyGroups({ navigation }) {
     <View style={styles.groupCard}>
       <Text
         style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}>
+        onPress={() => navigation.navigate("SingleGroup", { item })}
+      >
         {item.name}
       </Text>
       <View style={styles.groupBody}>
