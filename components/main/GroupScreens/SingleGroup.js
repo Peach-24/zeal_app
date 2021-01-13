@@ -25,7 +25,6 @@ export default function SingleGroup(props, { navigation }) {
   const currentUser = firebase.auth().currentUser;
   const groupsJoinedIds = groupsJoined.map((group) => group.groupId);
   const groupInfo = props.route.params.item;
-  console.log("groupInfo", groupInfo);
   const { groupId } = groupInfo;
   const [challenges, setChallenges] = useState([]);
   const [membersCount, setMembersCount] = useState(0);

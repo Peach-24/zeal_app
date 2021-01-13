@@ -44,7 +44,6 @@ export default function CreateGroup() {
       frequency,
       startDate,
     };
-
     const db = firebase.firestore();
     const batch = db.batch();
     const groupRef = db.collection("groups").doc(groupId);
