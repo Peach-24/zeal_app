@@ -55,6 +55,7 @@ export default function SingleGroup(props, { navigation }) {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     // Gets information about the users who have submitted to each challenge
     fetchUsersWhoHaveSubmitted();
     // Gets the challenge information from firebase
@@ -97,9 +98,11 @@ export default function SingleGroup(props, { navigation }) {
         setMembersCount(snapshot.docs.length);
         setTimeout(() => {
           setIsLoading(false);
-        }, 780);
+        }, 400);
       });
-  }, [joined]);
+    // have use effect run on a change to groups joined
+    // or a change on incoming info
+  }, [joined, groupInfo]);
 
   const challengeButtonText = {
     closed: "Closed",
