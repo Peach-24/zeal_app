@@ -13,7 +13,9 @@ const GroupStack = createStackNavigator();
 
 const Groups = () => {
   return (
-    <GroupStack.Navigator initialRouteName="MyGroups">
+    <GroupStack.Navigator
+      initialRouteName="MyGroups"
+      backBehavior="initialRoute">
       <GroupStack.Screen
         name="MyGroups"
         component={MyGroupsScreen}
@@ -24,7 +26,11 @@ const Groups = () => {
         component={SearchGroupsScreen}
         options={{ headerShown: false }}
       />
-      <GroupStack.Screen name="CreateGroup" component={CreateGroupScreen} />
+      <GroupStack.Screen
+        name="CreateGroup"
+        component={CreateGroupScreen}
+        options={{ headerShown: false }}
+      />
       <GroupStack.Screen
         name="SingleGroup"
         component={SingleGroupScreen}

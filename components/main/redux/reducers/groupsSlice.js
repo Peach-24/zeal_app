@@ -100,7 +100,11 @@ export const leaveGroup = createAsyncThunk(
 const groupsSlice = createSlice({
   name: "groups",
   initialState,
-  reducers: {},
+  reducers: {
+    userSignedOut(state, action) {
+      return [];
+    },
+  },
   extraReducers: {
     [fetchGroupsJoined.fulfilled]: (state, action) => {
       return action.payload;
@@ -119,7 +123,8 @@ const groupsSlice = createSlice({
     },
   },
 });
-
+export const { userSignedOut } = groupsSlice.actions;
 export default groupsSlice.reducer;
 
-export const selectGroupsJoined = (state) => state.groups;
+export const selectGroupsJoined = (state) =>
+  state.groups.filter((group) => Boolean(group));

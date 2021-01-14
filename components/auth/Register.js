@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { View, Button, TextInput, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Button,
+  TextInput,
+  Text,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as firebase from "firebase";
 import ZealNoTextSmall from "../../assets/zealNoTextSmall";
+
+const backgroundImage = require("../../assets/image1.jpeg");
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -41,54 +50,62 @@ const Register = () => {
   };
 
   return (
-    <View style={styles.main}>
-      <View style={styles.logoContainer}>
-        <ZealNoTextSmall />
+    <ImageBackground source={backgroundImage} style={styles.image}>
+      <View style={styles.main}>
+        <View style={styles.logoContainer}>
+          <ZealNoTextSmall />
+        </View>
+        <Text style={styles.title}>Zeal 🦓</Text>
+        <View style={styles.register}>
+          <TextInput
+            placeholder="username"
+            style={styles.input}
+            onChangeText={(username) => setUsername(username)}
+          />
+          <TextInput
+            placeholder="email"
+            style={styles.input}
+            onChangeText={(email) => setEmail(email)}
+          />
+          <TextInput
+            placeholder="password"
+            secureTextEntry={true}
+            style={styles.input}
+            onChangeText={(password) => setPassword(password)}
+          />
+          <TextInput
+            placeholder="confirm password"
+            secureTextEntry={true}
+            style={styles.input}
+            onChangeText={(confirmPassword) =>
+              setConfirmPassword(confirmPassword)
+            }
+          />
+          <Text style={styles.error}>{isMatching}</Text>
+        </View>
+        <View style={styles.register}>
+          <TouchableOpacity
+            onPress={() => onSignUp()}
+            style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Text style={styles.title}>Zeal 🦓</Text>
-      <View style={styles.register}>
-        <TextInput
-          placeholder="username"
-          style={styles.input}
-          onChangeText={(username) => setUsername(username)}
-        />
-        <TextInput
-          placeholder="email"
-          style={styles.input}
-          onChangeText={(email) => setEmail(email)}
-        />
-        <TextInput
-          placeholder="password"
-          secureTextEntry={true}
-          style={styles.input}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <TextInput
-          placeholder="confirm password"
-          secureTextEntry={true}
-          style={styles.input}
-          onChangeText={(confirmPassword) =>
-            setConfirmPassword(confirmPassword)
-          }
-        />
-        <Text style={styles.error}>{isMatching}</Text>
-      </View>
-      <View style={styles.register}>
-        <TouchableOpacity
-          onPress={() => onSignUp()}
-          style={styles.buttonContainer}
-        >
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 export default Register;
 
 const styles = StyleSheet.create({
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+  },
   buttonContainer: {
+    borderWidth: 1,
+    borderColor: "#ffffff",
     elevation: 8,
     backgroundColor: "#303030",
     borderRadius: 10,

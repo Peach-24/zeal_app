@@ -16,8 +16,9 @@ if (firebase.apps.length === 0) {
 }
 // React
 import React, { Component, useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
+import { StyleSheet, Text, View, LogBox } from "react-native";
+// disable log boxes for demo
+LogBox.ignoreAllLogs();
 // React-Navigation
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -57,9 +58,9 @@ export const App = () => {
   if (!loggedIn) {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Landing">
+        <Stack.Navigator initialRouteName="Login">
           <Stack.Screen
-            name="Landing"
+            name="Login"
             component={LandingScreen}
             options={{ headerShown: false }}
           />

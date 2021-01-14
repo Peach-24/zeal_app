@@ -7,18 +7,28 @@ import {
   Button,
   ScrollView,
   Dimensions,
+  ImageBackground,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
 import { challengeSet, challengeSets } from "../../testData/Data";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  joinGroup,
+  fetchGroupsJoined,
+  selectGroupsJoined,
+} from "../redux/reducers/groupsSlice";
 import * as firebase from "firebase";
 require("firebase/firestore");
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+const backgroundImage = require("../../../assets/image1.jpeg");
 import ModalDatePicker from "../Utils/ModalDatePicker";
 import ChallengeScroll from "../ChallengeScreens/ChallengeScroll";
+import { SafeAreaView } from "react-navigation";
 const { setChallengeDates } = require("../Utils/challengesDates");
 
-export default function CreateGroup() {
+export default function CreateGroup({ navigation }) {
+  const dispatch = useDispatch();
   const defaultDate = new Date();
   defaultDate.setHours(0, 0, 0, 0);
 
@@ -30,6 +40,7 @@ export default function CreateGroup() {
   const [startDate, setStartDate] = useState(defaultDate);
   const [isCreated, setCreated] = useState(false);
   const [chosenChallengeSet, setChosenChallengeSet] = useState([]);
+  const [groupsJoined, setGroupsJoined] = useSelector(selectGroupsJoined);
 
   const createGroup = async (groupName, desc, frequency) => {
     const groupId = Math.random().toString(36);
@@ -39,6 +50,7 @@ export default function CreateGroup() {
       description: desc,
       frequency,
       startDate,
+      id: groupId,
     };
     const db = firebase.firestore();
     const batch = db.batch();
@@ -59,8 +71,12 @@ export default function CreateGroup() {
       batch.set(challengeRef, challenge);
     });
 
-    await batch.commit().then(() => {
+    await batch.commit().then(async () => {
       setCreated(true);
+      // add the group creator to the group
+      await dispatch(joinGroup(groupData));
+      // once joined, update redux with the new group
+      await dispatch(fetchGroupsJoined());
       // ***need to reset fields back to defaults
       setGroupName("");
       setFrequency("Daily");
@@ -69,7 +85,9 @@ export default function CreateGroup() {
       // can use timeout to reset the screen after certain amount of time
       setTimeout(() => {
         setCreated(false);
-      }, 3000);
+        // navigate to the my groups screen
+        navigation.navigate("MyGroups");
+      }, 2000);
     });
   };
 
@@ -83,84 +101,90 @@ export default function CreateGroup() {
 
   !isCreated;
   return (
-    <ScrollView>
-      <View style={styles.header}>
-        <Text style={styles.heading}>Create a group...</Text>
-      </View>
-      {isCreated ? (
-        <View style={styles.createdContainer}>
-          <Text style={styles.createdText}>Group Created!</Text>
+    <ImageBackground source={backgroundImage} style={styles.image}>
+      <ScrollView>
+        <View style={styles.header}>
+          <Text style={styles.heading}>Create a group...</Text>
         </View>
-      ) : (
-        <View style={styles.contentContainer}>
-          <View>
-            <View style={styles.inputsContainer}>
-              <Text style={styles.label}>What will you call your group?</Text>
-              <TextInput
-                style={styles.input}
-                defaultValue={groupName}
-                placeholder="Group name"
-                maxLength={20}
-                require
-                onChangeText={(groupName) => setGroupName(groupName)}
-              />
-              {!!groupError && <Text style={styles.error}>{groupError}</Text>}
-              <Text style={styles.label}>A brief description</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="What's it about?"
-                defaultValue={desc}
-                onChangeText={(desc) => setDesc(desc)}
-              />
-              {!!descError && <Text style={styles.error}>{descError}</Text>}
-
-              <Text style={styles.label}>
-                How often do you want your challenges?
-              </Text>
-              <View style={styles.radioContainer}>
-                <RadioButton
-                  value="Daily"
-                  status={frequency === "Daily" ? "checked" : "unchecked"}
-                  onPress={() => setFrequency("Daily")}
-                />
-                <Text>Daily</Text>
-                <RadioButton
-                  value="Weekly"
-                  status={frequency === "Weekly" ? "checked" : "unchecked"}
-                  onPress={() => setFrequency("Weekly")}
-                />
-                <Text>Weekly</Text>
-              </View>
-              <View style={styles.dateContainer}>
-                <Text style={styles.label}>Start Date:</Text>
-                <ModalDatePicker handleDateChange={handleDateChange} />
-              </View>
-              <Text style={styles.label}>Select a challenge set:</Text>
-            </View>
-            <ChallengeScroll
-              data={challengeSets}
-              handleChosenChallengesChange={handleChosenChallengesChange}
+        {isCreated ? (
+          <View style={styles.createdContainer}>
+            <MaterialCommunityIcons
+              name={"check-circle-outline"}
+              style={styles.createdIcon}
             />
-            <View style={styles.buttonSize}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (groupName === "") {
-                    setGroupError("(group name required)");
-                  }
-                  if (desc === "") {
-                    setDescError("(description required)");
-                  } else {
-                    createGroup(groupName, desc, frequency);
-                  }
-                }}
-                style={styles.buttonContainer}>
-                <Text style={styles.buttonText}>Create Group</Text>
-              </TouchableOpacity>
+            <Text style={styles.createdText}>Group Created!</Text>
+          </View>
+        ) : (
+          <View style={styles.contentContainer}>
+            <View>
+              <View style={styles.inputsContainer}>
+                <Text style={styles.label}>What will you call your group?</Text>
+                <TextInput
+                  style={styles.input}
+                  defaultValue={groupName}
+                  placeholder="Group name"
+                  maxLength={20}
+                  require
+                  onChangeText={(groupName) => setGroupName(groupName)}
+                />
+                {!!groupError && <Text style={styles.error}>{groupError}</Text>}
+                <Text style={styles.label}>A brief description</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="What's it about?"
+                  defaultValue={desc}
+                  onChangeText={(desc) => setDesc(desc)}
+                />
+                {!!descError && <Text style={styles.error}>{descError}</Text>}
+
+                <Text style={styles.label}>
+                  How often do you want your challenges?
+                </Text>
+                <View style={styles.radioContainer}>
+                  <RadioButton
+                    value="Daily"
+                    status={frequency === "Daily" ? "checked" : "unchecked"}
+                    onPress={() => setFrequency("Daily")}
+                  />
+                  <Text style={styles.radioText}>Daily</Text>
+                  <RadioButton
+                    value="Weekly"
+                    status={frequency === "Weekly" ? "checked" : "unchecked"}
+                    onPress={() => setFrequency("Weekly")}
+                  />
+                  <Text style={styles.radioText}>Weekly</Text>
+                </View>
+                <View style={styles.dateContainer}>
+                  <Text style={styles.label}>Start Date:</Text>
+                  <ModalDatePicker handleDateChange={handleDateChange} />
+                </View>
+                <Text style={styles.label}>Select a challenge set:</Text>
+              </View>
+              <ChallengeScroll
+                data={challengeSets}
+                handleChosenChallengesChange={handleChosenChallengesChange}
+              />
+              <View style={styles.buttonSize}>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (groupName === "") {
+                      setGroupError("(group name required)");
+                    }
+                    if (desc === "") {
+                      setDescError("(description required)");
+                    } else {
+                      createGroup(groupName, desc, frequency);
+                    }
+                  }}
+                  style={styles.buttonContainer}>
+                  <Text style={styles.buttonText}>Create Group</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      )}
-    </ScrollView>
+        )}
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
@@ -186,6 +210,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 300,
   },
+  createdIcon: {
+    fontSize: 140,
+    color: "green",
+  },
   dateContainer: {
     flex: 1,
     flexDirection: "row",
@@ -193,16 +221,25 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#000",
-    padding: 20,
+    marginTop: 35,
+    paddingTop: 20,
+    paddingHorizontal: 20,
     paddingBottom: 10,
   },
   heading: {
     color: "#FFF",
     fontSize: 32,
+    marginTop: 20,
     marginBottom: 10,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
   },
   label: {
     fontSize: 18,
+    paddingTop: 10,
     paddingRight: 10,
   },
   contentContainer: {
@@ -213,7 +250,7 @@ const styles = StyleSheet.create({
   inputsContainer: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 30,
   },
   radioContainer: {
     flex: 1,
@@ -221,6 +258,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  radioText: {
+    fontSize: 20,
+    padding: 10,
   },
   input: {
     padding: 5,
@@ -240,7 +281,7 @@ const styles = StyleSheet.create({
   createdContainer: {
     flex: 1,
     alignItems: "center",
-    paddingTop: height / 3,
+    paddingTop: height / 7,
   },
   createdText: {
     color: "green",

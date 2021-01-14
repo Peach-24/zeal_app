@@ -24,7 +24,7 @@ import { ScrollView } from "react-native-gesture-handler";
 const Dashboard = ({ navigation }) => {
   const currentUser = useSelector(selectUser);
   const [challenges, setChallenges] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(currentUser);
   const groupsJoined = useSelector(selectGroupsJoined);
 
@@ -42,6 +42,7 @@ const Dashboard = ({ navigation }) => {
   });
 
   const getUserChallenges = async () => {
+    setIsLoading(true);
     const promises = groupObjRef.map((group) => {
       const { groupID, groupName } = group;
       return firebase
@@ -81,8 +82,8 @@ const Dashboard = ({ navigation }) => {
   };
 
   useEffect(() => {
-    setChallenges([]);
     setIsLoading(true);
+    setChallenges([]);
     getUserChallenges();
   }, [user, groupsJoined]);
 

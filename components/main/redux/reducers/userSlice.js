@@ -13,21 +13,8 @@ export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
     .collection("users")
     .doc(firebase.auth().currentUser.uid)
     .get();
-
   return response.data();
 });
-
-export function signOut() {
-  firebase
-    .auth()
-    .signOut()
-    .then(() => {
-      console.log("logged user out");
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
 
 const userSlice = createSlice({
   name: "user",
