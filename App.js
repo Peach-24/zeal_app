@@ -58,9 +58,9 @@ export const App = () => {
   if (!loggedIn) {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Landing">
+        <Stack.Navigator initialRouteName="Login">
           <Stack.Screen
-            name="Landing"
+            name="Login"
             component={LandingScreen}
             options={{ headerShown: false }}
           />
