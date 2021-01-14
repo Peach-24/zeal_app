@@ -70,29 +70,29 @@ export default function SearchGroups({ navigation }) {
   };
 
   return (
-    <ImageBackground source={backgroundImage} style={styles.image}>
-      <SafeAreaView style={styles.container}>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <SafeAreaView style={styles.container}>
-            <View style={styles.searchWrapper} />
-            <SearchBar
-              placeholder="Type Here..."
-              onChangeText={(text) => searchFilter(text)}
-              value={search}
-              style={styles.searchBar}
-            />
-            <FlatList
-              numColumns={1}
-              data={filtered}
-              renderItem={renderItem}
-              style={styles.groupsList}
-            />
-          </SafeAreaView>
-        )}
-      </SafeAreaView>
-    </ImageBackground>
+    // <ImageBackground source={backgroundImage} style={styles.image}>
+    <SafeAreaView style={styles.container}>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <SafeAreaView style={styles.container}>
+          <View style={styles.searchWrapper} />
+          <SearchBar
+            placeholder="Type Here..."
+            onChangeText={(text) => searchFilter(text)}
+            value={search}
+            style={styles.searchBar}
+          />
+          <FlatList
+            numColumns={1}
+            data={filtered}
+            renderItem={renderItem}
+            style={styles.groupsList}
+          />
+        </SafeAreaView>
+      )}
+    </SafeAreaView>
+    // </ImageBackground>
   );
 }
 
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   searchWrapper: {
-    marginTop: 50,
+    marginTop: 0,
   },
   searchBar: { padding: 5 },
   groupsList: {
