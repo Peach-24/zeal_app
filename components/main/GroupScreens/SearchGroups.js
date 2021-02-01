@@ -9,12 +9,14 @@ import {
   FlatList,
   SafeAreaView,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import formatDistance from "date-fns/formatDistance";
 import Loading from "../Loading";
 
 const backgroundImage = require("../../../assets/image1.jpeg");
+const { width, height } = Dimensions.get("window");
 
 export default function SearchGroups({ navigation }) {
   const [groups, setGroups] = useState([]);
@@ -43,7 +45,8 @@ export default function SearchGroups({ navigation }) {
     <View style={styles.groupCard}>
       <Text
         style={styles.groupTitle}
-        onPress={() => navigation.navigate("SingleGroup", { item })}>
+        onPress={() => navigation.navigate("SingleGroup", { item })}
+      >
         {item.name}
       </Text>
       <View style={styles.groupBody}>
@@ -70,7 +73,6 @@ export default function SearchGroups({ navigation }) {
   };
 
   return (
-    // <ImageBackground source={backgroundImage} style={styles.image}>
     <SafeAreaView style={styles.container}>
       {isLoading ? (
         <Loading />
@@ -92,12 +94,16 @@ export default function SearchGroups({ navigation }) {
         </SafeAreaView>
       )}
     </SafeAreaView>
-    // </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { marginBottom: 70 },
+  container: {
+    marginBottom: 70,
+    height: height * 0.9,
+    width: width,
+    backgroundColor: "black",
+  },
   image: {
     flex: 1,
     resizeMode: "cover",
@@ -123,6 +129,7 @@ const styles = StyleSheet.create({
   searchBar: { padding: 5 },
   groupsList: {
     padding: 10,
+    backgroundColor: "lightgrey",
   },
   groupTitle: {
     fontSize: 24,

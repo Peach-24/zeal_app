@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Button,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -19,9 +20,10 @@ import * as firebase from "firebase";
 require("firebase/firestore");
 import formatDistance from "date-fns/formatDistance";
 import { isAfter, isBefore } from "date-fns";
+import Loading from "../Loading";
 
 const backgroundImage = require("../../../assets/image1.jpeg");
-import Loading from "../Loading";
+const { width, height } = Dimensions.get("window");
 
 export default function SingleGroup(props, { navigation }) {
   const dispatch = useDispatch();
@@ -164,7 +166,8 @@ export default function SingleGroup(props, { navigation }) {
                       item,
                       groupDetails: groupInfo,
                     });
-              }}>
+              }}
+            >
               <Text style={styles[hasSubmitted ? "view" : "submit"]}>
                 {hasSubmitted ? "View" : "Submit"}
               </Text>
@@ -190,17 +193,16 @@ export default function SingleGroup(props, { navigation }) {
   };
   isLoading;
   return (
-    <ImageBackground source={backgroundImage} style={styles.image}>
+    <ImageBackground source={backgroundImage} style={styles.background}>
       {isLoading ? (
         <Loading />
       ) : (
-        <View>
+        <View style={styles.outerContainer}>
           <View style={styles.header}>
             <Text style={styles.groupName}>{groupInfo.name}</Text>
-            <View style={styles.subHead}>
+            <View>
               <Text style={styles.description}>{groupInfo.description}</Text>
               <Text style={styles.members}>Members: {membersCount}</Text>
-              <Text></Text>
             </View>
           </View>
           <View>
@@ -208,7 +210,8 @@ export default function SingleGroup(props, { navigation }) {
               <View style={styles.buttonSize}>
                 <TouchableOpacity
                   onPress={() => handleJoin()}
-                  style={styles.buttonContainer}>
+                  style={styles.buttonContainer}
+                >
                   <Text style={styles.buttonText}>Join Group</Text>
                 </TouchableOpacity>
               </View>
@@ -216,7 +219,8 @@ export default function SingleGroup(props, { navigation }) {
               <View style={styles.buttonSize}>
                 <TouchableOpacity
                   onPress={() => handleLeave()}
-                  style={styles.buttonOnPress}>
+                  style={styles.buttonOnPress}
+                >
                   <Text style={styles.buttonOnPressText}>Leave Group</Text>
                 </TouchableOpacity>
               </View>
@@ -245,13 +249,17 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
   },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
+  outerContainer: {
+    marginTop: 20,
+    maxHeight: height * 0.8,
+  },
+  background: {
+    flex: 0,
+    height: height,
+    width: width,
   },
   buttonOnPressText: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#303030",
     fontWeight: "bold",
     alignSelf: "center",
@@ -265,7 +273,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#fff",
     fontWeight: "bold",
     alignSelf: "center",
@@ -274,14 +282,13 @@ const styles = StyleSheet.create({
   buttonSize: {
     alignSelf: "center",
     justifyContent: "center",
-    width: 300,
+    width: width * 0.4,
   },
   challengeButton: {
     paddingLeft: 10,
   },
   challengeCard: {
     flexDirection: "column",
-    //justifyContent: "space-between",
     alignItems: "flex-start",
     padding: 10,
     margin: 10,
@@ -310,8 +317,8 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   challengeList: {
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingHorizontal: 10,
+    maxHeight: height * 0.55,
   },
   challengeNum: {
     fontSize: 24,
@@ -335,31 +342,30 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   header: {
-    backgroundColor: "#000",
-    padding: 20,
-    paddingBottom: 5,
+    marginTop: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
     marginBottom: 10,
   },
-  subHead: {},
   groupName: {
-    color: "#FFF",
+    color: "black",
     fontSize: 34,
     marginBottom: 8,
   },
   description: {
-    color: "#FFF",
-    fontSize: 24,
+    color: "black",
+    fontSize: 18,
     fontStyle: "italic",
     marginBottom: 5,
   },
   members: {
     color: "grey",
-    fontSize: 16,
+    fontSize: 18,
   },
   listHeader: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    fontSize: 26,
+    fontSize: 20,
   },
   closed: {
     color: "blue",
