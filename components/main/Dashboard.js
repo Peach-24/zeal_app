@@ -8,6 +8,7 @@ import {
   FlatList,
   SafeAreaView,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import * as firebase from "firebase";
 
@@ -17,6 +18,7 @@ import { selectGroupsJoined } from "../main/redux/reducers/groupsSlice";
 import Loading from "./Loading";
 
 import { isAfter, isBefore } from "date-fns";
+const { width, height } = Dimensions.get("window");
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { ScrollView } from "react-native-gesture-handler";
@@ -102,7 +104,8 @@ const Dashboard = ({ navigation }) => {
                   screen: "SingleGroup",
                   params: { item: groupInfo },
                 })
-              }>
+              }
+            >
               {item.topic}{" "}
             </Text>
             <Text style={styles.groupName}>in {item.groupName}</Text>
@@ -113,7 +116,7 @@ const Dashboard = ({ navigation }) => {
   };
 
   return (
-    <View style={{ backgroundColor: "black" }}>
+    <View style={styles.screenContainer}>
       <SafeAreaView>
         {!isLoading ? (
           <SafeAreaView>
@@ -125,56 +128,59 @@ const Dashboard = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("Groups", { screen: "MyGroups" })
-                }>
+                }
+              >
                 <Text style={styles.visitMyGroupsLink}>Visit My Groups</Text>
               </TouchableOpacity>
             </View>
-            <View>
-              <Text style={styles.subhead}>Your current challenges...</Text>
-            </View>
             <View style={styles.flatList}>
+              <View>
+                <Text style={styles.subhead}>Your current challenges...</Text>
+              </View>
               <FlatList
                 numColumns={1}
                 data={challenges}
                 renderItem={renderItem}
-                style={styles.groupsList}
+                style={styles.groupsListItem}
                 keyExtractor={(item, index) => index.toString()}
               />
-              <View styles={styles.buttonSection}>
-                <View style={styles.buttonLeft}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("Groups", {
-                        screen: "SearchGroups",
-                      })
-                    }>
-                    <View style={styles.buttonContainer}>
-                      <Text style={styles.buttonText}>Discover groups</Text>
-                      <MaterialCommunityIcons
-                        name="magnify"
-                        size={40}
-                        color="white"
-                        style={{ alignSelf: "center", paddingTop: 5 }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.buttonRight}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("Groups", { screen: "CreateGroup" })
-                    }>
-                    <View style={styles.buttonContainer}>
-                      <Text style={styles.buttonText}>Create a group</Text>
-                      <MaterialCommunityIcons
-                        name="account-group"
-                        size={40}
-                        color="white"
-                        style={{ alignSelf: "center", paddingTop: 5 }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </View>
+            </View>
+            <View styles={styles.buttonSection}>
+              <View style={styles.buttonLeft}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Groups", {
+                      screen: "SearchGroups",
+                    })
+                  }
+                >
+                  <View style={styles.buttonContainer}>
+                    <Text style={styles.buttonText}>Discover groups</Text>
+                    <MaterialCommunityIcons
+                      name="magnify"
+                      size={35}
+                      color="white"
+                      style={{ alignSelf: "center", paddingTop: 5 }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.buttonRight}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Groups", { screen: "CreateGroup" })
+                  }
+                >
+                  <View style={styles.buttonContainer}>
+                    <Text style={styles.buttonText}>Create a group</Text>
+                    <MaterialCommunityIcons
+                      name="account-group"
+                      size={35}
+                      color="white"
+                      style={{ alignSelf: "center", paddingTop: 5 }}
+                    />
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
           </SafeAreaView>
@@ -189,14 +195,22 @@ const Dashboard = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  flatList: {
-    backgroundColor: "white",
-    height: 380,
+  screenContainer: {
+    backgroundColor: "black",
+    height: height,
+    width: width,
+    flex: 0,
   },
   title: {
     fontSize: 35,
     color: "white",
     marginBottom: 20,
+  },
+  flatList: {
+    backgroundColor: "white",
+    minHeight: "40%",
+    maxHeight: height * 0.4,
+    height: "auto",
   },
   visitMyGroups: {
     fontSize: 20,
@@ -210,33 +224,35 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   header: {
-    backgroundColor: "black",
+    flex: 0,
     padding: 30,
   },
   buttonLeft: {
     flex: 1,
     alignSelf: "flex-start",
-    marginLeft: 60,
+    marginLeft: 45,
+    marginRight: 15,
   },
   buttonRight: {
     flex: 1,
     alignSelf: "flex-end",
-    marginRight: 60,
+    marginRight: 45,
+    marginLeft: 15,
   },
   buttonSection: {
     flex: 1,
-    padding: 50,
-    backgroundColor: "#fff",
+    height: height * 0.3,
+    backgroundColor: "grey",
   },
   buttonContainer: {
     elevation: 8,
     backgroundColor: "#303030",
     borderRadius: 10,
-    paddingVertical: 20,
+    paddingVertical: 10,
     paddingHorizontal: 12,
     marginTop: 20,
-    width: 130,
-    height: 130,
+    width: width * 0.3,
+    height: height * 0.15,
   },
   buttonText: {
     fontSize: 18,
@@ -247,7 +263,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   subhead: { fontSize: 20, padding: 20, backgroundColor: "#fff" },
-
   groupCard: {
     flex: 1,
     padding: 15,
@@ -268,10 +283,9 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     paddingTop: 5,
   },
-  groupsList: {
+  groupsListItem: {
     marginTop: -10,
     marginHorizontal: 10,
-    // backgroundColor: "#fff",
   },
   groupTitle: {
     fontSize: 24,
