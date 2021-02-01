@@ -4,7 +4,7 @@ Zeal is a social activity app that allows friends to get creative and collective
 
 ## Visuals:
 
-![alt text]('/assets/zealMockup.png')
+![Screenshots](/assets/zealMockup.png)
 
 ## Tech Used:
 
