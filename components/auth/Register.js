@@ -6,12 +6,14 @@ import {
   Text,
   StyleSheet,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as firebase from "firebase";
 import ZealNoTextSmall from "../../assets/zealNoTextSmall";
 
 const backgroundImage = require("../../assets/image1.jpeg");
+const { width, height } = Dimensions.get("window");
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -55,7 +57,7 @@ const Register = () => {
         <View style={styles.logoContainer}>
           <ZealNoTextSmall />
         </View>
-        <Text style={styles.title}>Zeal 🦓</Text>
+        <Text style={styles.title}>Create a Zeal account</Text>
         <View style={styles.register}>
           <TextInput
             placeholder="username"
@@ -86,7 +88,8 @@ const Register = () => {
         <View style={styles.register}>
           <TouchableOpacity
             onPress={() => onSignUp()}
-            style={styles.buttonContainer}>
+            style={styles.buttonContainer}
+          >
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
@@ -130,14 +133,16 @@ const styles = StyleSheet.create({
   logoContainer: {
     width: "100%",
     alignItems: "center",
+    marginBottom: 20,
   },
   title: {
-    fontSize: 30,
-    textTransform: "uppercase",
+    fontSize: 20,
     textAlign: "center",
+    paddingBottom: 20,
   },
   register: {
-    padding: 60,
+    paddingHorizontal: 70,
+    paddingVertical: 10,
   },
   input: {
     padding: 5,

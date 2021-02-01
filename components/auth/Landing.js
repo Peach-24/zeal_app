@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import * as firebase from "firebase";
 import ZealNoTextSmall from "../../assets/zealNoTextSmall";
@@ -14,6 +15,8 @@ import { fetchUser } from "../main/redux/reducers/userSlice";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const backgroundImage = require("../../assets/image1.jpeg");
+
+const { width, height } = Dimensions.get("window");
 
 const Landing = (props) => {
   const [email, setEmail] = useState("");
@@ -38,7 +41,7 @@ const Landing = (props) => {
         <View style={styles.logoContainer}>
           <ZealNoTextSmall />
         </View>
-        <Text style={styles.title}>Zeal 🦓</Text>
+        <Text style={styles.title}>Zeal</Text>
         <View style={styles.login}>
           <TextInput
             placeholder="email"
@@ -63,15 +66,17 @@ const Landing = (props) => {
           )}
           <TouchableOpacity
             onPress={() => onSignIn()}
-            style={styles.buttonContainer}>
+            style={styles.buttonContainer}
+          >
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.register}>
-          <Text style={styles.noAccount}>Don't have an account? </Text>
+          <Text style={styles.noAccount}>Don't have an account?</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate("Register")}
-            style={styles.buttonContainer}>
+            style={styles.buttonContainer}
+          >
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
         </View>
@@ -116,24 +121,24 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    textTransform: "uppercase",
     textAlign: "center",
   },
   login: {
-    padding: 50,
+    paddingHorizontal: 50,
     paddingTop: 10,
     marginTop: 10,
-    marginBottom: 25,
+    marginBottom: 45,
   },
   register: {
-    padding: 50,
-    marginTop: -80,
+    marginTop: 30,
+    paddingHorizontal: 50,
+    alignItems: "center",
   },
   noAccount: {
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingVertical: 10,
     textAlign: "center",
     color: "#fff",
+    fontSize: 18,
   },
   input: {
     padding: 5,
