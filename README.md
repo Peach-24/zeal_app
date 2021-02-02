@@ -26,6 +26,4 @@ Steps:
 4. After the above is complete, run `expo start -c` and wait for the QR code to appear.
 5. Either scan the QR code with your phone (which should open the Expo app) or type the appropriate letter in terminal to open a simulator.
 
-**Notes**
 
-- We're currently looking at improving responsiveness across devices. Because of this, the recommended way of viewing the app is using xcode's iOS simulator, on an iPhone 12 pro model.
